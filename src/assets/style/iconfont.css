@@ -1,0 +1,37 @@
+/* 右箭头 */
+.el-icon-arrow-right:before{
+  content: url('../images/right.png');
+}
+/* 上箭头 */
+.el-icon-arrow-up:before{
+  content: url('../images/up.png');
+}
+/* 下箭头 */
+.el-icon-arrow-down:before{
+  content: url('../images/down.png');
+}
+/* 减 */
+.el-icon-minus:before{
+  content: url('../images/subtract.png');
+}
+/* 加 */
+.el-icon-plus:before{
+  content: url('../images/add.png');
+}
+/* 乘 */
+.el-icon-ride:before{
+  content: url('../images/ride.png');
+}
+/* 关闭 */
+.el-icon-close:before{
+  content: url('../images/ride.png');
+}
+/* el-input-number调整位置 */
+.el-input-number--mini .el-input-number__decrease, .el-input-number--mini .el-input-number__increase {
+  width: 28px;
+  font-size: 22px;
+}
+/* el-select调整位置 */
+.el-select .el-input .el-select__caret{
+  font-size: 20px;
+}
