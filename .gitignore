@@ -4,3 +4,5 @@
 /.eslintrc.js
 .DS_Store
 npm-debug.log
+id_rsa
+id_rsa.pub
