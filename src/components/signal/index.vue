@@ -183,7 +183,7 @@ export default {
                     inCardArr[i].srcArr[k].label_extra='S'+(this.int(i)+1)+'_'+(this.int(k)+1);
                 }
             }
-            this.inputCardList=inCardArr;
+            this.globalEvent.inputCardList=this.inputCardList=inCardArr;
         },
         handleNodeClick(data,node,tree){
             if(node.level==2){

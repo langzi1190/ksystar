@@ -64,8 +64,8 @@
             <card title="高级菜单">
               <card-item title="用户"></card-item>
               <card-item title="亮度"></card-item>
-              <card-item title="KFS"></card-item>
-              <card-item title="多机同步"></card-item>
+              <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
+              <card-item @click.native="showDialog='multi'" title="多机同步"></card-item>
               <card-item title="输出关闭"></card-item>
               <card-item title="输出开启"></card-item>
               <card-item title="导入配置"></card-item>
@@ -76,7 +76,7 @@
               <card-item title="语言设置"></card-item>
             </card>
             <card title="专家系统">
-              <card-item title="串口设置"></card-item>
+              <card-item @click.native="showDialog='serial'" title="串口设置"></card-item>
               <card-item title="网络设置"></card-item>
               <card-item title="计算器"></card-item>
               <card-item title="演示模式"></card-item>
@@ -127,7 +127,10 @@
       </div>
     </footer>
     <!-- 弹窗集合组件 -->
-    <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
+      <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
+      <kfsDialog @sub_event="subEvent" :showDialog="showDialog"></kfsDialog>
+      <serialDialog @sub_event="subEvent" :showDialog="showDialog"></serialDialog>
+      <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog"></multiSyncDialog>
   </div>
 </template>
 
@@ -140,17 +143,22 @@ import udialog from "@/components/dialog";
 import signal from "@/components/signal";
 import vdr from "@/components/vdr";
 import attr from "@/components/attr";
+import kfsDialog from "@/components/panel/kfsDialog";
+import serialDialog from "@/components/panel/serialDialog";
+import multiSyncDialog from "@/components/panel/multiSyncDialog";
+
 export default {
   name: "Home",
   data() {
     return {
-      activeName: "0", // 侧边栏选项
-      activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
-      isEcho: false, // 是否回传
-      dialogVisible: false, // 弹出对话框
-      dialogTitle: "",
-      drawCenter: true,
-      positionLock: false, //位置锁定
+        activeName: "0", // 侧边栏选项
+        activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
+        isEcho: false, // 是否回传
+        dialogVisible: false, // 弹出对话框
+        dialogTitle: "",
+        drawCenter: true,
+        positionLock: false, //位置锁定
+        showDialog:''
         // scale:1,
     };
   },
@@ -195,20 +203,24 @@ export default {
               return ;
           }
           this.globalEvent.$emit('load_screen',{seq});
+      },
+      subEvent(param){
+          if('close_kfs'==param.act){
+              this.showDialog='';
+          }
       }
-      // subEvent(param){
-      //   console.log(param);
-      //   this.scale=param.scale;
-      // }
   },
   components: {
-    card,
-    cardItem,
-    cardChild,
-    udialog,
-    vdr,
-    attr,
-    signal,
+      card,
+      cardItem,
+      cardChild,
+      udialog,
+      vdr,
+      attr,
+      signal,
+      kfsDialog,
+      serialDialog,
+      multiSyncDialog
   },
 };
 </script>
