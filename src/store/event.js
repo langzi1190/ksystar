@@ -33,6 +33,7 @@ let gobalEvent =new Vue({
 
         },
         screenInfo:{},//所有屏幕墙
+        curScreenIndex:-1,//当前操作的屏幕序号，/vdr index.vue
         selectedPort:0,//屏幕参数设置，选择端口
     },
     methods:{

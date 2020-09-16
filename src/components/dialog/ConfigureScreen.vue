@@ -15,7 +15,7 @@
           </li>
         </ul>
         <div class="mapping">
-          <el-button type="primary" size="mini">自动映射</el-button>
+          <el-button type="primary" @click="autoMap" size="mini">自动映射</el-button>
         </div>
       </div>
       <div class="setting-parameter">
@@ -110,6 +110,24 @@ export default {
       },
       showTab(index){
           this.curTabName=this.displayList[index].tabName;
+      },
+      autoMap(){
+          //映射当前 屏幕??
+          if(!this.isValidCardCount()){
+              return ;
+          }
+          let validPos=[];//可用位置
+          this.portList.forEach((v,k)=>{
+              if(v==1){
+                  validPos.push(k);
+              }
+          });
+          for(let i in this.displayList){
+              for(let k in this.displayList[i].portArr){
+                  // this.displayList[i].portArr[k]=[validPos.shift()+1];
+                  this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()+1]);
+              }
+          }
       },
       isValidCardCount(){
           //计算数量

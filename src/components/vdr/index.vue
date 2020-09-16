@@ -70,6 +70,9 @@
                 //添加窗口事件
                 this.addWindowItem();
             });
+            this.globalEvent.$on('load_screen',(param)=>{
+                this.loadScreen(param.seq);
+            });
             this.globalEvent.$on("close_window_item",(param)=>{
                 //关闭窗口
                 if(param.act=='all'){
@@ -252,6 +255,7 @@
                 let curScreen=this.globalEvent.screenInfo.scrGroupArr[seq];
                 let portArr=curScreen.portArr;
                 this.curScreen=curScreen;
+                this.globalEvent.curScreenIndex=seq;
 
                 this.row=curScreen.Row;
                 this.col=curScreen.Col;
@@ -352,7 +356,7 @@
                     "srcGroupId":	0,
                     "srcCardId":	1,
                     "srcId":	0,
-                    "layerId":	1,
+                    "layerId":	len,
                     "partOrAll":	0,
                     "cropSizeArr":	[0, 0, 0, 0],
                     "winSizeArr":	[left, top, 1920, 1080]

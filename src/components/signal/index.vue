@@ -68,7 +68,7 @@ export default {
                 }, {
                     "portType":	16,
                     "ITESrcType":	17,
-                    "resolArr":	[300, 200],
+                    "resolArr":	[800, 600],
                     "bakFuncSta":	0,
                     "bakSrcCardId":	0,
                     "bakSrcId":	0
@@ -116,7 +116,7 @@ export default {
                 }, {
                     "portType":	9,
                     "ITESrcType":	17,
-                    "resolArr":	[300, 200],
+                    "resolArr":	[800, 600],
                     "bakFuncSta":	0,
                     "bakSrcCardId":	0,
                     "bakSrcId":	0
@@ -150,14 +150,28 @@ export default {
                return h('span',data.label)
             }
             else if(node.level==2){
-                return h('span',[
-                    h('span',{
-                        attrs:{
-                            class:'card_label'
-                        }
-                    },data.label),
-                    data.label_extra
-                ])
+                if(data.resolArr[1]>200 && data.resolArr[0]>300){
+                    return h('span',[
+                        h('span',{
+                            attrs:{
+                                class:'card_label card_label_valid'
+                            }
+                        },data.label),
+                        data.label_extra
+                    ])
+                }
+                else{
+                    return h('span',[
+                        h('span',{
+                            attrs:{
+                                class:'card_label'
+                            }
+                        },data.label),
+                        data.label_extra
+                    ])
+                }
+
+
             }
         },
         syscInputInfo(signal_list){
@@ -212,6 +226,8 @@ export default {
       line-height: 40px;
     }
     .card_label{margin-right:3px;color:#f44f44;}
+    .card_label_valid{position:relative;display:inline-block;}
+    .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
 }
 </style>

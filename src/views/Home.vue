@@ -30,17 +30,17 @@
               <card-item title="回显配置"></card-item>
             </card>
             <card title="屏幕切换">
-              <card-item title="屏幕墙 1" iconName="display"></card-item>
-              <card-item title="屏幕墙 2" iconName="display"></card-item>
+              <card-item title="屏幕墙 1" @click.native="loadScreen(0)"  iconName="display"></card-item>
+              <card-item title="屏幕墙 2" @click.native="loadScreen(1)" iconName="display"></card-item>
               <div class="card-item">
-                <card-child title="屏幕墙3" iconName="display"></card-child>
-                <card-child title="屏幕墙4" iconName="display"></card-child>
-                <card-child title="屏幕墙5" iconName="display"></card-child>
+                <card-child title="屏幕墙3" @click.native="loadScreen(2)"  iconName="display"></card-child>
+                <card-child title="屏幕墙4" @click.native="loadScreen(3)"  iconName="display"></card-child>
+                <card-child title="屏幕墙5" @click.native="loadScreen(4)"  iconName="display"></card-child>
               </div>
               <div class="card-item">
-                <card-child title="屏幕墙6" iconName="display"></card-child>
-                <card-child title="屏幕墙7" iconName="display"></card-child>
-                <card-child title="屏幕墙8" iconName="display"></card-child>
+                <card-child title="屏幕墙6" @click.native="loadScreen(5)"  iconName="display"></card-child>
+                <card-child title="屏幕墙7" @click.native="loadScreen(6)"  iconName="display"></card-child>
+                <card-child title="屏幕墙8" @click.native="loadScreen(7)"  iconName="display"></card-child>
               </div>
             </card>
             <card title="对外控制">
@@ -187,6 +187,14 @@ export default {
       },
       addScreen(){
           this.globalEvent.$emit("add_window_item");//vdr/index.vue
+      },
+      loadScreen(seq){
+          console.log(seq,this.globalEvent.screenInfo.scrGroupArr.length);
+          if(seq>=this.globalEvent.screenInfo.scrGroupArr.length){
+              alert("屏幕墙不存在");
+              return ;
+          }
+          this.globalEvent.$emit('load_screen',{seq});
       }
       // subEvent(param){
       //   console.log(param);
