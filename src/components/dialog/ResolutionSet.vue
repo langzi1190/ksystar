@@ -27,7 +27,7 @@
             <div class="inline_input">
                 <div class="input_tip"></div>
                 <div>
-                    <el-button @click="isSubmit(false)" size="mini">输出时序</el-button>
+                    <el-button @click="showTimeSeq" size="mini">输出时序</el-button>
                 </div>
             </div>
             <div style="text-align:center">
@@ -57,6 +57,9 @@
             }
         },
         methods:{
+            showTimeSeq(){
+                this.$emit('sub_event',{act:'showTimeSeq'});
+            },
             isSubmit(on){
                 if(!on){
                     this.$emit('sub_event',{act:'closeSetDialog'});

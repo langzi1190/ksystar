@@ -59,6 +59,7 @@
     </div>
 
       <Rs @sub_event="subEvent" :showSetting="showSetting"></Rs>
+      <Ts @sub_event="subEvent" :showSetting="showTimeSeq"></Ts>
   </div>
 </template>
 
@@ -179,6 +180,7 @@ const hertz = [
   }
 ];
 import Rs from '@/components/dialog/ResolutionSet';
+import Ts from '@/components/dialog/TimeSeq';
 export default {
   props:['item','seq'],
   data() {
@@ -193,6 +195,7 @@ export default {
         columnNum: this.item.Col,
         TimingMode: this.item.TimingMode,
         showSetting:false,
+        showTimeSeq:false
     };
   },
     methods:{
@@ -210,6 +213,13 @@ export default {
         subEvent(param){
             if(param.act=='closeSetDialog'){
                 this.showSetting=false;
+            }
+            else if(param.act=='closeTimeSeqDialog'){
+                this.showTimeSeq=false;
+            }
+            else if(param.act=='showTimeSeq'){
+                this.showSetting=false;
+                this.showTimeSeq=true;
             }
         }
     },
@@ -256,7 +266,7 @@ export default {
 
     },
     components:{
-        Rs
+        Rs,Ts
     }
 
 };

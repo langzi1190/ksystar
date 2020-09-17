@@ -47,7 +47,12 @@
         },
         methods:{
             op(act){
-
+                if(!act){
+                    this.$emit('sub_event',{act:'close_kfs'});
+                }
+                else{
+                    console.log("sure");
+                }
             }
         }
     }
