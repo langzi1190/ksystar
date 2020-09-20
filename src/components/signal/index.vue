@@ -18,7 +18,92 @@
           <img class="header-icon" src="@/assets/images/UserMode.png" />
           <span class="content-list-title">用户模式</span>
         </template>
-        <div class="content-list">用户模式</div>
+        <div class="content-list">
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+          <div class="list_item">
+            用户模式 1
+          </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+            <div class="list_item">
+                用户模式 1
+            </div>
+        </div>
       </el-collapse-item>
       <el-collapse-item name="2">
         <template slot="title">
@@ -44,6 +129,10 @@ export default {
         return {
             inputCardList:[],
 
+            presetList:[],
+            scenePollingList:[],
+            srcGroupList:[],
+
             activeName: "0", // 侧边栏选项
             activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
 
@@ -54,91 +143,17 @@ export default {
         };
     },
     mounted(){
-        let signal_list={
-            "inCardNum":	3,
-            "inCardArr":	[{
-                "srcNum":	2,
-                "srcArr":	[{
-                    "portType":	16,
-                    "ITESrcType":	17,
-                    "resolArr":	[300, 200],//区分是否可用
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	16,
-                    "ITESrcType":	17,
-                    "resolArr":	[800, 600],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }]
-            }, {
-                "srcNum":	3,
-                "srcArr":	[{
-                    "portType":	16,
-                    "ITESrcType":	1,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	16,
-                    "ITESrcType":	1,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	16,
-                    "ITESrcType":	1,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }]
-            }, {
-                "srcNum":	5,
-                "srcArr":	[{
-                    "portType":	4,
-                    "ITESrcType":	17,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	5,
-                    "ITESrcType":	17,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	9,
-                    "ITESrcType":	17,
-                    "resolArr":	[800, 600],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	4,
-                    "ITESrcType":	18,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }, {
-                    "portType":	5,
-                    "ITESrcType":	18,
-                    "resolArr":	[300, 200],
-                    "bakFuncSta":	0,
-                    "bakSrcCardId":	0,
-                    "bakSrcId":	0
-                }]
-            }]
-        };
 
-        this.syscInputInfo(signal_list);
+        this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+            this.syscInputInfo(ret.data);
+        });
+
+        this.$http.get("scenePollingRd.cgi",{},(ret)=>{
+            this.scenePollingList=ret.data;
+        });
+        this.$http.get("srcGroupRd.cgi",{},(ret)=>{
+            this.srcGroupList=ret.data;
+        });
     },
     methods:{
         int(i){
@@ -229,5 +244,7 @@ export default {
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
+    .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;}
+    .el-collapse-item__content{max-height:500px;overflow:auto;}
 }
 </style>

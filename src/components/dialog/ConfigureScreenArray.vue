@@ -32,13 +32,13 @@
                     <p>屏幕编号:{{index+1}}</p>
                     <p>水平大小:{{item.sizeArr[0]}}</p>
                     <p>垂直大小:{{item.sizeArr[1]}}</p>
-                    <p>输出映射:{{item.mapArr[0]}}</p>
+                    <p>输出映射:{{item.mapArr[0]+1}}</p>
                 </div>
                 <div div v-show="displayIndex === index">
                     <p>屏幕编号:{{index+1}}</p>
                     <p>水平大小:{{item.sizeArr[0]}}</p>
                     <p>垂直大小:{{item.sizeArr[1]}}</p>
-                    <p>输出映射:Port{{item.mapArr[0]}}(点击Port修改)</p>
+                    <p>输出映射:Port{{item.mapArr[0]+1}}(点击Port修改)</p>
                 </div>
             </div>
         </div>

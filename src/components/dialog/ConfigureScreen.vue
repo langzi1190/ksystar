@@ -58,36 +58,14 @@ export default {
     };
   },
   created() {
-        console.log("created configure screen ...");
-      let outPortListInfo={
-          "outCardNum":	2,
-          "outPortNum":	12,
-          "maxOutCardNum":	15,
-          "portNumPerCard":	6,
-          "outCardArr":	[
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [1, 1, 1, 1, 1, 1],
-              [1, 1, 1, 1, 1, 1],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0],
-              [0, 0, 0, 0, 0, 0]
-          ]
-      };
+
+      this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+          this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
+          this.syncOutputInfoRd(ret.data);
+          this.syncScrInfoRd();
+      });
 
 
-      this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
-
-      this.syncOutputInfoRd(outPortListInfo);
-      this.syncScrInfoRd();
 
   },
   methods: {
@@ -204,8 +182,8 @@ export default {
       },
       portPut(io) {
         // 当前点击的port端口
-        this.selectedPort=this.totalPort-io;
-        if(this.portList[this.selectedPort-1]==0){
+        this.selectedPort=this.totalPort-io-1;
+        if(this.portList[this.selectedPort]==0){
             alert("当前端口不可用");
             return ;
         }
@@ -280,7 +258,6 @@ export default {
         top: 0px;
         background: #e4e7ed;
         div {
-          // border: 1px solid #dcdfe6;
           box-sizing: border-box;
           width: 192px;
           height: 20px;
@@ -301,7 +278,6 @@ export default {
         left: 0px;
         background: #e4e7ed;
         div {
-          // border: 1px solid #dcdfe6;
           box-sizing: border-box;
           width: 40px;
           height: 108px;
@@ -315,12 +291,8 @@ export default {
           }
         }
       }
-      // display: flex;
-      // justify-content: flex-start;
-      // align-items: center;
       overflow: scroll;
       .drawing-list {
-        // margin: auto;
         background: #f5f7fa;
         display: flex;
         flex-wrap: wrap;

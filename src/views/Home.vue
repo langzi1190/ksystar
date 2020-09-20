@@ -225,7 +225,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .home {
   height: 100%;
   display: flex;
@@ -273,11 +273,11 @@ export default {
           min-height: 418px;
           position: relative;
           overflow: scroll;
-          .draw-center {
+        /*  .draw-center {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-          }
+          }*/
           .draw-content {
             background-color: #f5f7fa;
             border: 1px solid #dcdfe6;

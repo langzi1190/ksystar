@@ -100,25 +100,8 @@
                 this.o_height=Math.ceil(v*this.$parent.totalHeight/100);
             },
             ratio(v,ov){
-                // this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
-                // this.height=Math.ceil(this.pheight*this.$parent.ratioHeight/100);
-                // this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
-                // this.width=Math.ceil(this.pwidth*this.$parent.ratioWidth/100);
                 this.percent2Ratio();
             },
-
-            // o_top(v,ov){
-            //     this.sendEvent({pos:0,v,seq:this.seq});
-            // },
-            // o_left(v,ov){
-            //     this.sendEvent({pos:1,v,seq:this.seq});
-            // },
-            // o_width(v,ov){
-            //     this.sendEvent({pos:2,v,seq:this.seq});
-            // },
-            // o_height(v,ov){
-            //     this.sendEvent({pos:3,v,seq:this.seq});
-            // }
         },
         methods:{
             sendEvent(param){
@@ -395,7 +378,7 @@
 
 <style lang="scss">
     .windowItem{
-        position:absolute;box-shadow: 0 0 3px #505050;
+        position:absolute;box-sizing: border-box;
     }
 
     .draw-area__dots{
@@ -517,6 +500,7 @@
             position:relative;
             overflow: hidden;
             padding: 6px;
+            border:1px solid #dcdcdc;
             p{
                 font-size: 14px;
                 color: #909399;

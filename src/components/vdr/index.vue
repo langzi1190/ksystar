@@ -25,7 +25,7 @@
         </div>
         <div
                 @wheel="mouseWheel"
-                :style="`height: ${ratioHeight}px; width: ${ratioWidth}px; border: 1px solid #dcdfe6; position: relative;box-sizing:border-box;`"
+                :style="`height: ${ratioHeight}px; width: ${ratioWidth}px; position: relative;`"
         >
             <windowItem
                     v-for="(item,index) in windowItems"
@@ -100,6 +100,12 @@
                     //子组件更新参数
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
                     this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setProp(param);
+
+                    // this.$http.post("/winLayerWr.cgi",{
+                    //     type:param.act=='top'?1:0,
+                    //     groupId:this.globalEvent.curScreenIndex,
+                    //     windId:this.globalEvent.selectedWindowIndex
+                    // });
                 }
                 else if(param.act=='window_size'){
                     //全屏,扩张，还原
@@ -112,97 +118,7 @@
                 this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setWindowSize(param);
 
             });
-            this.globalEvent.screenInfo={
-                "ScrGroupNum":	2,
-                "scrGroupArr":	[{
-                    "Row":	2,
-                    "Col":	2,
-                    "VideoId":	16,
-                    "TimingMode":	1,
-                    "FrameRate":	60,//格式是 0 1 2？？
-                    "FormatW":	1920,
-                    "HFrontPorch": 88,
-                    "HSyncTime":	44,
-                    "HBackPorch":	148,
-                    "FormatH":	1080,
-                    "VFrontPorch":	4,
-                    "VSyncTime":	5,
-                    "VBackPorch":	36,
-                    "ClkFreq":	148500,
-                    "HPolar":	0,
-                    "VPolar":	0,
-                    "portArr":	[{
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[12],
-                        "briArr":	[0, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[13],
-                        "briArr":	[0, 1, 201],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[14],
-                        "briArr":	[0, 209, 4],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[15],
-                        "briArr":	[32, 2, 95],
-                        "conArr":	[100, 100, 100]
-                    }]
-                }, {
-                    "Row":	2,
-                    "Col":	3,
-                    "VideoId":	16,
-                    "TimingMode":	0,
-                    "FrameRate":	60,
-                    "FormatW":	1920,
-                    "HFrontPorch":	88,
-                    "HSyncTime":	44,
-                    "HBackPorch":	148,
-                    "FormatH":	1080,
-                    "VFrontPorch":	4,
-                    "VSyncTime":	5,
-                    "VBackPorch":	36,
-                    "ClkFreq":	148500,
-                    "HPolar":	0,
-                    "VPolar":	0,
-                    "portArr":	[{
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[18],
-                        "briArr":	[0, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[19],
-                        "briArr":	[0, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[20],
-                        "briArr":	[0, 1, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[21],
-                        "briArr":	[1, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[22],
-                        "briArr":	[0, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }, {
-                        "sizeArr":	[1920, 1080],
-                        "mapArr":	[23],
-                        "briArr":	[0, 0, 0],
-                        "conArr":	[100, 100, 100]
-                    }]
-                }]
-            };
-            this.loadScreen(0)
+            this.loadData();
         },
         computed:{
             ratioWidth(){
@@ -213,6 +129,17 @@
             }
         },
         methods: {
+            loadData(){
+                //screen_info.json
+                this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
+                    this.globalEvent.screenInfo=ret.data;
+                    this.loadScreen(0)
+                })
+                //获取顶部工具区域通用参数
+                this.$http.get("syncCommonInfoRd.cgi",{},(ret)=>{
+                    this.globalEvent.commonInfo=ret.data;
+                });
+            },
             getMaxIndexPos(){
                 //交换最大值
                 let maxIndex=0;
@@ -272,11 +199,10 @@
                 let v=0;
                 let h=0;
                 for(let i in portArr){
-
                     if(i<curScreen.Col){
                         this.totalWidth+=parseInt(portArr[i].sizeArr[0]);
                     }
-                    if(i%(curScreen.Row+1)==0){
+                    if(i%(curScreen.Col+1)==0){
                         this.totalHeight+=parseInt(portArr[i].sizeArr[1]);
                     }
 
@@ -320,31 +246,33 @@
             },
             loadScreenWindowItems(){
                 //获取当前屏幕墙的输出窗口
-                this.globalEvent.windowItemsInfo={
-                    "scrGroupId":	0,//屏幕墙编号
-                    "winNum":	2,
-                    "winArr":[{
-                        "winId":	0,//自己
-                        "srcGroupId":	0,//信号源分组
-                        "srcCardId":	0,
-                        "srcId":	0,
-                        "layerId":	0,
-                        "partOrAll":	0,
-                        "cropSizeArr":	[0, 0, 0, 0],
-                        "winSizeArr":	[0, 0, 1920, 1080]
-                    }, {
-                        "winId":	1,
-                        "srcGroupId":	0,
-                        "srcCardId":	1,
-                        "srcId":	0,
-                        "layerId":	1,
-                        "partOrAll":	0,
-                        "cropSizeArr":	[0, 0, 0, 0],
-                        "winSizeArr":	[1920, 1080, 1920, 1080]
-                    }]
-                };
-                this.windowItems=this.globalEvent.windowItemsInfo.winArr;
-
+                // this.globalEvent.windowItemsInfo={
+                //     "scrGroupId":	0,//屏幕墙编号
+                //     "winNum":	2,
+                //     "winArr":[{
+                //         "winId":	0,//自己
+                //         "srcGroupId":	0,//信号源分组
+                //         "srcCardId":	0,
+                //         "srcId":	0,
+                //         "layerId":	0,
+                //         "partOrAll":	0,
+                //         "cropSizeArr":	[0, 0, 0, 0],
+                //         "winSizeArr":	[0, 0, 1920, 1080]
+                //     }, {
+                //         "winId":	1,
+                //         "srcGroupId":	0,
+                //         "srcCardId":	1,
+                //         "srcId":	0,
+                //         "layerId":	1,
+                //         "partOrAll":	0,
+                //         "cropSizeArr":	[0, 0, 0, 0],
+                //         "winSizeArr":	[1920, 1080, 1920, 1080]
+                //     }]
+                // };
+                this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                    this.globalEvent.windowItemsInfo=ret.data;
+                    this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+                });
             },
             addWindowItem(){
                 console.log(this.globalEvent.selectedCard);
@@ -445,6 +373,9 @@
             subEvent(param){
                 if('delete_window_item'==param.act){
                     this.windowItems.splice(param.seq,1);
+                    if(this.globalEvent.selectedWindowIndex==param.seq){
+                        this.globalEvent.selectedWindowIndex=-1;
+                    }
                 }
                 else if('update_window_pos'==param.act){
 
@@ -469,8 +400,8 @@
         top: 0;
         left: 0;
     }
-    .line_h{position:absolute;height:0;border-top:2px solid #dcdcdc;left:0;}
-    .line_v{position:absolute;width:0;border-left:2px solid #dcdcdc;top:0;}
+    .line_h{position:absolute;height:0;border-top:1px solid #dcdcdc;left:0;}
+    .line_v{position:absolute;width:0;border-left:1px solid #dcdcdc;top:0;}
 
     .grid{border:2px solid #dcdcdc;border-top:none;border-right:none;position:absolute;}
 </style>

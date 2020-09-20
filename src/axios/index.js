@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = '/api'; // 跨域情况下使用
+const baseURL = 'http://192.168.0.100/';
 
 let http = axios.create({
   baseURL: baseURL,
@@ -8,19 +8,33 @@ let http = axios.create({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
-  transformRequest: [function (data) {
-    let newData = '';
-    for (let k in data) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (data.hasOwnProperty(k) === true) {
-        newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-      }
-    }
-    return newData;
-  }]
+  // transformRequest: [function (data) {
+  //   let newData = '';
+  //   for (let k in data) {
+  //     if (data.hasOwnProperty(k) === true) {
+  //       newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+  //     }
+  //   }
+  //   return newData;
+  // }]
 });
 
 function apiAxios(method, url, params, response) {
+  if(baseURL==''){
+      //todo delete
+    let urlTrans={
+        "syncScrInfoRd.cgi":"/screen_info.json",
+        "syncWinInfoRd.cgi":"/window_items.json",
+        "syncOutputInfoRd.cgi":"/out_put_list.json",
+        "syncInputInfoRd.cgi":"/signal_list.json",
+        "syncCommonInfoRd.cgi":"/common_param.json",
+        "scenePollingRd.cgi":"/scene_polling.json",
+        "srcGroupRd.cgi":"/src_group_list.json",
+    };
+      url=urlTrans[url];
+      method='GET';
+  }
+
   http({
     method: method,
     url: url,
