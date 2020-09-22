@@ -19,90 +19,9 @@
           <span class="content-list-title">用户模式</span>
         </template>
         <div class="content-list">
-          <div class="list_item">
-            用户模式 1
+          <div class="list_item" v-for="(item,index) in userSceneList">
+            用户模式 {{index+1}}
           </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-          <div class="list_item">
-            用户模式 1
-          </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
-            <div class="list_item">
-                用户模式 1
-            </div>
         </div>
       </el-collapse-item>
       <el-collapse-item name="2">
@@ -110,7 +29,9 @@
           <img class="header-icon" src="@/assets/images/Round.png" />
           <span class="content-list-title">场景轮巡</span>
         </template>
-        <div class="content-list">场景轮巡</div>
+        <div class="content-list">
+          <sceneCarousel></sceneCarousel>
+        </div>
       </el-collapse-item>
       <el-collapse-item name="3">
         <template slot="title">
@@ -124,10 +45,12 @@
 </template>
 
 <script>
+  import sceneCarousel from "@/components/signal/sceneCarousel"
 export default {
     data() {
         return {
             inputCardList:[],
+            userSceneList:[],//用户模式 列表
 
             presetList:[],
             scenePollingList:[],
@@ -229,6 +152,14 @@ export default {
                     });
                 }
             }
+        }
+    },
+    components:{
+        sceneCarousel
+    },
+    watch:{
+        "globalEvent.commonInfo":function (v,ov) {
+            this.userSceneList=v.presetStaArr;
         }
     }
 
