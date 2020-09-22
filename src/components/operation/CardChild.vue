@@ -1,5 +1,8 @@
 <template>
-  <div class="card-child">
+  <div class="card-child"
+       :style="{opacity:(globalEvent.screenInfo.scrGroupArr!==undefined && seq>=globalEvent.screenInfo.scrGroupArr.length)?0.6:1}"
+       :class="{'card-item-bg':seq==globalEvent.curScreenIndex}"
+  >
     <img :src="iconImg" class="header-icon" />
     <span>{{title}}</span>
   </div>
@@ -7,7 +10,7 @@
 
 <script>
 export default {
-  props: ['title','iconName'],
+  props: ['title','iconName','seq'],
   data() {
     return {
       iconImg: "",
@@ -19,7 +22,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .card-child {
   width: 60px;
   font-size: 12px;
@@ -40,5 +43,12 @@ export default {
 .card-child:hover {
   cursor: pointer;
   background-color: #f5f7fa;
+}
+.card-item-bg {
+  background-color: #f5f7fa;
+  span,
+  i {
+    color: #409eff;
+  }
 }
 </style>

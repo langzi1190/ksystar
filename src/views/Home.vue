@@ -30,17 +30,17 @@
               <card-item title="回显配置"></card-item>
             </card>
             <card title="屏幕切换">
-              <card-item title="屏幕墙 1" @click.native="loadScreen(0)"  iconName="display"></card-item>
-              <card-item title="屏幕墙 2" @click.native="loadScreen(1)" iconName="display"></card-item>
+              <card-item title="屏幕墙 1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
+              <card-item title="屏幕墙 2" seq='1' @click.native="loadScreen(1)" iconName="display"></card-item>
               <div class="card-item">
-                <card-child title="屏幕墙3" @click.native="loadScreen(2)"  iconName="display"></card-child>
-                <card-child title="屏幕墙4" @click.native="loadScreen(3)"  iconName="display"></card-child>
-                <card-child title="屏幕墙5" @click.native="loadScreen(4)"  iconName="display"></card-child>
+                <card-child title="屏幕墙3" seq='2' @click.native="loadScreen(2)"  iconName="display"></card-child>
+                <card-child title="屏幕墙4" seq='3' @click.native="loadScreen(3)"  iconName="display"></card-child>
+                <card-child title="屏幕墙5" seq='4' @click.native="loadScreen(4)"  iconName="display"></card-child>
               </div>
               <div class="card-item">
-                <card-child title="屏幕墙6" @click.native="loadScreen(5)"  iconName="display"></card-child>
-                <card-child title="屏幕墙7" @click.native="loadScreen(6)"  iconName="display"></card-child>
-                <card-child title="屏幕墙8" @click.native="loadScreen(7)"  iconName="display"></card-child>
+                <card-child title="屏幕墙6" seq='5' @click.native="loadScreen(5)"  iconName="display"></card-child>
+                <card-child title="屏幕墙7" seq='6' @click.native="loadScreen(6)"  iconName="display"></card-child>
+                <card-child title="屏幕墙8" seq='7' @click.native="loadScreen(7)"  iconName="display"></card-child>
               </div>
             </card>
             <card title="对外控制">

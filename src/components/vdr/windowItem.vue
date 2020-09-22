@@ -18,7 +18,7 @@
 
             <div class="title"  data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:S1_1</span>
+                    <span>Win-{{seq+1}}:{{globalEvent.cardLabelExtra(item.srcCardId,item.srcId)}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
@@ -105,9 +105,19 @@
         },
         methods:{
             sendEvent(param){
-                param.act='update_window_pos';
-                this.$emit('sub_event',param);
+                // param.act='update_window_pos';
+                // this.$emit('sub_event',param);
+
+                this.$parent.windowItems[param.seq].winSizeArr[param.pos]=param.v;
+                //通知侧边修改 窗口参数
+                this.globalEvent.$emit("update_side_attr");
+                clearTimeout(this.time_event);
+                this.time_event=setTimeout(()=>{
+                    this.$parent.syncWindowSize();
+                },400);
+
             },
+
             setProp(param){
                 //vdr/index.vue 调用
                 if(param.act=='top' || param.act=='bottom'){
@@ -176,7 +186,8 @@
                     this.o_height=this.$parent.totalHeight;
                 }
                 else if (val === "2") {
-                    this.$emit('sub_event',{act:'delete_window_item',seq:this.seq})
+                    // this.$emit('sub_event',{act:'delete_window_item',seq:this.seq})
+                    this.globalEvent.$emit("close_window_item",{act:'cur'});
                 }
                 else if(val==='3'){
                     //检测辅助线
@@ -349,6 +360,7 @@
                     that.height=Math.max(that.height,35);
                     that.width=Math.max(that.width,35);
 
+                    console.log(that.left,that.top,that.width,that.height);
 
                     that.ptop=that.top/that.$parent.ratioHeight*100;
                     that.pleft=that.left/that.$parent.ratioWidth*100;

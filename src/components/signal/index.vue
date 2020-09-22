@@ -166,7 +166,11 @@ export default {
             }
             else if(node.level==2){
                 if(data.resolArr[1]>200 && data.resolArr[0]>300){
-                    return h('span',[
+                    return h('span',{
+                        class:{
+                            'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
+                        },
+                    },[
                         h('span',{
                             attrs:{
                                 class:'card_label card_label_valid'
@@ -176,7 +180,11 @@ export default {
                     ])
                 }
                 else{
-                    return h('span',[
+                    return h('span',{
+                          class:{
+                              'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
+                          },
+                        },[
                         h('span',{
                             attrs:{
                                 class:'card_label'
@@ -203,6 +211,23 @@ export default {
         handleNodeClick(data,node,tree){
             if(node.level==2){
                 this.globalEvent.selectedCard=data;
+                let w=this.globalEvent.selectedWindowIndex;
+                let num=this.globalEvent.sourceCardNumber();
+                if(w>-1){
+                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
+                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
+
+                    //保存信号源信息
+                    let data={
+                        scrGroupId:this.globalEvent.curScreenIndex,
+                        winId:w,
+                        srcCardId:num[0],
+                        srcId:num[1]
+                    };
+                    this.$http.post("switchWinScr.cgi",data,(ret)=>{
+                        console.log("signal/index.vue 切换窗口源信号");
+                    });
+                }
             }
         }
     }
@@ -246,5 +271,6 @@ export default {
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
     .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;}
     .el-collapse-item__content{max-height:500px;overflow:auto;}
+  .selected_card .card_label{color:#00cc99;}
 }
 </style>

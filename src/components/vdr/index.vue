@@ -34,7 +34,6 @@
                     :seq="index"
                     ref="windowObj"
                     :ratio="ratio"
-                    @sub_event="subEvent"
             ></windowItem>
         </div>
     </div>
@@ -67,21 +66,59 @@
         created() {
 
             this.globalEvent.$on("add_window_item",(param)=>{
-                //添加窗口事件
-                this.addWindowItem();
+                //添加窗口事件,添加完，可以直接 loadScreenWindowItems，
+                // console.log(this.globalEvent.selectedCard);
+                let cardNumber=this.globalEvent.sourceCardNumber();
+                console.log(cardNumber);
+                let len=this.windowItems.length;
+                let left=100*len;
+                let top=100*len;
+                let data={
+                    type:1,//新开
+                    scrGroupId: this.globalEvent.curScreenIndex,
+                    winId: len,
+                    srcGroupId:0,
+                    srcCardId:cardNumber[0],
+                    srcId:cardNumber[1],
+                    layerId:len,
+                    cropLeft:0,
+                    cropTop:0,
+                    cropW:0,
+                    cropH:0,
+                    winLeft:left,
+                    winTop:top,
+                    winW:1920,
+                    winH:1080,
+                };
+
+                this.$http.post("winOpr.cgi",data,(ret)=>{
+                    console.log(ret.data);
+                    this.loadScreenWindowItems();
+                    // this.windowItems.push(data);
+                });
+                // this.addWindowItem();
             });
             this.globalEvent.$on('load_screen',(param)=>{
                 this.loadScreen(param.seq);
             });
             this.globalEvent.$on("close_window_item",(param)=>{
                 //关闭窗口
+                let data={
+                    groupId:this.curScreenIndex
+                };
                 if(param.act=='all'){
                     this.windowItems=[];
                 }
                 else{
                     this.windowItems.splice(this.globalEvent.selectedWindowIndex,1);
-
+                    data.winId=this.globalEvent.selectedWindowIndex;
                 }
+
+                this.$http.post("closeWin.cgi",data,(ret)=>{
+                    console.log("vdr/index.vue 关闭窗口。。。");
+                });
+
+
                 if(this.windowItems.length==0){
                     this.globalEvent.selectedWindowIndex=-1;
                 }
@@ -101,11 +138,13 @@
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
                     this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setProp(param);
 
-                    // this.$http.post("/winLayerWr.cgi",{
-                    //     type:param.act=='top'?1:0,
-                    //     groupId:this.globalEvent.curScreenIndex,
-                    //     windId:this.globalEvent.selectedWindowIndex
-                    // });
+                    this.$http.post("winLayerWr.cgi",{
+                        type:param.act=='top'?1:0,
+                        groupId:this.globalEvent.curScreenIndex,
+                        windId:this.globalEvent.selectedWindowIndex
+                    },(ret)=>{
+                        console.log("vdr/index.vue 置顶，置底。。。。");
+                    });
                 }
                 else if(param.act=='window_size'){
                     //全屏,扩张，还原
@@ -115,8 +154,16 @@
             });
             this.globalEvent.$on("update_window_pos_by_side",(param)=>{
                 //来自侧边栏的 属性更改通知
-                this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setWindowSize(param);
-
+                let w=this.globalEvent.selectedWindowIndex;
+                let posMap={'cleft':0,'ctop':1,'cwidth':2,'cheight':3};
+                //更新窗口属性
+                if(['cleft','ctop','cwidth','cheight'].includes(param.act)){
+                    this.globalEvent.windowItemsInfo.winArr[w].cropSizeArr[posMap[param.act]]=param.v;
+                }
+                else{
+                    this.$refs.windowObj[w].setWindowSize(param);
+                }
+                this.syncWindowSize();
             });
             this.loadData();
         },
@@ -274,24 +321,24 @@
                     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
                 });
             },
-            addWindowItem(){
-                console.log(this.globalEvent.selectedCard);
-                let len=this.windowItems.length;
-                let left=100*len;
-                let top=100*len;
-                let emptyItem={
-                    "winId":len,
-                    "srcGroupId":	0,
-                    "srcCardId":	1,
-                    "srcId":	0,
-                    "layerId":	len,
-                    "partOrAll":	0,
-                    "cropSizeArr":	[0, 0, 0, 0],
-                    "winSizeArr":	[left, top, 1920, 1080]
-                };
-                console.log(emptyItem);
-                this.windowItems.push(emptyItem);
-            },
+            // addWindowItem(){
+            //     console.log(this.globalEvent.selectedCard);
+            //     let len=this.windowItems.length;
+            //     let left=100*len;
+            //     let top=100*len;
+            //     let emptyItem={
+            //         "winId":len,
+            //         "srcGroupId":	0,
+            //         "srcCardId":	1,
+            //         "srcId":	0,
+            //         "layerId":	len,
+            //         "partOrAll":	0,
+            //         "cropSizeArr":	[0, 0, 0, 0],
+            //         "winSizeArr":	[left, top, 1920, 1080]
+            //     };
+            //     console.log(emptyItem);
+            //     this.windowItems.push(emptyItem);
+            // },
             mouseWheel(e) {
                 // let wh_ratio=this.totalWidth/this.totalHeight;
                 if(e.wheelDelta>0){
@@ -370,20 +417,47 @@
 
                 return [nt,nl,nw,nh];
             },
-            subEvent(param){
-                if('delete_window_item'==param.act){
-                    this.windowItems.splice(param.seq,1);
-                    if(this.globalEvent.selectedWindowIndex==param.seq){
-                        this.globalEvent.selectedWindowIndex=-1;
-                    }
-                }
-                else if('update_window_pos'==param.act){
-
-                    this.windowItems[param.seq].winSizeArr[param.pos]=param.v;
-                    //通知侧边修改 窗口参数
-                    this.globalEvent.$emit("update_side_attr");
-                }
-            }
+            syncWindowSize(){
+                let w=this.globalEvent.selectedWindowIndex;
+                let curWindow=this.globalEvent.windowItemsInfo.winArr[w];
+                let data={
+                    type:2,//移动
+                    scrGroupId:curWindow.scrGroupId,
+                    winId:curWindow.winId,
+                    srcGroupId:curWindow.srcGroupId,
+                    srcId:curWindow.srcId,
+                    layerId:curWindow.layerId,
+                    cropLeft:curWindow.cropSizeArr[0],
+                    cropTop:curWindow.cropSizeArr[1],
+                    cropW:curWindow.cropSizeArr[2],
+                    cropH:curWindow.cropSizeArr[3],
+                    winLeft:curWindow.winSizeArr[0],
+                    winTop:curWindow.winSizeArr[1],
+                    winW:curWindow.winSizeArr[2],
+                    winH:curWindow.winSizeArr[3],
+                };
+                this.$http.post("winOpr.cgi",data,(ret)=>{
+                    console.log("vdr/index.vue .保存窗口 尺寸 位置....");
+                    //如果都统一保存 然后再读取（ loadScreenWindowItems），就没必要修改属性（减少复杂度 代码量）。。。 调用
+                });
+            },
+            // subEvent(param){
+            //     if('delete_window_item'==param.act){
+            //         this.windowItems.splice(param.seq,1);
+            //         if(this.globalEvent.selectedWindowIndex==param.seq){
+            //             this.globalEvent.selectedWindowIndex=-1;
+            //             this.$http.post("closeWin.cgi",{groupId:this.curScreenIndex,winId:param.seq},(ret)=>{
+            //                 console.log("vdr/index.vue 关闭窗口。。。");
+            //             });
+            //         }
+            //     }
+            //     else if('update_window_pos'==param.act){
+            //
+            //         this.windowItems[param.seq].winSizeArr[param.pos]=param.v;
+            //         //通知侧边修改 窗口参数
+            //         this.globalEvent.$emit("update_side_attr");
+            //     }
+            // }
         },
         components: {
             windowItem

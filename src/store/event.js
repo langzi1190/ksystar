@@ -39,7 +39,19 @@ let gobalEvent =new Vue({
         commonInfo:{}
     },
     methods:{
-
+        sourceCardNumber(){
+            let label_extra=this.selectedCard.label_extra;
+            let num=[0,0];
+            if(label_extra!==undefined){
+                label_extra=label_extra.replace('S','');
+                num=label_extra.split("_");
+                num=num.map((v)=>{return parseInt(v)-1;});
+            }
+            return num;
+        },
+        cardLabelExtra(cardId,srcId){
+            return 'S'+(cardId+1)+'_'+(srcId+1);
+        }
     }
 });
 

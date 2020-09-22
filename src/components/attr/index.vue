@@ -44,19 +44,19 @@
         <el-collapse-item title="局部显示" name="2">
           <div class="position-size">
             <span>水平位置:</span>
-            <el-input-number v-model="cleft" :min="0" size="mini"></el-input-number>
+            <el-input-number v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
           </div>
           <div class="position-size">
             <span>垂直位置:</span>
-            <el-input-number v-model="ctop" :min="0" size="mini"></el-input-number>
+            <el-input-number v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
           </div>
           <div class="position-size">
             <span>水平大小:</span>
-            <el-input-number v-model="cwidth" :min="400" size="mini"></el-input-number>
+            <el-input-number v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
           </div>
           <div class="position-size">
             <span>垂直大小:</span>
-            <el-input-number v-model="cheight" :min="200" size="mini"></el-input-number>
+            <el-input-number v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -80,9 +80,9 @@ export default {
             width:1,
             height:1,
 
-            ctop:1,//局部显示
-            cleft:1,
-            cwidth:1,
+            ctop:0,//局部显示
+            cleft:0,
+            cwidth:0,
             cheight:0
         };
     },
@@ -134,6 +134,12 @@ export default {
             this.top=curWindow.winSizeArr[1];
             this.width=curWindow.winSizeArr[2];
             this.height=curWindow.winSizeArr[3];
+
+            this.cleft=curWindow.cropSizeArr[0];
+            this.ctop=curWindow.cropSizeArr[1];
+            this.cwidth=curWindow.cropSizeArr[2];
+            this.cheight=curWindow.cropSizeArr[3];
+
         }
     },
     watch:{

@@ -1,5 +1,7 @@
 <template>
-  <div class="card-item" :class="{'card-item-bg':isChecked}">
+  <div class="card-item"
+       :style="{opacity:(globalEvent.screenInfo.scrGroupArr!==undefined && seq>=globalEvent.screenInfo.scrGroupArr.length)?0.6:1}"
+       :class="{'card-item-bg':isChecked || seq==globalEvent.curScreenIndex}">
     <div>
       <img :src="iconImg" class="header-icon" />
     </div>
@@ -11,19 +13,23 @@
 
 <script>
 export default {
-  props: {
-    title: {
-      type: String,
+  props:{
+      title: {
+          type: String,
       default: "未定义",
-    },
-    iconName: {
-      type: String,
+      },
+      iconName: {
+          type: String,
       default: "eleme",
-    },
-    isChecked: {
-      type: Boolean,
+      },
+      isChecked: {
+          type: Boolean,
       default: false,
-    },
+      },
+      seq:{
+          type:String,
+          default:'-1'
+      }
   },
   data() {
     return {
