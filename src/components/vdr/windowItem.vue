@@ -117,7 +117,13 @@
                 },400);
 
             },
-
+            sendSizeEvent(){
+                // console.log("init_size",this.o_width);
+                this.sendEvent({pos:0,v:this.o_left,seq:this.seq});
+                this.sendEvent({pos:1,v:this.o_top,seq:this.seq});
+                this.sendEvent({pos:2,v:this.o_width,seq:this.seq});
+                this.sendEvent({pos:3,v:this.o_height,seq:this.seq});
+            },
             setProp(param){
                 //vdr/index.vue 调用
                 if(param.act=='top' || param.act=='bottom'){
@@ -167,6 +173,11 @@
 
                         this.percent2Ratio();
                         this.stickSize=[];
+
+                        setTimeout(()=>{
+                            // 如果是恢复 需要等待 o_top的计算
+                            this.sendSizeEvent();
+                        },400);
                     }
                     else{
                         this.o_top=Math.ceil(this.ptop*this.$parent.totalHeight/100);
@@ -174,6 +185,7 @@
                         this.o_left=Math.ceil(this.pleft*this.$parent.totalWidth/100);
                         this.o_width=Math.ceil(this.pwidth*this.$parent.totalWidth/100);
                     }
+
 
 
                 }
@@ -184,6 +196,8 @@
                     this.o_top=this.o_left=0;
                     this.o_width=this.$parent.totalWidth;
                     this.o_height=this.$parent.totalHeight;
+
+                    this.sendSizeEvent();
                 }
                 else if (val === "2") {
                     // this.$emit('sub_event',{act:'delete_window_item',seq:this.seq})
@@ -207,6 +221,7 @@
                                                                     });
                     //修改 拖拽坐标 可以在窗口放大后 拖拽
                     this.percent2Ratio();
+                    this.sendSizeEvent();
                     // this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
                     // this.height=Math.ceil(this.pheight*this.$parent.ratioHeight/100);
                     // this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
@@ -373,10 +388,7 @@
                         that.stickSize=[];//窗口发生位移 则取消保存的位置
                     }
 
-                    that.sendEvent({pos:0,v:that.o_left,seq:that.seq});
-                    that.sendEvent({pos:1,v:that.o_top,seq:that.seq});
-                    that.sendEvent({pos:2,v:that.o_width,seq:that.seq});
-                    that.sendEvent({pos:3,v:that.o_height,seq:that.seq});
+                    that.sendSizeEvent();
 
                     document.removeEventListener("mousemove",mv);
                     document.removeEventListener("mouseup",mu);
