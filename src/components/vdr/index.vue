@@ -125,6 +125,8 @@
                 else{
                     this.globalEvent.selectedWindowIndex=0;
                 }
+
+                this.syncLocalName();
             });
             this.globalEvent.$on('update_window',(param)=>{
                 //修改窗口属性
@@ -160,6 +162,11 @@
                 if(['cleft','ctop','cwidth','cheight'].includes(param.act)){
                     this.globalEvent.windowItemsInfo.winArr[w].cropSizeArr[posMap[param.act]]=param.v;
                 }
+                else if(param.act=='label'){
+                    // this.$refs.windowObj[w].label=param.v;
+                    this.globalEvent.windowItemsInfo.winArr[w].label=param.v;
+                    this.syncLocalName();
+                }
                 else{
                     this.$refs.windowObj[w].setWindowSize(param);
                 }
@@ -179,13 +186,13 @@
             loadData(){
                 //screen_info.json
                 this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
+
                     this.globalEvent.screenInfo=ret.data;
                     this.loadScreen(0)
                 })
-                //获取顶部工具区域通用参数
-                this.$http.get("syncCommonInfoRd.cgi",{},(ret)=>{
-                    this.globalEvent.commonInfo=ret.data;
-                });
+            },
+            syncLocalName(){
+                this.globalEvent.syncLocalName("windowItem",this.windowItems)
             },
             getMaxIndexPos(){
                 //交换最大值
@@ -289,6 +296,7 @@
                 this.globalEvent.totalWidth=this.totalWidth;
                 this.globalEvent.totalHeight=this.totalHeight;
 
+
                 this.loadScreenWindowItems();
             },
             loadScreenWindowItems(){
@@ -316,29 +324,17 @@
                 //         "winSizeArr":	[1920, 1080, 1920, 1080]
                 //     }]
                 // };
+                this.globalEvent.loadWindowLocalName();
                 this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                    for(let i in ret.data.winArr){
+                        let win=ret.data.winArr[i];
+                        win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,win.srcCardId,win.srcId);
+                    }
                     this.globalEvent.windowItemsInfo=ret.data;
                     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+                    this.syncLocalName();
                 });
             },
-            // addWindowItem(){
-            //     console.log(this.globalEvent.selectedCard);
-            //     let len=this.windowItems.length;
-            //     let left=100*len;
-            //     let top=100*len;
-            //     let emptyItem={
-            //         "winId":len,
-            //         "srcGroupId":	0,
-            //         "srcCardId":	1,
-            //         "srcId":	0,
-            //         "layerId":	len,
-            //         "partOrAll":	0,
-            //         "cropSizeArr":	[0, 0, 0, 0],
-            //         "winSizeArr":	[left, top, 1920, 1080]
-            //     };
-            //     console.log(emptyItem);
-            //     this.windowItems.push(emptyItem);
-            // },
             mouseWheel(e) {
                 // let wh_ratio=this.totalWidth/this.totalHeight;
                 if(e.wheelDelta>0){

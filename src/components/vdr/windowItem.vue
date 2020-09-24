@@ -18,7 +18,7 @@
 
             <div class="title"  data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:{{globalEvent.cardLabelExtra(item.srcCardId,item.srcId)}}</span>
+                    <span>Win-{{seq+1}}:{{item.label}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">

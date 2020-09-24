@@ -17,7 +17,7 @@
       <el-button size="mini" @click="closeWindowItem('cur')">关闭</el-button>
     </div>
     <div class="title">
-      <el-input placeholder="请输入画面名称" v-model="title" size="mini">
+      <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
         <template slot="prepend">画面名称:</template>
       </el-input>
     </div>
@@ -70,7 +70,7 @@ export default {
         return {
             activeName: "1",
             isPanorama: true,
-            title: "",
+            label: "",
             num: 0,
 
             totalWidth:0,
@@ -130,6 +130,7 @@ export default {
             //初始化当前参数
             let curWindow=this.globalEvent.windowItemsInfo.winArr[seq];
 
+            this.label=curWindow.label;
             this.left=curWindow.winSizeArr[0];
             this.top=curWindow.winSizeArr[1];
             this.width=curWindow.winSizeArr[2];

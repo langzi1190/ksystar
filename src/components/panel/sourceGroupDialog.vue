@@ -1,27 +1,27 @@
 <template>
     <div class="scene_carousel_dialog">
-        <el-dialog title="轮巡方案设置" :visible="true" @close="op(false)">
+        <el-dialog title="信号源分组设置" :visible="true" @close="op(false)">
             <div class="top_part">
-                <div>轮巡方案名称 : </div>
+                <div>源组名称 : </div>
                 <div class="label_group">
-                    <el-input v-model="sceneName" size="mini"/>
+                    <el-input v-model="srcGroupName" size="mini"/>
                 </div>
             </div>
             <div class="dialog_body">
                 <div class="left_body">
                     <div class="scene_item"
-                         :class="{selected_secene_item:selectedUserScene==index}"
-                         @click="selectUserScene(index,'')"
-                         v-for="(item,index) in userSceneList">{{item.label}}</div>
+                         :class="{selected_secene_item:selectedSrcCard==index}"
+                         @click="selectSrcCard(index,'')"
+                         v-for="(item,index) in srcCardList">{{item.label}}</div>
                 </div>
                 <div class="middle_body">
-                    <el-button size="mini" @click="addUserScene">添加布局  >> </el-button>
+                    <el-button size="mini" @click="addSrcCard">添加布局  >> </el-button>
                 </div>
                 <div class="right_body">
                     <div class="scene_item"
-                         :class="{selected_secene_item:selectedOpUserScene==index}"
-                         @click="selectUserScene(index,'op')"
-                         v-for="(item,index) in selectedUserSceneList">{{item.label}}</div>
+                         :class="{selected_secene_item:selectedOpSrcCard==index}"
+                         @click="selectSrcCard(index,'op')"
+                         v-for="(item,index) in selectedSrcCardList">{{item.label}} {{item.tLabel}}</div>
 
                 </div>
             </div>
@@ -47,8 +47,8 @@
                     <div class="modifySub" @click.stop="modifyTime('sub')">-</div>
                 </div>
 
-                <el-button size="mini" @click="opRightScene('del')">删除布局</el-button>
-                <el-button size="mini" @click="opRightScene('edit')">编辑布局时长</el-button>
+                <el-button size="mini" @click="opRightScene('del')">删除信号源</el-button>
+                <el-button size="mini" @click="opRightScene('edit')">编辑信号源时长</el-button>
             </div>
             <div class="button_group_bottom">
                 <el-button size="mini" @click="op(true)">确定</el-button>
@@ -63,39 +63,39 @@
         props:['showSceneDialog'],
         data(){
             return {
-                sceneName:'',
+                srcGroupName:'',
                 timeEditMode:-1,//-1 左边，>-1右边
                 d:0,
                 h:0,
                 m:5,
                 s:0,
                 modifyLabel:'',//正在修改的
-                userSceneList:[],
+                srcCardList:[],
 
-                selectedUserScene:-1,
-                selectedUserSceneList:[],
+                selectedSrcCard:-1,//左边 选中 index
+                selectedSrcCardList:[],
 
-                selectedOpUserScene:-1,//待删除/编辑的用户模式
+                selectedOpSrcCard:-1,//待删除/编辑的用户模式
             };
         },
         mounted(){
-            document.addEventListener("click",this.clearModifyLabel)
+            document.addEventListener("click",this.clearModifyLabel);
 
-            let presetStaArr=this.globalEvent.commonInfo.presetStaArr;
-            this.userSceneList=[];
+            let presetStaArr=this.globalEvent.inputCardList;
+            this.srcCardList=[];
             for(let i in presetStaArr){
-                if(presetStaArr[i]>0){
-                    // this.userSceneList.push(parseInt(i)+1);
-                    this.userSceneList.push({
-                        label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
-                        value:presetStaArr[i]
+                for(let k in presetStaArr[i].srcArr){
+                    this.srcCardList.push({
+                        label:presetStaArr[i].srcArr[k].label_extra,
+                        srcCardId:i,
+                        srcId:k
                     });
                 }
             }
 
             if(this.showSceneDialog=='edit'){
-                this.sceneName=this.$parent.selectedScene.label;
-                this.selectedUserSceneList=JSON.parse(JSON.stringify(this.$parent.selectedScene.presetArr));
+                this.srcGroupName=this.$parent.selectedSource.label;
+                this.selectedSrcCardList=JSON.parse(JSON.stringify(this.$parent.selectedSource.srcArr));
             }
         },
         destroyed(){
@@ -115,7 +115,7 @@
         methods:{
             op(act){
                 if(act){
-                    this.$emit("sub_event",{act:'updateScene',label:this.sceneName,list:this.selectedUserSceneList});
+                    this.$emit("sub_event",{act:'updateSrcGroup',label:this.srcGroupName,list:this.selectedSrcCardList});
                 }else{
                     this.$emit("sub_event",{act:'closeDialog'});
                 }
@@ -126,16 +126,16 @@
             doubleNum(v){
                 return v<10?'0'+v:v;
             },
-            selectUserScene(index,act){
+            selectSrcCard(index,act){
                 if(act=='op'){
                     //待操作 用户模式
-                    this.selectedOpUserScene=index;
+                    this.selectedOpSrcCard=index;
                     if(this.timeEditMode!=index){
                         this.timeEditMode=-1;//恢复左侧编辑模式
                     }
                 }
                 else{
-                    this.selectedUserScene=index;
+                    this.selectedSrcCard=index;
                     this.timeEditMode=-1;//恢复左侧编辑模式
                 }
 
@@ -147,10 +147,9 @@
             syncRightScene(){
 
                 if(this.timeEditMode>-1){
-                    //右侧编辑 选中的用户模式，实时改变时间,modifyTime,setModifyLabel
-                    let dataArr=this.selectedUserSceneList[this.selectedOpUserScene];
-                    dataArr.dataArr=[dataArr.dataArr[0],this.d,this.h,this.m,this.s];
-                    dataArr.label=this.$parent.userSceneName(dataArr.dataArr)+this.$parent.userSceneTime(dataArr.dataArr);
+                    let dataArr=this.selectedSrcCardList[this.selectedOpSrcCard];
+                    dataArr.dataArr=[dataArr.dataArr[0],dataArr.dataArr[1],this.d,this.h,this.m,this.s];
+                    dataArr.tLabel=this.$parent.userSceneTime(dataArr.dataArr);
                 }
             },
             modifyTime(act){
@@ -183,30 +182,40 @@
                     this[label]=0;
                 }
             },
-            addUserScene(){
+            addSrcCard(){
                 //添加布局，right scene Id 保存的时候需要减 1
-                if(this.selectedUserScene==-1){
+                if(this.selectedSrcCard==-1){
                     return ;
                 }
-                let arr=[this.userSceneList[this.selectedUserScene]-1,this.d,this.h,this.m,this.s];
 
-                this.selectedUserSceneList.push({
-                    label:"用户模式 "+(arr[0]+1)+this.$parent.userSceneTime(arr),
+                let arr=[this.srcCardList[this.selectedSrcCard].srcCardId,this.srcCardList[this.selectedSrcCard].srcId,this.d,this.h,this.m,this.s];
+
+                for(let i in this.selectedSrcCardList){
+                    let dataArr=this.selectedSrcCardList[i].dataArr;
+                    if(dataArr[0]==arr[0] && dataArr[1]==arr[1]){
+                        alert("已经选入");
+                        return ;
+                    }
+                }
+
+                this.selectedSrcCardList.push({
+                    label:this.globalEvent.signalCardName(arr[0],arr[1]),
+                    tLabel:this.$parent.userSceneTime(arr),
                     dataArr:arr
                 });
             },
             opRightScene(act){
-                if(act=='del' && this.selectedOpUserScene>-1){
-                    this.selectedUserSceneList.splice(this.selectedOpUserScene,1);
-                    this.selectedOpUserScene=-1;
+                if(act=='del' && this.selectedOpSrcCard>-1){
+                    this.selectedSrcCardList.splice(this.selectedOpSrcCard,1);
+                    this.selectedOpSrcCard=-1;
                 }
-                else if(act=='edit' && this.selectedOpUserScene>-1){
-                    let rightScene=this.selectedUserSceneList[this.selectedOpUserScene];
-                    this.d=rightScene.dataArr[1];
-                    this.h=rightScene.dataArr[2];
-                    this.m=rightScene.dataArr[3];
-                    this.s=rightScene.dataArr[4];
-                    this.timeEditMode=this.selectedOpUserScene;
+                else if(act=='edit' && this.selectedOpSrcCard>-1){
+                    let rightScene=this.selectedSrcCardList[this.selectedOpSrcCard];
+                    this.d=rightScene.dataArr[2];
+                    this.h=rightScene.dataArr[3];
+                    this.m=rightScene.dataArr[4];
+                    this.s=rightScene.dataArr[5];
+                    this.timeEditMode=this.selectedOpSrcCard;
                 }
             }
         }

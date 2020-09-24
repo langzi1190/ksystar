@@ -24,6 +24,7 @@
               {{item.label}}
             </div>
             <div class="list_item" v-show="selectedSceneIndex==index">
+              <el-button size="mini" @click="editScene">改名</el-button>
               <el-button size="mini" @click="loadScene">载入</el-button>
             </div>
           </template>
@@ -44,15 +45,32 @@
           <img class="header-icon" src="@/assets/images/signal.png" />
           <span class="content-list-title">信号源分组</span>
         </template>
-        <div class="content-list">信号源分组</div>
+        <div class="content-list">
+            <sourceGroup></sourceGroup>
+        </div>
       </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
 <script>
-  import sceneCarousel from "@/components/signal/sceneCarousel"
+  import sceneCarousel from "@/components/signal/sceneCarousel";
+  import sourceGroup from "@/components/signal/sourceGroup";
 export default {
+    created(){
+        //获取顶部工具区域通用参数
+        this.$http.get("syncCommonInfoRd.cgi",{},(ret)=>{
+
+            for(let i in ret.data.presetStaArr){
+                this.userSceneList.push({
+                    label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
+                    value:ret.data.presetStaArr[i]
+                });
+            }
+            this.syncLocalName();
+            this.globalEvent.commonInfo=ret.data;
+        });
+    },
     data() {
         return {
             inputCardList:[],
@@ -61,7 +79,7 @@ export default {
 
             presetList:[],
             scenePollingList:[],
-            srcGroupList:[],
+            // srcGroupList:[],
 
             activeName: "0", // 侧边栏选项
             activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
@@ -78,16 +96,19 @@ export default {
             this.syscInputInfo(ret.data);
         });
 
-        this.$http.get("scenePollingRd.cgi",{},(ret)=>{
-            this.scenePollingList=ret.data;
-        });
-        this.$http.get("srcGroupRd.cgi",{},(ret)=>{
-            this.srcGroupList=ret.data;
-        });
+        // this.$http.get("scenePollingRd.cgi",{},(ret)=>{
+        //     this.scenePollingList=ret.data;
+        // });
+        // this.$http.get("srcGroupRd.cgi",{},(ret)=>{
+        //     this.srcGroupList=ret.data;
+        // });
     },
     methods:{
-        int(i){
-            return parseInt(i);
+        // int(i){
+        //     return parseInt(i);
+        // },
+        syncLocalName(){
+            this.globalEvent.syncLocalName('sceneUserName',this.userSceneList);
         },
         renderContent(h,{node,data,store}){
             if(node.level==1){
@@ -133,7 +154,7 @@ export default {
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
                     inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
-                    inCardArr[i].srcArr[k].label_extra='S'+(this.int(i)+1)+'_'+(this.int(k)+1);
+                    inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);//'S'+(this.int(i)+1)+'_'+(this.int(k)+1);
                 }
             }
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
@@ -160,6 +181,19 @@ export default {
                 }
             }
         },
+        editScene(){
+            let s=prompt("输入新名称");
+            if(s===null){
+                return ;
+            }
+            else if(s==''){
+                alert("不能为空");
+                return ;
+            }
+            this.userSceneList[this.selectedSceneIndex].label=s;
+            this.syncLocalName();
+
+        },
         loadScene(){
             if(this.userSceneList[this.selectedSceneIndex].value==0){
                 alert("该模式没有内容");
@@ -175,20 +209,20 @@ export default {
         }
     },
     components:{
-        sceneCarousel
+        sceneCarousel,
+        sourceGroup
     },
-    watch:{
-        "globalEvent.commonInfo":function (v,ov) {
-            // this.userSceneList=v.presetStaArr;
-            this.userSceneList=[];
-            for(let i in v.presetStaArr){
-                this.userSceneList.push({
-                    label:'用户模式 '+(this.int(i)+1),
-                    value:v.presetStaArr[i]
-                });
-            }
-        }
-    }
+    // watch:{
+    //     "globalEvent.commonInfo":function (v,ov) {
+    //         this.userSceneList=[];
+    //         for(let i in v.presetStaArr){
+    //             this.userSceneList.push({
+    //                 label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
+    //                 value:v.presetStaArr[i]
+    //             });
+    //         }
+    //     }
+    // }
 
 };
 </script>
