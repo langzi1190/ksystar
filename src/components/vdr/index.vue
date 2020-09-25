@@ -238,6 +238,8 @@
                 this.curScreen=curScreen;
                 this.globalEvent.curScreenIndex=seq;
 
+                this.globalEvent.loadWindowLocalName();
+
                 this.row=curScreen.Row;
                 this.col=curScreen.Col;
                 this.ratio=1;
@@ -324,7 +326,6 @@
                 //         "winSizeArr":	[1920, 1080, 1920, 1080]
                 //     }]
                 // };
-                this.globalEvent.loadWindowLocalName();
                 this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
