@@ -21,13 +21,13 @@
               <card-item title="屏幕配置" iconName="display" @click.native="setting('2')"></card-item>
             </card>
             <card title="预设">
-              <card-item title="用户模式"></card-item>
-              <card-item title="保存模式"></card-item>
+              <card-item title="用户模式" @click.native="showDialog='userModel'"></card-item>
+              <card-item title="保存模式" @click.native="showDialog='saveUserModel'"></card-item>
               <card-item title="出厂设置"></card-item>
               <card-item title="同步"></card-item>
               <card-item title="打开回显" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
               <card-item title="关闭回显" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
-              <card-item title="回显配置"></card-item>
+              <card-item title="回显配置" @click.native="showDialog='monIp'"></card-item>
             </card>
             <card title="屏幕切换">
               <card-item title="屏幕墙 1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
@@ -47,7 +47,7 @@
               <div class="card-item">
                 <card-child title="开屏" iconName="display"></card-child>
                 <card-child title="关屏" iconName="display"></card-child>
-                <card-child title="通道设置" iconName="display"></card-child>
+                <card-child title="通道设置" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
               </div>
             </card>
             <card title="锁定">
@@ -63,26 +63,26 @@
           <div class="card-s">
             <card title="高级菜单">
               <card-item title="用户"></card-item>
-              <card-item title="亮度"></card-item>
+              <card-item @click.native="showDialog='screenBright'" title="亮度"></card-item>
               <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
               <card-item @click.native="showDialog='multi'" title="多机同步"></card-item>
               <card-item title="输出关闭"></card-item>
               <card-item title="输出开启"></card-item>
               <card-item title="导入配置"></card-item>
               <card-item title="导出配置"></card-item>
-              <card-item title="EDID"></card-item>
+              <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
             </card>
             <card title="语言选择">
               <card-item title="语言设置"></card-item>
             </card>
             <card title="专家系统">
               <card-item @click.native="showDialog='serial'" title="串口设置"></card-item>
-              <card-item title="网络设置"></card-item>
+              <card-item title="网络设置" @click.native="showDialog='ipConfig'"></card-item>
               <card-item title="计算器"></card-item>
               <card-item title="演示模式"></card-item>
               <card-item title="测试"></card-item>
               <card-item title="版本控制"></card-item>
-              <card-item title="温度信息"></card-item>
+              <card-item @click.native="showDialog='temp'" title="温度信息"></card-item>
               <card-item title="ARM升级"></card-item>
               <card-item style="width: 56px;" title="FPGA升级"></card-item>
             </card>
@@ -92,7 +92,7 @@
     </header>
     <center>
       <!-- 侧边栏选项 -->
-      <signal></signal>
+      <signal ref="signal"></signal>
       <!-- 屏幕编辑与显示 -->
       <div class="content">
         <div class="content-title">模拟操作</div>
@@ -129,8 +129,16 @@
     <!-- 弹窗集合组件 -->
       <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
       <kfsDialog @sub_event="subEvent" :showDialog="showDialog"></kfsDialog>
+      <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
+      <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
       <serialDialog @sub_event="subEvent" :showDialog="showDialog"></serialDialog>
+      <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
+      <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog"></multiSyncDialog>
+      <edidDialog @sub_event="subEvent" :showDialog="showDialog"></edidDialog>
+      <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog"></screenCtrDialog>
+      <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
+      <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
   </div>
 </template>
 
@@ -146,6 +154,14 @@ import attr from "@/components/attr";
 import kfsDialog from "@/components/panel/kfsDialog";
 import serialDialog from "@/components/panel/serialDialog";
 import multiSyncDialog from "@/components/panel/multiSyncDialog";
+import userModelDialog from "@/components/panel/userModelDialog";
+import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
+import monIpDialog from "@/components/panel/monIpDialog";
+import ipConfigDialog from "@/components/panel/ipConfigDialog";
+import edidDialog from "@/components/panel/edidDialog";
+import screenCtrDialog from "@/components/panel/screenCtrDialog";
+import screenBrightDialog from "@/components/panel/screenBrightDialog";
+import tempDialog from "@/components/panel/tempDialog";
 
 export default {
   name: "Home",
@@ -208,6 +224,15 @@ export default {
           if('close_kfs'==param.act){
               this.showDialog='';
           }
+          else if('select_user_model'==param.act){
+              this.showDialog='';
+              this.$refs.signal.loadUserModel(param.v);
+          }
+          else if("update_user_model"==param.act){
+              this.$refs.signal.userSceneList[param.seq].label=param.name;
+              this.$refs.signal.syncLocalName();
+              this.showDialog='';
+          }
       }
   },
   components: {
@@ -220,7 +245,15 @@ export default {
       signal,
       kfsDialog,
       serialDialog,
-      multiSyncDialog
+      multiSyncDialog,
+      userModelDialog,
+      saveUserModelDialog,
+      monIpDialog,
+      ipConfigDialog,
+      edidDialog,
+      screenCtrDialog,
+      screenBrightDialog,
+      tempDialog,
   },
 };
 </script>

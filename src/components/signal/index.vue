@@ -201,11 +201,14 @@ export default {
             else{
                 //载入用户模式
 
-                this.$http.post("loadPreset.cgi",{presetId:this.selectedSceneIndex},(ret)=>{
-                    console.log("signal/index.vue 载入用户模式");
-                    console.log(ret.data);
-                });
+               this.loadUserModel(this.selectedSceneIndex);
             }
+        },
+        loadUserModel(v){
+            this.$http.post("loadPreset.cgi",{presetId:v},(ret)=>{
+                console.log("signal/index.vue 载入用户模式");
+                console.log(ret.data);
+            });
         }
     },
     components:{

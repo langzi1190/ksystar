@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://192.168.0.100/';//'http://192.168.0.100/';
+const baseURL = '';//'http://192.168.0.100/';
 
 let http = axios.create({
   baseURL: baseURL,
@@ -35,6 +35,8 @@ function apiAxios(method, url, params, response) {
         "closeWin.cgi":"/new_win.json",
         "closeAllWin.cgi":"/new_win.json",
         "winLayerWr.cgi":"/new_win.json",
+        "ipCfgRd.cgi":"ip_config.json",
+        "monitorIpWr.cgi":"ip_config.json",
     };
       url=urlTrans[url];
       method='GET';

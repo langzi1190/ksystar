@@ -187,7 +187,13 @@
                 //screen_info.json
                 this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
 
+
+                    for(let i in ret.data.scrGroupArr){
+                        ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
+                    }
+
                     this.globalEvent.screenInfo=ret.data;
+
                     this.loadScreen(0)
                 })
             },

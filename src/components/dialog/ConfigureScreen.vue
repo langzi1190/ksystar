@@ -65,8 +65,6 @@ export default {
           this.syncScrInfoRd();
       });
 
-
-
   },
   methods: {
       syncOutputInfoRd(outPortListInfo){
@@ -78,10 +76,8 @@ export default {
       syncScrInfoRd(){
           //屏幕墙
           this.displayList=this.screenInfo.scrGroupArr;
-          for(let i in this.displayList){
-              this.$set(this.displayList[i],'tabName',this.newTabname());
-          }
           this.curTabName=this.displayList[0].tabName;
+          console.log("configureScreen",this.curTabName);
       },
       newTabname(){
           return 'name'+parseInt(Math.random()*10000);
