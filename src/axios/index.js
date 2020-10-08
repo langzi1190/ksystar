@@ -37,6 +37,7 @@ function apiAxios(method, url, params, response) {
         "winLayerWr.cgi":"/new_win.json",
         "ipCfgRd.cgi":"ip_config.json",
         "monitorIpWr.cgi":"ip_config.json",
+        "fpgaTempRd.cgi":"temperature.json",
     };
       url=urlTrans[url];
       method='GET';

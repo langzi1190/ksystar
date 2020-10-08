@@ -16,6 +16,7 @@ module.exports = {
             "error",
             2 //我的是编辑器自动格式化，不是使用tabs，而是四个空格
         ],
+        "no-debugger":"off",
         "linebreak-style": [
             0,
             "error",

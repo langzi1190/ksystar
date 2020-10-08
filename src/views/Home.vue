@@ -178,8 +178,6 @@ export default {
         // scale:1,
     };
   },
-  created() {
-  },
   methods: {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置
       preinstall(setFn) {
