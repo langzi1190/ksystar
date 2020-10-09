@@ -3,7 +3,7 @@
         <el-dialog title="多机设置" :visible="showDialog=='multi'" @close="op(false)">
             <div class="item">
                 <span>控制卡同步：</span>
-                <el-select v-model="controlSync" placeholder="同步基准源" size="mini">
+                <el-select v-model="controlSync" size="mini">
                     <el-option
                             v-for="(item,index) in syncList"
                             :key="item"
@@ -14,9 +14,21 @@
             </div>
             <div class="item">
                 <span>信号源卡ID：</span>
-                <el-select v-model="controlSync" placeholder="" size="mini">
+                <el-select v-model="cardId"  size="mini">
                     <el-option
-                            v-for="(item,index) in syncList"
+                            v-for="(item,index) in cardIdList"
+                            :key="item"
+                            :label="item"
+                            :value="index"
+                    ></el-option>
+                </el-select>
+            </div>
+
+            <div class="item">
+                <span>信 号 源 ID：</span>
+                <el-select v-model="sourceId" placeholder="" size="mini">
+                    <el-option
+                            v-for="(item,index) in sourceIdList"
                             :key="item"
                             :label="item"
                             :value="index"
@@ -41,17 +53,39 @@
                 controlSync:0,
 
                 cardIdList:[],
-                sourceCardIdList:[],
-                sourceId:[],
+                sourceIdList:[],
+                cardId:0,
+                sourceId:0,
             };
         },
+        mounted(){
+            for(let i in this.globalEvent.inputCardList){
+                this.cardIdList.push(++i);
+            }
+            if(this.cardIdList.length>0)
+                    this.selectCard(0);
+        },
+        watch:{
+            cardId(v,ov){
+                this.selectCard(v);
+            }
+        },
         methods:{
+            selectCard(index){
+                let inputCard=this.globalEvent.inputCardList;
+                this.sourceIdList=[];
+                this.sourceId=0;
+                for(let i in inputCard[index].srcArr){
+                    this.sourceIdList.push(++i);
+                }
+
+            },
             op(act){
                 if(!act){
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else{
-                    console.log("sure");
+                    console.log(this.cardId,this.sourceId);
                 }
             }
         }

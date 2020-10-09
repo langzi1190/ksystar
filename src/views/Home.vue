@@ -80,8 +80,8 @@
               <card-item title="网络设置" @click.native="showDialog='ipConfig'"></card-item>
               <card-item title="计算器"></card-item>
               <card-item title="演示模式"></card-item>
-              <card-item title="测试"></card-item>
-              <card-item title="版本控制"></card-item>
+              <card-item @click.native="showDialog='deviceStatus'" title="测试"></card-item>
+              <card-item @click.native="showDialog='version'" title="版本信息"></card-item>
               <card-item @click.native="showDialog='temp'" title="温度信息"></card-item>
               <card-item title="ARM升级"></card-item>
               <card-item style="width: 56px;" title="FPGA升级"></card-item>
@@ -134,11 +134,13 @@
       <serialDialog @sub_event="subEvent" :showDialog="showDialog"></serialDialog>
       <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
-      <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog"></multiSyncDialog>
+      <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
       <edidDialog @sub_event="subEvent" :showDialog="showDialog"></edidDialog>
       <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog"></screenCtrDialog>
       <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
       <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
+      <versionDialog @sub_event="subEvent" v-if="showDialog=='version'" :showDialog="showDialog"></versionDialog>
+      <deviceStatusDialog @sub_event="subEvent" v-if="showDialog=='deviceStatus'" :showDialog="showDialog"></deviceStatusDialog>
   </div>
 </template>
 
@@ -162,6 +164,8 @@ import edidDialog from "@/components/panel/edidDialog";
 import screenCtrDialog from "@/components/panel/screenCtrDialog";
 import screenBrightDialog from "@/components/panel/screenBrightDialog";
 import tempDialog from "@/components/panel/tempDialog";
+import versionDialog from "@/components/panel/versionDialog";
+import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
 
 export default {
   name: "Home",
@@ -252,6 +256,8 @@ export default {
       screenCtrDialog,
       screenBrightDialog,
       tempDialog,
+      versionDialog,
+      deviceStatusDialog,
   },
 };
 </script>
