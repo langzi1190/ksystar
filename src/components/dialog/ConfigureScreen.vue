@@ -41,7 +41,6 @@
 import csParameter from "@/components/dialog/ConfigureScreenParameter";
 import csArray from "@/components/dialog/ConfigureScreenArray";
 
-
 export default {
   props: ['dialogVisible'],
   data() {

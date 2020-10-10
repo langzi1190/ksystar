@@ -1,17 +1,17 @@
 <template>
   <div id="popup">
     <!-- 屏幕配置 -->
-    <configure-screen
+    <ConfigureScreen
       v-if="(title === 'ConfigureScreen')&&(dialogVisible)"
       :dialogVisible="dialogVisible"
-      :data="data"
       @isDialogVisible="isDialogVisible"
-    ></configure-screen>
+    ></ConfigureScreen>
   </div>
 </template>
 
 <script>
 import ConfigureScreen from "@/components/dialog/ConfigureScreen";
+// const ConfigureScreen=()=>{import("@/components/dialog/ConfigureScreen")};
 export default {
   name: "popup",
   props: {
@@ -22,10 +22,6 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false
-    },
-    data: {
-      type: Object,
-      default: () => {}
     }
   },
   methods: {

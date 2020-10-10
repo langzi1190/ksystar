@@ -4,10 +4,13 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    // "extends": "eslint:recommended",
+
     "parserOptions": {
+        "parser": "babel-eslint",
         "ecmaVersion": 2015,
-        "sourceType": "module"
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
     },
     "parser": "vue-eslint-parser",
     "rules": {
@@ -54,5 +57,6 @@ module.exports = {
         "comma-dangle": [0,2, "never"],
         //this别名
         "consistent-this": [2, "that"],
+        "global-require": 0
     }
 };

@@ -179,8 +179,10 @@ const hertz = [
     label: "50HZ"
   }
 ];
-import Rs from '@/components/dialog/ResolutionSet';
-import Ts from '@/components/dialog/TimeSeq';
+// import Rs from '@/components/dialog/ResolutionSet';
+// import Ts from '@/components/dialog/TimeSeq';
+const Rs=()=>{import('@/components/dialog/ResolutionSet');}
+const Ts=()=>{import('@/components/dialog/TimeSeq');}
 export default {
   props:['item','seq'],
   data() {

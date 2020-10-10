@@ -149,23 +149,40 @@
 import card from "@/components/operation/Card";
 import cardItem from "@/components/operation/CardItem";
 import cardChild from "@/components/operation/CardChild";
-import udialog from "@/components/dialog";
-import signal from "@/components/signal";
-import vdr from "@/components/vdr";
-import attr from "@/components/attr";
-import kfsDialog from "@/components/panel/kfsDialog";
-import serialDialog from "@/components/panel/serialDialog";
-import multiSyncDialog from "@/components/panel/multiSyncDialog";
-import userModelDialog from "@/components/panel/userModelDialog";
-import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
-import monIpDialog from "@/components/panel/monIpDialog";
-import ipConfigDialog from "@/components/panel/ipConfigDialog";
-import edidDialog from "@/components/panel/edidDialog";
-import screenCtrDialog from "@/components/panel/screenCtrDialog";
-import screenBrightDialog from "@/components/panel/screenBrightDialog";
-import tempDialog from "@/components/panel/tempDialog";
-import versionDialog from "@/components/panel/versionDialog";
-import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+// import udialog from "@/components/dialog";
+const udialog = ()=>import("@/components/dialog");
+// import signal from "@/components/signal";
+const signal = ()=>import("@/components/signal");
+// import vdr from "@/components/vdr";
+const vdr = ()=>import("@/components/vdr");
+// import attr from "@/components/attr";
+const attr = ()=>import("@/components/attr");
+// import kfsDialog from "@/components/panel/kfsDialog";
+const kfsDialog = ()=>import("@/components/panel/kfsDialog");
+// import serialDialog from "@/components/panel/serialDialog";
+const serialDialog = ()=>import("@/components/panel/serialDialog");
+// import multiSyncDialog from "@/components/panel/multiSyncDialog";
+const multiSyncDialog = ()=>import("@/components/panel/multiSyncDialog");
+// import userModelDialog from "@/components/panel/userModelDialog";
+const userModelDialog = ()=>import("@/components/panel/userModelDialog");
+// import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
+const saveUserModelDialog = ()=>import("@/components/panel/saveUserModelDialog");
+// import monIpDialog from "@/components/panel/monIpDialog";
+const monIpDialog = ()=>import("@/components/panel/monIpDialog");
+// import ipConfigDialog from "@/components/panel/ipConfigDialog";
+const ipConfigDialog = ()=>import("@/components/panel/ipConfigDialog");
+// import edidDialog from "@/components/panel/edidDialog";
+const edidDialog = ()=>import("@/components/panel/edidDialog");
+// import screenCtrDialog from "@/components/panel/screenCtrDialog";
+const screenCtrDialog = ()=>import("@/components/panel/screenCtrDialog");
+// import screenBrightDialog from "@/components/panel/screenBrightDialog";
+const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
+// import tempDialog from "@/components/panel/tempDialog";
+const tempDialog = ()=>import("@/components/panel/tempDialog");
+// import versionDialog from "@/components/panel/versionDialog";
+const versionDialog = ()=>import("@/components/panel/versionDialog");
+// import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
 
 export default {
   name: "Home",
@@ -196,7 +213,7 @@ export default {
     },
     // 设置:1-创建画面、2-屏幕配置
       setting(setFn) {
-        console.log(setFn);
+
         if (setFn === "1") {
           console.log("创建画面");
         }
