@@ -43,6 +43,7 @@
                     }
                 }
                 this.sourceList=srcGroupArr;
+                this.isPlay=ret.data.funcSta;
                 //初始载入 同步一次本地名称
                 this.syncLocalName();
             })
@@ -125,15 +126,15 @@
                         let index=this.selectedSource.srcArr.findIndex((item)=>{return item==this.selectedCard});
                         this.selectedSource.srcArr.splice(index,1);
                     }
-
-
-
+                    this.syncSourceList();
                 }
                 else if('play'==act && 0==this.isPlay){
                     this.isPlay=1;
+                    this.syncSourceList();
                 }
                 else if('stop'==act  && 1==this.isPlay){
                     this.isPlay=0;
+                    this.syncSourceList();
                 }
                 else if('up'==act && 0==this.isPlay && Object.keys(this.selectedSource).length>0){
                     //上移动  sceneId 需要与数组顺序相同
@@ -142,7 +143,8 @@
                         if(index>0){
                             let scene=this.sourceList.splice(index,1);
                             this.sourceList.splice(index-1,0,scene[0]);
-                            this.updateTree();
+                            // this.updateTree();
+                            this.syncSourceList();
                         }
                     }
                     else{
@@ -151,7 +153,8 @@
                         if(index>0){
                             let scene=srcArr.splice(index,1);
                             srcArr.splice(index-1,0,scene[0]);
-                            this.updateTree();
+                            // this.updateTree();
+                            this.syncSourceList();
                         }
                     }
 
@@ -163,7 +166,8 @@
                         if(index<this.sourceList.length-1){
                             let scene=this.sourceList.splice(index,1);
                             this.sourceList.splice(index+1,0,scene[0]);
-                            this.updateTree();
+                            // this.updateTree();
+                            this.syncSourceList();
                         }
                     }
                     else{
@@ -172,12 +176,54 @@
                         if(index>0){
                             let scene=srcArr.splice(index,1);
                             srcArr.splice(index+1,0,scene[0]);
-                            this.updateTree();
+                            // this.updateTree();
+                            this.syncSourceList();
                         }
                     }
-
-
                 }
+
+            },
+            syncSourceList(){
+                let param={
+                    funcSta:this.isPlay,
+                    srcGroupNum:this.sourceList.length,
+                    srcGroupArr:[]
+                    // srcGroupArr:[
+                    //     {
+                    //         srcGroupId:0,
+                    //         srcNum:0,
+                    //         srcArr:[
+                    //             {
+                    //                 dataArr:[
+                    //                     {
+                    //                         srcCardId:0,
+                    //                         srcId:0,
+                    //                     }
+                    //                 ]
+                    //             }
+                    //         ]
+                    //     }
+                    // ]
+                };
+
+                for(let i in this.sourceList){
+                    let srcGroup={
+                        srcGroupId:i,//todo 保存的时候 id 也重排么？
+                        srcNum:this.sourceList[i].srcArr.length,
+                        srcArr:[]
+                    };
+                    for(let k in this.sourceList[i].srcArr){
+                        let src={
+                            dataArr:this.sourceList[i].srcArr[k]
+                        };
+                        srcGroup.srcArr.push(src);
+                    }
+                    param.srcGroupArr.push(srcGroup);
+                }
+
+                this.$http.post("srcGroupWr.cgi",param,(ret)=>{
+                    this.updateTree();
+                });
             },
             subEvent(param){
                 if('closeDialog'==param.act){

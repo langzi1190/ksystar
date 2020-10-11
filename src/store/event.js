@@ -38,6 +38,7 @@ let gobalEvent =new Vue({
         inputCardList:[],//signal index.vue 初始化
         commonInfo:{},
         sceneCarousel:{},//用户场景轮巡
+        versionInfo:{},
 
         keys:{
             'srcGroup':'src_group_name',//源组

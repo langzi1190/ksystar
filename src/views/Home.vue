@@ -100,7 +100,7 @@
           <!-- 窗口编辑面板 -->
           <div class="draw-panel">
             <div class="draw-content" :class="{'draw-center':(drawCenter&&!isEcho)}">
-              <vdr @alignCenter="alignCenter"></vdr>
+              <vdr ref="vdr" @alignCenter="alignCenter"></vdr>
             </div>
           </div>
           <!-- 回显 -->
@@ -117,18 +117,18 @@
     <!-- 底部设备信息 -->
     <footer>
       <div class="status-bar">
-        <div>通讯状态:</div>
-        <div>
-          <img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />
-          <img v-show="true" class="header-icon" src="@/assets/images/failed.png" />
-        </div>
+        <!--<div>通讯状态:</div>-->
+        <!--<div>-->
+          <!--<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />-->
+          <!--<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />-->
+        <!--</div>-->
         <div>设备型号:</div>
-        <div title="A123411">A123411</div>
+        <div>{{devType}}</div>
       </div>
     </footer>
     <!-- 弹窗集合组件 -->
       <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
-      <kfsDialog @sub_event="subEvent" :showDialog="showDialog"></kfsDialog>
+      <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
       <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
       <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
       <serialDialog @sub_event="subEvent" :showDialog="showDialog"></serialDialog>
@@ -149,43 +149,66 @@
 import card from "@/components/operation/Card";
 import cardItem from "@/components/operation/CardItem";
 import cardChild from "@/components/operation/CardChild";
-// import udialog from "@/components/dialog";
+
 const udialog = ()=>import("@/components/dialog");
-// import signal from "@/components/signal";
 const signal = ()=>import("@/components/signal");
-// import vdr from "@/components/vdr";
 const vdr = ()=>import("@/components/vdr");
-// import attr from "@/components/attr";
 const attr = ()=>import("@/components/attr");
-// import kfsDialog from "@/components/panel/kfsDialog";
 const kfsDialog = ()=>import("@/components/panel/kfsDialog");
-// import serialDialog from "@/components/panel/serialDialog";
 const serialDialog = ()=>import("@/components/panel/serialDialog");
-// import multiSyncDialog from "@/components/panel/multiSyncDialog";
 const multiSyncDialog = ()=>import("@/components/panel/multiSyncDialog");
-// import userModelDialog from "@/components/panel/userModelDialog";
 const userModelDialog = ()=>import("@/components/panel/userModelDialog");
-// import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
 const saveUserModelDialog = ()=>import("@/components/panel/saveUserModelDialog");
-// import monIpDialog from "@/components/panel/monIpDialog";
 const monIpDialog = ()=>import("@/components/panel/monIpDialog");
-// import ipConfigDialog from "@/components/panel/ipConfigDialog";
 const ipConfigDialog = ()=>import("@/components/panel/ipConfigDialog");
-// import edidDialog from "@/components/panel/edidDialog";
 const edidDialog = ()=>import("@/components/panel/edidDialog");
-// import screenCtrDialog from "@/components/panel/screenCtrDialog";
 const screenCtrDialog = ()=>import("@/components/panel/screenCtrDialog");
-// import screenBrightDialog from "@/components/panel/screenBrightDialog";
 const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
-// import tempDialog from "@/components/panel/tempDialog";
 const tempDialog = ()=>import("@/components/panel/tempDialog");
-// import versionDialog from "@/components/panel/versionDialog";
 const versionDialog = ()=>import("@/components/panel/versionDialog");
-// import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
 const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
+
+
+// import udialog from "@/components/dialog";
+
+// import signal from "@/components/signal";
+
+// import vdr from "@/components/vdr";
+
+// import attr from "@/components/attr";
+
+// import kfsDialog from "@/components/panel/kfsDialog";
+
+// import serialDialog from "@/components/panel/serialDialog";
+
+// import multiSyncDialog from "@/components/panel/multiSyncDialog";
+
+// import userModelDialog from "@/components/panel/userModelDialog";
+
+// import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
+
+// import monIpDialog from "@/components/panel/monIpDialog";
+
+// import ipConfigDialog from "@/components/panel/ipConfigDialog";
+
+// import edidDialog from "@/components/panel/edidDialog";
+
+// import screenCtrDialog from "@/components/panel/screenCtrDialog";
+
+// import screenBrightDialog from "@/components/panel/screenBrightDialog";
+
+// import tempDialog from "@/components/panel/tempDialog";
+
+// import versionDialog from "@/components/panel/versionDialog";
+
+// import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+
 
 export default {
   name: "Home",
+    created(){
+      this.loadVersion();
+    },
   data() {
     return {
         activeName: "0", // 侧边栏选项
@@ -195,7 +218,8 @@ export default {
         dialogTitle: "",
         drawCenter: true,
         positionLock: false, //位置锁定
-        showDialog:''
+        showDialog:'',
+        devType:''
         // scale:1,
     };
   },
@@ -239,6 +263,12 @@ export default {
           }
           this.globalEvent.$emit('load_screen',{seq});
       },
+      loadVersion(){
+          this.$http.get("verInfoRd.cgi",{},(ret)=>{
+              this.devType=ret.data.devType;
+              this.globalEvent.versionInfo=ret.data;
+          });
+      },
       subEvent(param){
           if('close_kfs'==param.act){
               this.showDialog='';
@@ -249,6 +279,7 @@ export default {
           }
           else if("update_user_model"==param.act){
               this.$refs.signal.userSceneList[param.seq].label=param.name;
+              this.globalEvent.commonInfo.presetStaArr[param.seq]=1;
               this.$refs.signal.syncLocalName();
               this.showDialog='';
           }

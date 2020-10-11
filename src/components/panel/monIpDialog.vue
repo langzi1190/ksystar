@@ -4,7 +4,7 @@
             <div class="item">
                 <span>IP地址：</span>
                 <div class="input_group">
-                    <input v-model="ipArr[0]" />.<input  v-model="ipArr[1]"/>.<input  v-model="ipArr[2]"/>.<input  v-model="ipArr[3]"/>
+                    <input v-model="ipArr[0]" min="0" max="255" />.<input  v-model="ipArr[1]"  min="0" max="255"/>.<input  v-model="ipArr[2]"  min="0" max="255"/>.<input  v-model="ipArr[3]"  min="0" max="255"/>
                 </div>
             </div>
 
@@ -21,14 +21,20 @@
         props:['showDialog'],
         data(){
             return {
-                ipArr:[23,35,67,88]
+                ipArr:[0,0,0,0]
             };
         },
-        created(){
-            this.$http.get("monitorIpWr.cgi",{},(ret)=>{
-                this.ipArr=ret.data.ipArr;
-            });
-        },
+        // created(){
+        //     this.$http.get("monitorIpWr.cgi",{},(ret)=>{
+        //         this.ipArr=ret.data.ipArr;
+        //     });
+        // },
+        // mounted(){
+        //     this.$http.get("ipCfgRd.cgi",{},(ret)=>{
+        //         console.log(ret.data);
+        //         this.ipArr=ret.data.ipArr;
+        //     });
+        // },
         watch:{
             ipArr:{
                 deep:true,
@@ -43,6 +49,13 @@
                         }
                     }
                 }
+            },
+            showDialog(v,ov){
+                if(v=='monIp'){
+                    this.$http.post("monitorIpWr.cgi",{ipArr:[0,0,0,0]},(ret)=>{
+                        this.ipArr=ret.data.ipArr;
+                    });
+                }
             }
         },
         methods:{
@@ -53,8 +66,9 @@
             },
             op(act){
                 if(act){
-                    //todo 保存用户模式数据
-                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+
+                    this.$http.post("monitorIpWr.cgi",{ipArr:this.ipArr.map((s)=>{return parseInt(s)})},(ret)=>{
+                    });
                 }
 
                 this.$emit('sub_event',{act:'close_kfs'});

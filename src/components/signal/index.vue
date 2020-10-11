@@ -37,7 +37,7 @@
           <span class="content-list-title">场景轮巡</span>
         </template>
         <div class="content-list">
-          <sceneCarousel></sceneCarousel>
+          <sceneCarousel v-if="activeName==2"></sceneCarousel>
         </div>
       </el-collapse-item>
       <el-collapse-item name="3">
@@ -46,7 +46,7 @@
           <span class="content-list-title">信号源分组</span>
         </template>
         <div class="content-list">
-            <sourceGroup></sourceGroup>
+            <sourceGroup v-if="activeName==3"></sourceGroup>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -58,18 +58,7 @@
   import sourceGroup from "@/components/signal/sourceGroup";
 export default {
     created(){
-        //获取顶部工具区域通用参数
-        this.$http.get("syncCommonInfoRd.cgi",{},(ret)=>{
-
-            for(let i in ret.data.presetStaArr){
-                this.userSceneList.push({
-                    label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
-                    value:ret.data.presetStaArr[i]
-                });
-            }
-            this.syncLocalName();
-            this.globalEvent.commonInfo=ret.data;
-        });
+        this.getCommonInfo();
     },
     data() {
         return {
@@ -92,9 +81,7 @@ export default {
     },
     mounted(){
 
-        this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
-            this.syscInputInfo(ret.data);
-        });
+       this.getSysInputInfo();
 
         // this.$http.get("scenePollingRd.cgi",{},(ret)=>{
         //     this.scenePollingList=ret.data;
@@ -107,6 +94,27 @@ export default {
         // int(i){
         //     return parseInt(i);
         // },
+        getSysInputInfo(){
+            this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+                this.syscInputInfo(ret.data);
+            });
+        },
+        getCommonInfo(){
+            //获取顶部工具区域通用参数
+            this.userSceneList=[];
+
+            this.$http.get("syncCommonInfoRd.cgi",{},(ret)=>{
+
+                for(let i in ret.data.presetStaArr){
+                    this.userSceneList.push({
+                        label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
+                        value:ret.data.presetStaArr[i]
+                    });
+                }
+                this.syncLocalName();
+                this.globalEvent.commonInfo=ret.data;
+            });
+        },
         syncLocalName(){
             this.globalEvent.syncLocalName('sceneUserName',this.userSceneList);
         },
@@ -150,9 +158,12 @@ export default {
         },
         syscInputInfo(signal_list){
             let inCardArr=signal_list.inCardArr;
+            let id=1;
             for(let i in inCardArr){
+                inCardArr[i].id=id++;//tree id
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
+                    inCardArr[i].srcArr[k].id=id++;
                     inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
                     inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);//'S'+(this.int(i)+1)+'_'+(this.int(k)+1);
                 }
@@ -205,9 +216,16 @@ export default {
             }
         },
         loadUserModel(v){
-            this.$http.post("loadPreset.cgi",{presetId:v},(ret)=>{
-                console.log("signal/index.vue 载入用户模式");
+            this.$http.post("loadPreset.cgi",{presetId:parseInt(v)+1},(ret)=>{
+                // syncScrInfoRd.cgi
+
+                this.getCommonInfo();
+                this.getSysInputInfo();
+                this.$parent.$refs.vdr.loadData();
+
+                // console.log("signal/index.vue 载入用户模式，重载接口");
                 console.log(ret.data);
+
             });
         }
     },
@@ -215,17 +233,6 @@ export default {
         sceneCarousel,
         sourceGroup
     },
-    // watch:{
-    //     "globalEvent.commonInfo":function (v,ov) {
-    //         this.userSceneList=[];
-    //         for(let i in v.presetStaArr){
-    //             this.userSceneList.push({
-    //                 label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
-    //                 value:v.presetStaArr[i]
-    //             });
-    //         }
-    //     }
-    // }
 
 };
 </script>

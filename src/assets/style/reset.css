@@ -46,3 +46,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.dialog_body{display:flex;margin-top:20px;}
+.right_body{padding-top: 10px;padding-left: 20px;position:relative;}
+.left_body{width:180px;background-color:#fff;border:1px solid #dcdcdc;height:400px;max-height:400px;overflow:auto;}
+.label_group label{width:100px;display:inline-block;text-align:center;cursor:pointer;}
+.label_group input{margin-top:0;vertical-align: middle;}
+.top_part{display:flex;}

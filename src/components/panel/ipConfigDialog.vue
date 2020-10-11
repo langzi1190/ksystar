@@ -35,19 +35,28 @@
         props:['showDialog'],
         data(){
             return {
-                ipArr:[23,35,67,88],
+                ipArr:[0,0,0,0],
                 gateArr:[0,0,0,0],
                 maskArr:[255,255,255,0],
             };
         },
-        created(){
-            this.$http.get("ipCfgRd.cgi",{},(ret)=>{
-                this.ipArr=ret.data.ipArr;
-                this.maskArr=ret.data.maskArr;
-                this.gateArr=ret.data.gateArr;
-            });
-        },
+        // created(){
+        //     this.$http.get("ipCfgRd.cgi",{},(ret)=>{
+        //         this.ipArr=ret.data.ipArr;
+        //         this.maskArr=ret.data.maskArr;
+        //         this.gateArr=ret.data.gateArr;
+        //     });
+        // },
         watch:{
+            showDialog(v,ov){
+                if(v=='ipConfig'){
+                    this.$http.get("ipCfgRd.cgi",{},(ret)=>{
+                        this.ipArr=ret.data.ipArr;
+                        this.maskArr=ret.data.maskArr;
+                        this.gateArr=ret.data.gateArr;
+                    });
+                }
+            },
             ipArr:{
                 deep:true,
                 handler(v,ov){
@@ -106,7 +115,7 @@
             op(act){
                 if(act){
                     //todo 保存用户模式数据
-                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+                    alert("暂无接口");
                 }
 
                 this.$emit('sub_event',{act:'close_kfs'});

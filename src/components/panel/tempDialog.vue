@@ -88,7 +88,7 @@
                 this.$emit('sub_event',{act:'close_kfs'});
             },
             getData(){
-                this.$http.get("fpgaTempRd.cgi",{},(ret)=>{
+                this.$http.post("fpgaTempRd.cgi",{},(ret)=>{
 
                     let data=ret.data;
 
@@ -183,7 +183,7 @@
 <style>
     .temp_dialog .el-dialog{width:800px;}
     .top_part > div{display:inline-block;}
-    .top_part .temp{display:inline-block;color:#fff;height: 25px;line-height: 25px;margin: 0 10px;padding: 0 10px;}
+    .top_part .temp{display:inline-block;color:#fff;height: 25px;line-height: 25px;margin: 0 10px;padding: 0 5px;width:30px;vertical-align: middle;}
     .top_part label input{vertical-align: middle;margin-right:5px;}
     .canvas_wrapper{margin-top:15px;}
     .canvas_wrapper canvas{margin:0 auto;}

@@ -59,6 +59,8 @@
             };
         },
         mounted(){
+            console.log("多机同步");
+            this.controlSync=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
             for(let i in this.globalEvent.inputCardList){
                 this.cardIdList.push(++i);
             }
@@ -85,7 +87,14 @@
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else{
-                    console.log(this.cardId,this.sourceId);
+                    console.log("多机同步",this.controlSync,this.cardId,this.sourceId);
+                    if(this.cardIdList.length==0 && this.sourceIdList.length==0){
+                        alert("无数据");
+                        return ;
+                    }
+                    this.$http.post("multiSyncWr.cgi",{funcSta:this.controlSync,srcCardId:this.cardId,srcId:this.sourceId},(ret)=>{
+                        this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=this.controlSync;
+                    });
                 }
             }
         }

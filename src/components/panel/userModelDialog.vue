@@ -42,7 +42,12 @@
                         alert("该模式没有数据");
                         return ;
                     }
+                    // this.$http.post("loadPreset.cgi",{presetId:this.userModel-1},(ret)=>{
+                    //     this.$emit('sub_event',{act:'select_user_model',v:this.userModel-1})
+                    // });
+
                     this.$emit('sub_event',{act:'select_user_model',v:this.userModel-1})
+
                 }
             }
         }

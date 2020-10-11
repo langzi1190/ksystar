@@ -206,6 +206,7 @@
                         this.selectedScene.presetArr=param.list;
                     }
                     else{
+                        //新增
                         let scene={
                             sceneId:this.sceneList.length,
                             presetNum:param.list.length,
@@ -214,6 +215,9 @@
                         scene.label=param.label==''?this.globalEvent.carouseName(scene):param.label;
                         this.sceneList.push(scene)
                     }
+
+                    console.log(this.sceneList);
+
                     this.syncLocalName();
                     this.showSceneDialog='';
                 }

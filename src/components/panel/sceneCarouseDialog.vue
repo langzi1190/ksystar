@@ -88,7 +88,8 @@
                     // this.userSceneList.push(parseInt(i)+1);
                     this.userSceneList.push({
                         label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
-                        value:presetStaArr[i]
+                        value:presetStaArr[i],
+                        id:i
                     });
                 }
             }
@@ -188,10 +189,10 @@
                 if(this.selectedUserScene==-1){
                     return ;
                 }
-                let arr=[this.userSceneList[this.selectedUserScene]-1,this.d,this.h,this.m,this.s];
+                let arr=[this.userSceneList[this.selectedUserScene].id,this.d,this.h,this.m,this.s];
 
                 this.selectedUserSceneList.push({
-                    label:"用户模式 "+(arr[0]+1)+this.$parent.userSceneTime(arr),
+                    label:this.globalEvent.userSceneName(arr[0])+this.$parent.userSceneTime(arr),//"用户模式 "+(arr[0]+1)+this.$parent.userSceneTime(arr),
                     dataArr:arr
                 });
             },

@@ -10,7 +10,17 @@
             </div>
             <div class="dialog_body">
                 <div class="left_body">
-                    <el-tree :data="signalList" show-checkbox :props="paramMap" :render-content="renderContent" @check-change="handleCheckClick"></el-tree>
+                    <el-tree :data="signalList"
+                             v-if="showTree"
+                             :default-checked-keys="selectedKey"
+                             show-checkbox
+                             node-key="id"
+                             :props="paramMap"
+                             :render-content="renderContent"
+                             :default-expand-all="true"
+                             @check-change="handleCheckClick">
+
+                    </el-tree>
                 </div>
                 <div class="right_body">
                     <div>同步基准源：</div>
@@ -39,17 +49,45 @@
         props:['showDialog'],
         data(){
             return {
-                syncEnable:0,
+                syncEnable:this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta,
                 signalList:[],
                 signalListFlat:[],
+                selectedKey:[],
                 paramMap:{
                     children: 'srcArr',
                 },
+                showTree:false,
                 // selectedSignal:{},
                 syncSignal:'',//被选中的信号 label_extra
             }
         },
+        mounted(){
+            this.signalList=this.globalEvent.inputCardList;
+            if(this.syncEnable==1){
+                this.reloadTree();
+            }
+
+            this.showTree=true;
+        },
         methods:{
+            reloadTree(){
+                //读入 kfs
+                this.showTree=false;
+                let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
+                for(let i in cardArr){
+                    for(let k in cardArr[i].scrPropArr){
+                        let src=cardArr[i].scrPropArr[k];
+
+                        this.syncSignal=this.globalEvent.signalCardName(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
+                        if(src.syncEn==1){
+                            this.signalListFlat.push(this.globalEvent.signalCardName(i,k));
+                            this.selectedKey.push(this.signalList[i].srcArr[k].id);
+                        }
+                    }
+                }
+
+                this.showTree=true;
+            },
             renderContent(h,{node,data,store}){
                 if(node.level==1){
 
@@ -64,30 +102,133 @@
                 }
             },
             handleCheckClick(data, checked, indeterminate){
-                console.log(data, checked, indeterminate);
+                // console.log(data, checked, indeterminate);
+
+                if(data.label_extra===undefined){
+                    //选择 信号卡
+                    // if(checked){
+                    //     for(let i in data.srcArr)
+                    //         this.signalListFlat.push(data.srcArr[i].label_extra);
+                    // }
+                    // else{
+                    //     //不选择 清空
+                    //     this.delSourceId(data.srcArr);
+                    // }
+
+                }
+                else{
+                    //信号源
+                    if(checked){
+                        this.signalListFlat.push(data.label_extra);
+                    }
+                    else{
+                        this.delSourceId([data])
+                    }
+                }
+
+            },
+            delSourceId(srcArr){
+
+                let sk=[];
+
+                for(let k in this.signalListFlat){
+                    for(let i in srcArr){
+                        if(this.signalListFlat[k]==srcArr[i].label_extra){
+                            sk.push(k);
+                            if(this.syncSignal==srcArr[i].label_extra){
+                                this.syncSignal='';
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                for(let i in sk){
+                    this.signalListFlat.splice(sk[i]-i,1);
+                }
             },
             op(act){
                 if(act){
-                    console.log(this.syncSignal);
-                    //修改 globalEvent
+                    // if(this.controlSync==0){
+                    //     alert("同步使能未开启");
+                    //     return ;
+                    // }
+                    if(this.syncSignal==''){
+                        alert("未选择同步基准源");
+                        return ;
+                    }
+
+                    // let param={
+                    //     inCardNum:this.signalList.length,
+                    //     funcSta:this.controlSync,//同步到 commonInfo
+                    //     inCardArr:[
+                    //         {
+                    //             inCardChnArr:[
+                    //                 {
+                    //                     syncEn:0,
+                    //                     syncCardId:0,
+                    //                     syncSrcId:9,
+                    //                 }
+                    //             ]
+                    //         }
+                    //     ]
+                    // };
+                    let param={
+                        inCardNum:this.signalList.length,
+                        funcSta:this.syncEnable,//同步到 commonInfo
+                        inCardArr:[]
+                    };
+
+                    let s=this.syncSignal.replace('S','');
+                    s=s.split("_");
+                    let syncCardId=s[0]-1;
+                    let syncSrcId=s[1]-1;
+                    for(let i in this.signalList){
+                        let inCard={
+                            inCardChnArr:[]
+                        };
+                        for(let k in this.signalList[i].srcArr){
+                            let src=this.signalList[i].srcArr[k].label_extra;
+                            let inCardChn={
+                                syncEn:0,
+                                syncCardId:syncCardId,
+                                syncSrcId:syncSrcId
+                            };
+                            if(this.signalListFlat.includes(src)){
+                                inCardChn.syncEn=1;
+                            }
+
+                            inCard.inCardChnArr.push(inCardChn);
+                        }
+
+                        param.inCardArr.push(inCard);
+                    }
+                    console.log(JSON.stringify(param));
+                    this.$http.post("KfsWr.cgi",param,(ret)=>{
+                        this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=param.funcSta;
+                        this.$emit('sub_event',{act:'close_kfs'})
+                    });
+
+
                 }
                 else{
                     this.$emit('sub_event',{act:'close_kfs'})
                 }
 
+
             }
         },
-        watch:{
-            showDialog(v,ov){
-                if(v=='kfs' && this.signalList.length==0){
-                    this.signalList=this.globalEvent.inputCardList;
-                    for(let i in this.signalList){
-                        for(let k in this.signalList[i].srcArr)
-                            this.signalListFlat.push(this.signalList[i].srcArr[k].label_extra);
-                    }
-                }
-            }
-        }
+        // watch:{
+        //     showDialog(v,ov){
+        //         if(v=='kfs' && this.signalList.length==0){
+        //             this.signalList=this.globalEvent.inputCardList;
+        //             for(let i in this.signalList){
+        //                 for(let k in this.signalList[i].srcArr)
+        //                     this.signalListFlat.push(this.signalList[i].srcArr[k].label_extra);
+        //             }
+        //         }
+        //     }
+        // }
     }
 </script>
 
@@ -98,9 +239,11 @@
     .label_group input{margin-top:0;vertical-align: middle;}
     .top_part{display:flex;}
     .dialog_body{display:flex;margin-top:20px;}
-    .right_body{    padding-top: 10px;padding-left: 20px;position:relative;}
+    .right_body{padding-top: 10px;padding-left: 20px;position:relative;}
     .left_body{width:180px;background-color:#fff;border:1px solid #dcdcdc;height:400px;max-height:400px;overflow:auto;}
     .button_group_bottom{position:absolute;bottom:0;left:100px;text-align:right;}
     .button_group_bottom button{margin-top:10px;}
     .right_body .el-select--mini{width:120px;margin-top:15px;}
+    .kfs_dialog .el-checkbox{display:none;}
+    .kfs_dialog .is-leaf + .el-checkbox{display:inline-block;}
 </style>

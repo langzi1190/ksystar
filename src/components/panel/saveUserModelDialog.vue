@@ -35,8 +35,11 @@
         methods:{
             op(act){
                 if(act){
-                    //todo 保存用户模式数据
-                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+
+                    this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
+                        this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+                    });
+
                 }
                 else{
                     this.$emit('sub_event',{act:'close_kfs'});

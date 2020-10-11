@@ -46,20 +46,31 @@
         props:['showDialog'],
         data(){
             return {
-                com1:0,
-                com2:0,
-                control_mode:0,
+                com1:this.globalEvent.commonInfo.COM1BaudId,
+                com2:this.globalEvent.commonInfo.COM2BaudId,
+                control_mode:this.globalEvent.commonInfo.COM2CtrlModeId,
                 baudList:[1200,2400,4800,9600,19200,38400,57600,115200]
             };
         },
         methods:{
             op(act){
                 if(act){
-                    console.log("sure");
+                    let param={
+                        com2CtrlMode:this.control_mode,
+                        com1BaudId:this.com1,
+                        com2BaudId:this.com2,
+                    };
+
+                    this.$http.post("comCfg.cgi",param,(ret)=>{
+                        this.$parent.$refs.signal.getCommonInfo();
+                        this.$emit('sub_event',{act:'close_kfs'});
+                    });
+
                 }
                 else{
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
+
             }
         }
     }
