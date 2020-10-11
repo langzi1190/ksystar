@@ -20,12 +20,12 @@
         </template>
         <div class="content-list">
           <template v-for="(item,index) in userSceneList">
-            <div class="list_item" @click="selectedSceneIndex=index">
+            <div class="list_item" :class="{list_item_cur:item.value==1}" @click="selectedSceneIndex=index">
               {{item.label}}
             </div>
             <div class="list_item" v-show="selectedSceneIndex==index">
               <el-button size="mini" @click="editScene">改名</el-button>
-              <el-button size="mini" @click="loadScene">载入</el-button>
+              <el-button size="mini" :disabled="item.value==0" @click="loadScene">载入</el-button>
             </div>
           </template>
 
@@ -267,7 +267,7 @@ export default {
       height: 40px;
       line-height: 40px;
     }
-    .card_label{margin-right:3px;color:#f44f44;}
+    .card_label{margin-right:3px;color:#f44f44;    width: 105px;text-align: left;display: inline-block;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
@@ -275,5 +275,6 @@ export default {
     .list_item:nth-child(even){border:none;}
     .el-collapse-item__content{max-height:500px;overflow:auto;}
   .selected_card .card_label{color:#00cc99;}
+  .list_item_cur{background-color:#00cc99;color:#fff;}
 }
 </style>
