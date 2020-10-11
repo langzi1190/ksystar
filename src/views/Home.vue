@@ -131,7 +131,7 @@
       <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
       <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
       <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
-      <serialDialog @sub_event="subEvent" :showDialog="showDialog"></serialDialog>
+      <serialDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='serial'"></serialDialog>
       <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
@@ -253,7 +253,7 @@ export default {
         this.drawCenter = bool;
       },
       addScreen(){
-          this.globalEvent.$emit("add_window_item");//vdr/index.vue
+          this.globalEvent.$emit("add_window_item",{act:'btn'});//vdr/index.vue
       },
       loadScreen(seq){
           console.log(seq,this.globalEvent.screenInfo.scrGroupArr.length);
