@@ -24,9 +24,16 @@
             </template>
         </div>
         <div
+                id="grids"
                 @wheel="mouseWheel"
                 :style="`height: ${ratioHeight}px; width: ${ratioWidth}px; position: relative;`"
         >
+            <div class="dragRect" :style="{
+                left:dragRect.x+'px',
+                top:dragRect.y+'px',
+                width:dragRect.w+'px',
+                height:dragRect.h+'px'
+                }"></div>
             <windowItem
                     v-for="(item,index) in windowItems"
                     :item="item"
@@ -46,11 +53,12 @@
     export default {
         data: function() {
             return {
-                windowList:[],//视频窗口
+                // windowList:[],//视频窗口
                 activeWindow:-1,
                 totalWidth:0,
                 totalHeight:0,
                 ratio:1,
+                scale:1,
                 normalWidth:1000,//归一化
                 totalLine:0,
                 totalCard:0,
@@ -61,42 +69,20 @@
                 lineV:[],
                 curScreen:{},//当前屏幕墙
                 windowItems:[],//当前屏幕墙所有窗口
+                dragRect:{
+                    x:0,
+                    y:0,
+                    w:0,
+                    h:0
+                },
+                refreshWindowItemsEvent:0,
             };
         },
         created() {
 
             this.globalEvent.$on("add_window_item",(param)=>{
                 //添加窗口事件,添加完，可以直接 loadScreenWindowItems，
-                // console.log(this.globalEvent.selectedCard);
-                let cardNumber=this.globalEvent.sourceCardNumber();
-                console.log(cardNumber);
-                let len=this.windowItems.length;
-                let left=100*len;
-                let top=100*len;
-                let data={
-                    type:1,//新开
-                    scrGroupId: this.globalEvent.curScreenIndex,
-                    winId: len,
-                    srcGroupId:0,
-                    srcCardId:cardNumber[0],
-                    srcId:cardNumber[1],
-                    layerId:len,
-                    cropLeft:0,
-                    cropTop:0,
-                    cropW:0,
-                    cropH:0,
-                    winLeft:left,
-                    winTop:top,
-                    winW:1920,
-                    winH:1080,
-                };
-
-                this.$http.post("winOpr.cgi",data,(ret)=>{
-                    console.log(ret.data);
-                    this.loadScreenWindowItems();
-                    // this.windowItems.push(data);
-                });
-                // this.addWindowItem();
+                this.addWindowItem(param);
             });
             this.globalEvent.$on('load_screen',(param)=>{
                 this.loadScreen(param.seq);
@@ -137,6 +123,8 @@
                     this.windowItems[maxIndexPos[0]].layerId=this.windowItems[this.globalEvent.selectedWindowIndex].layerId;
                     this.windowItems[this.globalEvent.selectedWindowIndex].layerId=maxIndexPos[1];
                     //子组件更新参数
+                    // console.log(param);
+                    // console.log(maxIndexPos[0],this.globalEvent.selectedWindowIndex);
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
                     this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setProp(param);
 
@@ -197,46 +185,6 @@
                     this.loadScreen(0)
                 })
             },
-            syncLocalName(){
-                this.globalEvent.syncLocalName("windowItem",this.windowItems)
-            },
-            getMaxIndexPos(){
-                //交换最大值
-                let maxIndex=0;
-                let index=-1;
-                for(let i in this.windowItems){
-                    if(maxIndex<this.windowItems[i].layerId){
-                        maxIndex=this.windowItems[i].layerId;
-                        index=i;
-                    }
-                }
-                return [index,maxIndex];
-            },
-            getMinIndexPos(){
-                //交换最大值
-                let minIndex=100;
-                let index=-1;
-                for(let i in this.windowItems){
-                    if(minIndex>this.windowItems[i].layerId){
-                        minIndex=this.windowItems[i].layerId;
-                        index=i;
-                    }
-                }
-                return [index,minIndex];
-            },
-            cardNumberStyle(index){
-                let style={
-                    position:'absolute',
-                    color:"#505050",
-                    fontSize:"50px",
-                };
-                let row=parseInt(index/this.col);//位于第几行
-                style.top=row==0?'30px':(this.lineH[2*row-1])*this.ratio+30+'px';
-
-                let col=index%this.col;//位于第几列
-                style.left=col==0?'30px':(this.lineV[2*col-1])*this.ratio+30+'px';
-                return style;
-            },
             loadScreen(seq){
 
                 let curScreen=this.globalEvent.screenInfo.scrGroupArr[seq];
@@ -292,46 +240,22 @@
                     }
                 }
 
-
-
-                if(this.totalWidth>1000){
-                    this.ratio=1000/this.totalWidth;
+                this.globalEvent.totalWidth=this.totalWidth;
+                this.globalEvent.totalHeight=this.totalHeight;
+                this.initScreenPanel();
+                this.loadScreenWindowItems();
+            },
+            initScreenPanel(){
+                //初始化 屏幕控制区域
+                if(this.totalWidth>this.normalWidth*this.scale){
+                    this.ratio=this.normalWidth*this.scale/this.totalWidth;
                 }
                 else{
                     this.ratio=1;
                 }
-
-                this.globalEvent.totalWidth=this.totalWidth;
-                this.globalEvent.totalHeight=this.totalHeight;
-
-
-                this.loadScreenWindowItems();
             },
             loadScreenWindowItems(){
-                //获取当前屏幕墙的输出窗口
-                // this.globalEvent.windowItemsInfo={
-                //     "scrGroupId":	0,//屏幕墙编号
-                //     "winNum":	2,
-                //     "winArr":[{
-                //         "winId":	0,//自己
-                //         "srcGroupId":	0,//信号源分组
-                //         "srcCardId":	0,
-                //         "srcId":	0,
-                //         "layerId":	0,
-                //         "partOrAll":	0,
-                //         "cropSizeArr":	[0, 0, 0, 0],
-                //         "winSizeArr":	[0, 0, 1920, 1080]
-                //     }, {
-                //         "winId":	1,
-                //         "srcGroupId":	0,
-                //         "srcCardId":	1,
-                //         "srcId":	0,
-                //         "layerId":	1,
-                //         "partOrAll":	0,
-                //         "cropSizeArr":	[0, 0, 0, 0],
-                //         "winSizeArr":	[1920, 1080, 1920, 1080]
-                //     }]
-                // };
+                this.windowItems=[];
                 this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
@@ -342,23 +266,127 @@
                     this.syncLocalName();
                 });
             },
+
+            addWindowItem(param){
+
+                let cardNumber=this.globalEvent.sourceCardNumber();
+                let len=this.windowItems.length;
+                let left=100*len;
+                let top=100*len;
+                let w=1920;
+                let h=1080;
+                if(param.act=='drag'){
+                    left=parseInt(this.dragRect.x/this.ratio);
+                    top=parseInt(this.dragRect.y/this.ratio);
+                    w=parseInt(this.dragRect.w/this.ratio);
+                    h=parseInt(this.dragRect.h/this.ratio);
+                    this.dragRect={x:0,y:0,h:0,w:0};
+                }
+                let data={
+                    type:1,//新开
+                    scrGroupId: this.globalEvent.curScreenIndex,
+                    winId: len,
+                    srcGroupId:0,
+                    srcCardId:cardNumber[0],
+                    srcId:cardNumber[1],
+                    layerId:len,
+                    cropLeft:0,
+                    cropTop:0,
+                    cropW:0,
+                    cropH:0,
+                    winLeft:left,
+                    winTop:top,
+                    winW:w,
+                    winH:h,
+                };
+
+
+                this.$http.post("winOpr.cgi",data,(ret)=>{
+                    console.log(ret.data);
+                    this.loadScreenWindowItems();
+                });
+            },
+            syncLocalName(){
+                this.globalEvent.syncLocalName("windowItem",this.windowItems)
+            },
+            getMaxIndexPos(){
+                //交换最大值
+                let maxIndex=0;
+                let index=-1;
+                for(let i in this.windowItems){
+                    if(maxIndex<this.windowItems[i].layerId){
+                        maxIndex=this.windowItems[i].layerId;
+                        index=i;
+                    }
+                }
+                return [index,maxIndex];
+            },
+            getMinIndexPos(){
+                //交换最大值
+                let minIndex=100;
+                let index=-1;
+                for(let i in this.windowItems){
+                    if(minIndex>this.windowItems[i].layerId){
+                        minIndex=this.windowItems[i].layerId;
+                        index=i;
+                    }
+                }
+                return [index,minIndex];
+            },
+            cardNumberStyle(index){
+                let style={
+                    position:'absolute',
+                    color:"#505050",
+                    fontSize:"50px",
+                };
+                let row=parseInt(index/this.col);//位于第几行
+                style.top=row==0?'30px':(this.lineH[2*row-1])*this.ratio+30+'px';
+
+                let col=index%this.col;//位于第几列
+                style.left=col==0?'30px':(this.lineV[2*col-1])*this.ratio+30+'px';
+                return style;
+            },
+
             mouseWheel(e) {
                 // let wh_ratio=this.totalWidth/this.totalHeight;
+                // if(e.wheelDelta>0){
+                //     //变大
+                //     this.ratio=this.ratio+0.001;
+                //
+                //     if(this.ratio>4){
+                //         this.ratio=4;
+                //     }
+                // }
+                // else{
+                //     //变小
+                //     this.ratio=this.ratio-0.001;
+                //     if(this.ratio<0.05){
+                //         this.ratio=0.05;
+                //     }
+                // }
+
                 if(e.wheelDelta>0){
                     //变大
-                    this.ratio=this.ratio+0.001;
+                    this.scale=this.scale+0.001;
 
-                    if(this.ratio>4){
-                        this.ratio=4;
+                    if(this.scale>4){
+                        this.scale=4;
                     }
                 }
                 else{
                     //变小
-                    this.ratio=this.ratio-0.001;
-                    if(this.ratio<0.05){
-                        this.ratio=0.05;
+                    this.scale=this.scale-0.001;
+                    if(this.scale<0.05){
+                        this.scale=0.05;
                     }
                 }
+                this.initScreenPanel();
+
+                clearTimeout(this.refreshWindowItemsEvent)
+                this.refreshWindowItemsEvent=setTimeout(()=>{
+                    this.loadScreenWindowItems();
+                },500);
+
             },
             getWindowSize(wSize){
                 //获取窗口 边界
@@ -461,6 +489,57 @@
             //         this.globalEvent.$emit("update_side_attr");
             //     }
             // }
+            initDragOpenWin(){
+                let panel=document.getElementById("grids");
+                let that=this;
+                let originPos={};
+                let pos=this.getLocation(panel);
+
+                panel.addEventListener("mousedown",function (e) {
+
+                    originPos.x=e.pageX;
+                    originPos.y=e.pageY;
+                    that.dragRect.x=originPos.x-pos.left;
+                    that.dragRect.y=originPos.y-pos.top;
+
+                    let mm=function(e){
+                        let deltax=e.pageX-originPos.x;
+                        let deltay=e.pageY-originPos.y;
+                        if(deltax<0 || deltax<0){
+                            return ;
+                        }
+
+                        that.dragRect.w=deltax;
+                        that.dragRect.h=deltay;
+                    };
+                    let mu=function(){
+                        that.addWindowItem({act:'drag'});
+                        document.removeEventListener("mousemove",mm);
+                        document.removeEventListener("mouseup",mu);
+                    };
+                    document.addEventListener("mousemove",mm);
+                    document.addEventListener("mouseup",mu);
+                });
+            },
+            getLocation(element) {
+                if(element == null)
+                    return null;
+                let offsetTop = element.offsetTop;
+                let offsetLeft = element.offsetLeft;
+                while(element = element.offsetParent) {
+                    offsetTop += element.offsetTop;
+                    offsetLeft += element.offsetLeft;
+                }
+                let o = {};
+                o.left = offsetLeft;
+                o.top = offsetTop;
+                return o;
+            }
+        },
+        mounted(){
+            setTimeout(()=>{
+                this.initDragOpenWin();
+            },300);
         },
         components: {
             windowItem
@@ -481,4 +560,5 @@
     .line_v{position:absolute;width:0;border-left:1px solid #dcdcdc;top:0;}
 
     .grid{border:2px solid #dcdcdc;border-top:none;border-right:none;position:absolute;}
+    .dragRect{position:absolute;background-color:rgba(214,214,214,0.6);border:1px dashed #dcdcdc;z-index:100;}
 </style>

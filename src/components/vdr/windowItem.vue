@@ -52,6 +52,7 @@
     export default {
         props:['ratio','item','seq'],
         data(){
+
             let pleft=this.item.winSizeArr[0]*100/this.$parent.totalWidth;
             let ptop=this.item.winSizeArr[1]*100/this.$parent.totalHeight;
             let pwidth=this.item.winSizeArr[2]*100/this.$parent.totalWidth;
@@ -62,7 +63,7 @@
                 pwidth=pheight=100;
 
             }
-
+            console.log(pleft);
             return {
                 ptop:ptop,//比例位置
                 pleft:pleft,
@@ -379,8 +380,12 @@
 
                     that.ptop=that.top/that.$parent.ratioHeight*100;
                     that.pleft=that.left/that.$parent.ratioWidth*100;
-                    that.pheight=that.height/that.$parent.ratioHeight*100;
-                    that.pwidth=that.width/that.$parent.ratioWidth*100;
+                    if(type!='move'){
+                        //移动 不改变大小
+                        that.pheight=that.height/that.$parent.ratioHeight*100;
+                        that.pwidth=that.width/that.$parent.ratioWidth*100;
+                    }
+
 
                 }
                 let mu=function (e) {
