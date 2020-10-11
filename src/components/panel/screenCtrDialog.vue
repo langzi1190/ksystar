@@ -39,7 +39,7 @@
                             <legend>大屏幕功能设置</legend>
                             <div class="tip">通讯延迟（毫秒）</div>
                             <el-input-number  size="mini"></el-input-number>
-                            <label><input v-model="shutAble" :false-value=0 :true-value=1 type="checkbox"/>允许开关屏{{shutAble}}</label>
+                            <label><input v-model="shutAble" :false-value=0 :true-value=1 type="checkbox"/>允许开关屏</label>
                         </fieldset>
                     </div>
                 </div>
