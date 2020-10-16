@@ -1,11 +1,11 @@
 <template>
     <div class="screen_ctr_dialog">
-        <el-dialog title="大屏幕控制" :visible="showDialog=='screenCtr'" @close="op(false)">
+        <el-dialog title="大屏幕控制" :visible="showDialog=='screenCtr'" @close="op('cancel')">
             <div class="dialog_body">
                 <div class="left_body">
                     <div class="item">
                         <span>屏幕类型:</span>
-                        <el-select disabled v-model="screenType" size="mini" placeholder="无">
+                        <el-select v-model="screenType" size="mini" placeholder="无">
                             <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -17,28 +17,28 @@
 
                     <fieldset>
                         <legend>屏幕序号</legend>
-                        <label><input type="radio"/>先行后列顺序</label>
-                        <label><input type="radio"/>先列后行顺序</label>
-                        <label><input type="radio"/>先行后列矩阵</label>
-                        <label><input type="radio"/>先列后行矩阵</label>
+                        <label><input value=0 v-model="scrMode" type="radio"/>先行后列顺序</label>
+                        <label><input value=1 v-model="scrMode"  type="radio"/>先列后行顺序</label>
+                        <label><input value=2 v-model="scrMode"  type="radio"/>先行后列矩阵</label>
+                        <label><input value=3 v-model="scrMode"  type="radio"/>先列后行矩阵</label>
                     </fieldset>
                 </div>
                 <div class="right_body">
                     <div class="item">
                         <span>COM 波特率:</span>
-                        <el-select disabled v-model="screenType" size="mini" placeholder="无">
+                        <el-select v-model="baud" size="mini" placeholder="无">
                             <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
+                                    v-for="(item,index) in baudList"
+                                    :key="index"
+                                    :label="item"
+                                    :value="index">
                             </el-option>
                         </el-select>
 
                         <fieldset>
                             <legend>大屏幕功能设置</legend>
                             <div class="tip">通讯延迟（毫秒）</div>
-                            <el-input-number  size="mini"></el-input-number>
+                            <el-input-number v-model="commuDly"  size="mini"></el-input-number>
                             <label><input v-model="shutAble" :false-value=0 :true-value=1 type="checkbox"/>允许开关屏</label>
                         </fieldset>
                     </div>
@@ -69,40 +69,77 @@
                 </div>
             </fieldset>
 
-            <div class="b_tip" style="line-height:25px;">每一行对应一条命令<br/>十六禁止格式：A1 B2 33 55</div>
+            <div class="b_tip" style="line-height:25px;">每一行对应一条命令<br/>十六进制格式：A1 B2 33 55</div>
             <div class="b_tip" style="text-align:center;">
-                <el-button size="mini">确定</el-button> <el-button size="mini">取消</el-button>
+                <el-button size="mini" @click="op('sure')">确定</el-button> <el-button size="mini" @click="op('cancel')">取消</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
+
     export default {
         props:['showDialog'],
         data(){
             return {
-                userModel:1,
+                baudList:[1200,2400,4800,9600,19200,38400,57600,115200],
+                baud:7,
                 options:[{
-                    'value':12,
+                    'value':0,
                     'label':'无'
+                    },
+                    {
+                        'value':1,
+                        'label':'自定义'
                     }
                 ],
-                screenType:'',
-                screenSeq:0,
+                screenType:0,
+                // screenSeq:0,
+                scrMode:0,
+                commuDly:0,
                 shutAble:0,
                 shutCode:'',
                 startCode:'',
             };
         },
+        created(){
+            this.$http.get("extCtrlRd.cgi",{},(ret)=>{
+                let info=ret.data;
+                this.baud=info.comBaud;
+                this.commuDly=info.commuDly;
+                this.shutAble=info.funcSta;
+                this.scrMode=info.scrMode;
+                this.screenType=info.scrType;
+                this.shutCode=info.stopCmdArr.join('\n');
+                this.startCode=info.startCmdArr.join('\n');
+            });
+        },
         methods:{
             op(act){
-                if(!act){
+                if('cancel'==act){
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
-                else{
-                    console.log('sure')
-                    this.$emit('sub_event',{act:'close_kfs'});
+                else if('sure'==act){
+                    let startCmdArr=this.startCode.split('\n');
+                    let stopCmdArr=this.shutCode.split('\n');
+                    let param={
+                        funcSta:this.shutAble,
+                        scrType:this.screenType,//this.screenType=='无'?0:1,
+                        scrMode:parseInt(this.scrMode),
+                        comBaud:this.baud,
+                        commuDly:this.commuDly,
+                        startBytes:this.startCode.replace(/\n/g,'').length,//todo 长度怎么算
+                        startCmdArr:startCmdArr,
+                        stopBytes:this.shutCode.replace(/\n/g,'').length,
+                        stopCmdArr:stopCmdArr,
+                    };
+                    console.log(param);
+
+                    this.$http.post("extCtrlWr.cgi",param,(r)=>{
+                        this.$emit('sub_event',{act:'close_kfs'});
+                    });
+
                 }
             }
         }

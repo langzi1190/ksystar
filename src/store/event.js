@@ -44,11 +44,13 @@ let gobalEvent =new Vue({
             'srcGroup':'src_group_name',//源组
             'sceneCarouse':'scene_carouse_name',//轮巡
             'sceneUserName':'scene_user_name',//用户模式
-            "windowItem":'window_item_name'
+            "windowItem":'window_item_name',
+            "sourceCardName":'source_card_name',  //信号源
         },
         srcGroupLocalName:[],//信号源分组名称
         carouseLocalName:[],//信号源分组名称
         userSceneLocalName:[],//用户模式名称
+        sourceCardLocalName:{},//输入卡 名称
         windowItemLocalName:{},//窗口名
     },
     created(){
@@ -58,21 +60,25 @@ let gobalEvent =new Vue({
     },
     methods:{
         sourceCardNumber(){
-            let label_extra=this.selectedCard.label_extra;
+            let label_info=this.selectedCard.label_info;
             let num=[0,0];
-            if(label_extra!==undefined){
-                label_extra=label_extra.replace('S','');
-                num=label_extra.split("_");
-                num=num.map((v)=>{return parseInt(v)-1;});
+            if(label_info!==undefined){
+                num=label_info.split("_");
+                num=num.map((v)=>{return parseInt(v);});
             }
             return num;
         },
-        // cardLabelExtra(cardId,srcId){
-        //     return 'S'+(cardId+1)+'_'+(srcId+1);
-        // },
-
+        signalCardInfo(i,k){
+            //用来表明 信号卡 的位置
+            return i+'_'+k;
+        },
         signalCardName(i,k){
-            return 'S'+(parseInt(i)+1)+'_'+(parseInt(k)+1);
+            let name='S'+(parseInt(i)+1)+'_'+(parseInt(k)+1);
+            let key='source_name_'+i+'_'+k;
+            if(this.sourceCardLocalName[key]!==undefined){
+                name=this.sourceCardLocalName[key];
+            }
+            return name;
         },
         userSceneName(seq){
             let k='user_scene_'+seq;
@@ -125,6 +131,12 @@ let gobalEvent =new Vue({
             if(name!==null){
                 this.userSceneLocalName=JSON.parse(name);
             }
+
+            key=this.keys.sourceCardName;
+            name=localStorage.getItem(key);
+            if(name!==null){
+                this.sourceCardLocalName=JSON.parse(name);
+            }
         },
         loadWindowLocalName(){
             let key=this.keys.windowItem+'_'+this.curScreenIndex;
@@ -133,24 +145,6 @@ let gobalEvent =new Vue({
                 this.windowItemLocalName=JSON.parse(name);
             }
         },
-        // opCarouseName(act){
-        //     //load
-        //     let key=this.keys.sceneCarouse;
-        //     let name=localStorage.getItem(key);
-        //     if(name!=null){
-        //         this.carouseLocalName=JSON.parse(name);
-        //     }
-        // },
-        // opSrcGroupName(act){
-        //     let key=this.keys.srcGroup;
-        //
-        //     if(act=='load'){
-        //         let name=localStorage.getItem(key);
-        //         if(name!==null){
-        //             this.srcGroupLocalName=JSON.parse(name);
-        //         }
-        //     }
-        // },
         syncLocalName(type,dataList){
             let key=this.keys[type];
             if(type=='srcGroup'){
@@ -188,6 +182,50 @@ let gobalEvent =new Vue({
                 // this.windowItemLocalName={'window_item_0_1':'xxx','window_item_0_0':'yyy'};
                 localStorage.setItem(key,JSON.stringify(this.windowItemLocalName));
             }
+            else if(type=='sourceCardName'){
+                this.sourceCardLocalName={};
+                for(let i in dataList){
+                    for(let k in dataList[i].srcArr){
+                        let ke='source_name_'+i+'_'+k;
+                        this.sourceCardLocalName[ke]=dataList[i].srcArr[k].label_extra;
+                    }
+                }
+
+                localStorage.setItem(key,JSON.stringify(this.sourceCardLocalName));
+            }
+        },
+        uploadFile(con={}){
+            let param=Object.assign({input:'',uploadBtn:''},con);
+            if(param.input==''){
+                return ;
+            }
+            if(param.uploadBtn==''){
+                return ;
+            }
+
+            param.uploadBtn.addEventListener("click",()=>{
+                let file=param.input.files[0];
+                let totalSize=file.size;
+                let fragment=1024*1024;
+                let fragmentCount= Math.ceil(totalSize / fragment);
+
+                let upload=function(i){
+                    if(i>=fragmentCount-1){
+                        return ;
+                    }
+                    let start = i * fragment,
+                        end = Math.min(totalSize, start + fragment);
+                    let form = new FormData();
+                    form.append("data", file.slice(start,end));  //slice方法用于切出文件的一部分
+
+                    this.$http.post("",form,()=>{
+                        upload(i+1);
+                    });
+                };
+
+                upload(0);
+
+            })
         }
     }
 });

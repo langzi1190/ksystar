@@ -59,6 +59,7 @@ export default {
   created() {
 
       this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+          console.log(this.globalEvent.screenInfo);
           this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
           this.syncOutputInfoRd(ret.data);
           this.syncScrInfoRd();
@@ -114,6 +115,21 @@ export default {
           }
           return true;
       },
+      isRepeatUsed(){
+          let flag=true;
+          let port=[];
+          for(let i in this.displayList){
+              for(let k in this.displayList[i].portArr){
+                  port.push(this.displayList[i].portArr[k].mapArr[0]);
+              }
+          }
+
+          console.log(port);
+          if(port.length!=[...new Set(port)].length){
+              flag=false;
+          }
+          return flag;
+      },
       subEvent(param){
           if(param.act=='Col' || param.act=='Row'){
               // if(!this.isValidCardCount()){
@@ -127,7 +143,7 @@ export default {
               this.displayList[param.seq].FormatH=m[1];
               this.displayList[param.seq].VideoId=param.videoId;
               if(param.videoId==117){
-                  this.displayList[param.seq].FrameRate=30;
+                  this.displayList[param.seq].FrameRate=30;//0:60,1:50, 2:30;
               }
               let portArr=this.displayList[param.seq].portArr;
               for(let i in portArr){
@@ -135,7 +151,6 @@ export default {
               }
 
               this.$refs.cs_array[param.seq].calRowColumnRank();
-
 
           }
           else if(param.act=='del'){
@@ -155,6 +170,8 @@ export default {
               this.displayList.push(emptyScreen);
               this.showTab(this.displayList.length-1);
           }
+          //同步窗口信息
+          this.syncScreen();
 
       },
       isSubmit(bool) {
@@ -163,17 +180,35 @@ export default {
                 //检查端口使用数量，
                 return ;
             }
-            //todo 检车端口 是否被重用
 
-            for(let i in this.displayList){
-                delete this.displayList[i].tabName;
-            }
-            this.screenInfo.ScrGroupNum=this.displayList.length;
-           console.log(this.screenInfo);
+           this.syncScreen();
         } else {
           console.log("取消");
         }
         this.$emit("isDialogVisible", false); // 退出关闭弹窗
+      },
+      syncScreen(){
+          if(!this.isRepeatUsed()){
+              alert("存在重复使用端口");
+              return ;
+          }
+
+          let copyDisplayList=JSON.parse(JSON.stringify(this.displayList));
+          for(let i in copyDisplayList){
+              delete copyDisplayList[i].tabName;
+              for(let k in copyDisplayList[i].portArr){
+                  copyDisplayList[i].FrameRate=copyDisplayList[i].FrameRate==30?2:(copyDisplayList[i].FrameRate==60?0:1);
+                  delete copyDisplayList[i].portArr[k].briArr;
+                  delete copyDisplayList[i].portArr[k].conArr;
+              }
+          }
+          let screenInfo={
+              scrGroupNum:copyDisplayList.length,
+              scrGroupArr:copyDisplayList
+          };
+          this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
+
+          });
       },
       portPut(io) {
         // 当前点击的port端口

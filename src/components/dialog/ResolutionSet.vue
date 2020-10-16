@@ -4,7 +4,7 @@
                 title="自定义输出分辨率"
                 :visible.sync="isVisible"
                 width="400px"
-                @close="isSubmit(false)"
+                @close="cancelSubmit"
                 :append-to-body="true"
                 center
         >
@@ -32,8 +32,8 @@
             </div>
             <div style="text-align:center">
                  <span slot="footer" class="dialog-footer">
-                     <el-button @click="isSubmit(false)" size="mini">取 消</el-button>
-                     <el-button type="primary" @click="isSubmit(true)" size="mini">确 定</el-button>
+                     <el-button @click="cancelSubmit" size="mini">取 消</el-button>
+                     <el-button type="primary" @click="isSubmit" size="mini">确 定</el-button>
                 </span>
             </div>
         </el-dialog>
@@ -46,8 +46,8 @@
         props:['showSetting'],
         data(){
             return {
-                x:1920,
-                y:1080,
+                x:this.$parent.item.FormatW,
+                y:this.$parent.item.FormatH,
                 isVisible: this.showSetting
             };
         },
@@ -60,13 +60,11 @@
             showTimeSeq(){
                 this.$emit('sub_event',{act:'showTimeSeq'});
             },
-            isSubmit(on){
-                if(!on){
-                    this.$emit('sub_event',{act:'closeSetDialog'});
-                }
-                else{
-                    //提交
-                }
+            cancelSubmit(){
+                this.$emit('sub_event',{act:'closeSetDialog'});
+            },
+            isSubmit(){
+                this.$emit("sub_event",{act:"setResolution",x:this.x,y:this.y});
             }
         }
     }

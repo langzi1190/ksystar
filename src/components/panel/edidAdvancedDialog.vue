@@ -1,11 +1,10 @@
 <template>
     <div >
         <el-dialog
-                title="输出时序设置"
-                :visible.sync="isVisible"
+                title="EDID详细参数设置"
+                :visible="showDialog=='edidAdvanced'"
                 width="700px"
-                @close="isSubmit(false)"
-                :append-to-body="true"
+                @close="cancelSubmit"
                 center
         >
             <div class="dialog_body time_seq">
@@ -64,18 +63,6 @@
                             <el-input
                                     size="mini"
                                     v-model="curScreen.HBackPorch">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="row_item">
-                        <div class="item_title">
-                            行极性：
-                        </div>
-                        <div class="item_input">
-                            <el-input
-                                    size="mini"
-                                    v-model="curScreen.HPolar"
-                                    :disabled="true">
                             </el-input>
                         </div>
                     </div>
@@ -139,23 +126,11 @@
                             </el-input>
                         </div>
                     </div>
-                    <div class="row_item">
-                        <div class="item_title">
-                            列极性：
-                        </div>
-                        <div class="item_input">
-                            <el-input
-                                    size="mini"
-                                    v-model="curScreen.VPolar"
-                                    :disabled="true">
-                            </el-input>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div style="text-align:center;">
-                <el-button @click="isSubmit(true)">确定</el-button>
-                <el-button @click="isSubmit(false)">取消</el-button>
+                <el-button @click="submit">确定</el-button>
+                <el-button @click="cancelSubmit">取消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -165,36 +140,50 @@
 <script>
 
     export default {
-        props:['showSetting'],
+        props:['showDialog'],
         data(){
             return {
-                isVisible: this.showSetting,
-                curScreen:this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
+                curScreen:{
+                    ClkFreq:526080,
+                    FormatW:3840,
+                    FormatH:2160,
+                    FrameRate:60,
+                    HFrontPorch:48,
+                    HSyncTime:32,
+                    HBackPorch:80,
+                    VFrontPorch:12,
+                    VSyncTime:8,
+                    VBackPorch:12
+                }//this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
             };
         },
-        watch:{
-            showSetting(v,ov){
-                this.isVisible=v;
-            },
-            "globalEvent.curScreenIndex":function(v,ov){
-                this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
-            }
-        },
+        // watch:{
+        //     "globalEvent.curScreenIndex":function(v,ov){
+        //         this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+        //     }
+        // },
         methods:{
-            copyObject(o){
-                return JSON.parse(JSON.stringify(o));
-            },
-            isSubmit(on){
-                if(!on){
+            getEdid(){
+                let num=this.globalEvent.selectedCard.label_info.split('_');
+                let param={
+                    srcCardId:num[0]-0,
+                    srcId:num[1]-0
+                };
+                this.$http.get("srcEdidRd.cgi",param,(ret)=>{
 
-                    this.$emit('sub_event',{act:'closeTimeSeqDialog'});
-                }
-                else{
-                    //提交
-                    console.log("xx");
-                    Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
-                    console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
-                }
+                });
+            },
+            // copyObject(o){
+            //     return JSON.parse(JSON.stringify(o));
+            // },
+            cancelSubmit(){
+                this.$emit('sub_event',{act:'close_kfs'});
+            },
+            submit(){
+                //提交
+                console.log("xx");
+                // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
+                // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
             }
         }
     }

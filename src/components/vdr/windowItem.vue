@@ -245,6 +245,7 @@
 
                 let old_x=ev.pageX;
                 let old_y=ev.pageY;
+
                 let init_x=old_x;//用来判断是否发生移动
                 let init_y=old_y;
 
@@ -258,6 +259,14 @@
                     let r,r1,r2,r3;//存储中间结果
                     old_x=new_x;
                     old_y=new_y;
+
+
+                    if(Math.abs(new_x-init_x)<5 && Math.abs(new_y-init_y)<5){
+                        //忽略鼠标 5像素以内的位移
+                        return ;
+                    }
+
+
                     switch(type){
                         case "top":
                             r = parseInt(that.top)+delta_y;
@@ -376,24 +385,22 @@
                     that.height=Math.max(that.height,35);
                     that.width=Math.max(that.width,35);
 
-                    console.log(that.left,that.top,that.width,that.height);
+                    // console.log(that.left,that.top,that.width,that.height);
 
                     that.ptop=that.top/that.$parent.ratioHeight*100;
                     that.pleft=that.left/that.$parent.ratioWidth*100;
-                    if(type!='move'){
-                        //移动 不改变大小
-                        that.pheight=that.height/that.$parent.ratioHeight*100;
-                        that.pwidth=that.width/that.$parent.ratioWidth*100;
-                    }
+                    that.pheight=that.height/that.$parent.ratioHeight*100;
+                    that.pwidth=that.width/that.$parent.ratioWidth*100;
 
 
                 }
                 let mu=function (e) {
-                    if(Math.abs(init_x-e.pageX)>5 || Math.abs(init_y-e.pageY)>5){
-                        that.stickSize=[];//窗口发生位移 则取消保存的位置
+                    let deltax=Math.abs(init_x-e.pageX);
+                    let deltay=Math.abs(init_y-e.pageY);
+                    if(deltax>5 || deltay>5){
+                        that.stickSize=[];//窗口发生位移 则取消保存的位置,
+                        that.sendSizeEvent();
                     }
-
-                    that.sendSizeEvent();
 
                     document.removeEventListener("mousemove",mv);
                     document.removeEventListener("mouseup",mu);

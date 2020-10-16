@@ -23,7 +23,7 @@
             <card title="预设">
               <card-item title="用户模式" @click.native="showDialog='userModel'"></card-item>
               <card-item title="保存模式" @click.native="showDialog='saveUserModel'"></card-item>
-              <card-item title="出厂设置"></card-item>
+              <card-item title="出厂设置" @click.native="preinstall('3')"></card-item>
               <card-item title="同步"></card-item>
               <card-item title="打开回显" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
               <card-item title="关闭回显" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
@@ -45,8 +45,8 @@
             </card>
             <card title="对外控制">
               <div class="card-item">
-                <card-child title="开屏" iconName="display"></card-child>
-                <card-child title="关屏" iconName="display"></card-child>
+                <card-child title="开屏"  @click.native="preinstall('10')" iconName="display"></card-child>
+                <card-child title="关屏"  @click.native="preinstall('11')" iconName="display"></card-child>
                 <card-child title="通道设置" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
               </div>
             </card>
@@ -66,8 +66,8 @@
               <card-item @click.native="showDialog='screenBright'" title="亮度"></card-item>
               <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
               <card-item @click.native="showDialog='multi'" title="多机同步"></card-item>
-              <card-item title="输出关闭"></card-item>
-              <card-item title="输出开启"></card-item>
+              <card-item title="输出关闭"  @click.native="preinstall('8')"></card-item>
+              <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
               <card-item title="导入配置"></card-item>
               <card-item title="导出配置"></card-item>
               <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
@@ -135,12 +135,17 @@
       <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
-      <edidDialog @sub_event="subEvent" :showDialog="showDialog"></edidDialog>
-      <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog"></screenCtrDialog>
+      <edidDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edid'"></edidDialog>
+      <edidAdvancedDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edidAdvanced'"></edidAdvancedDialog>
+      <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
       <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
       <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
       <versionDialog @sub_event="subEvent" v-if="showDialog=='version'" :showDialog="showDialog"></versionDialog>
       <deviceStatusDialog @sub_event="subEvent" v-if="showDialog=='deviceStatus'" :showDialog="showDialog"></deviceStatusDialog>
+      <hotBackupDialog @sub_event="subEvent" v-if="showDialog=='hotBackup'" :showDialog="showDialog"></hotBackupDialog>
+      <workModeDialog @sub_event="subEvent" v-if="showDialog=='workMode'" :showDialog="showDialog"></workModeDialog>
+      <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
+      <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
   </div>
 </template>
 
@@ -167,6 +172,11 @@ const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
 const tempDialog = ()=>import("@/components/panel/tempDialog");
 const versionDialog = ()=>import("@/components/panel/versionDialog");
 const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
+const edidAdvancedDialog = ()=>import("@/components/panel/edidAdvancedDialog");
+const hotBackupDialog = ()=>import("@/components/panel/hotBackupDialog");
+const workModeDialog = ()=>import("@/components/panel/workModeDialog");
+const eqDialog = ()=>import("@/components/panel/eqDialog");
+const vgaDialog = ()=>import("@/components/panel/vgaDialog");
 
 
 // import udialog from "@/components/dialog";
@@ -202,6 +212,11 @@ const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
 // import versionDialog from "@/components/panel/versionDialog";
 
 // import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+// import edidAdvancedDialog from "@/components/panel/edidAdvancedDialog";
+// import hotBackupDialog from "@/components/panel/hotBackupDialog";
+// import workModeDialog from "@/components/panel/workModeDialog";
+// import eqModeDialog from "@/components/panel/eqModeDialog";
+// import vgaDialog from "@/components/panel/vgaDialog";
 
 
 export default {
@@ -219,12 +234,13 @@ export default {
         drawCenter: true,
         positionLock: false, //位置锁定
         showDialog:'',
+        showEdidDialog:false,
         devType:''
         // scale:1,
     };
   },
   methods: {
-    // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置
+    // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
 
       console.log(setFn);
@@ -233,6 +249,32 @@ export default {
       }
       if (setFn === "6") {
         this.isEcho = false;
+      }
+      if( setFn==='3' && confirm("确定恢复出厂设置？")){
+          this.$http.get("factory.cgi",{},(ret)=>{
+              window.location.reload(true);
+          });
+      }
+      else if(setFn=='8'){
+          this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
+
+          });
+      }
+      else if(setFn=='9'){
+          this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
+
+          });
+      } else if(setFn=='10'){
+          //开屏
+          this.$http.post("extCtrlOprWr.cgi",{funcOpr:1},(ret)=>{
+              alert("已发送开屏命令");
+          });
+      }
+      else if(setFn=='11'){
+          //关屏
+          this.$http.post("extCtrlOprWr.cgi",{funcOpr:0},(ret)=>{
+              alert("已发送关屏命令")
+          });
       }
     },
     // 设置:1-创建画面、2-屏幕配置
@@ -270,6 +312,7 @@ export default {
           });
       },
       subEvent(param){
+          console.log(param);
           if('close_kfs'==param.act){
               this.showDialog='';
           }
@@ -282,6 +325,22 @@ export default {
               this.globalEvent.commonInfo.presetStaArr[param.seq]=1;
               this.$refs.signal.syncLocalName();
               this.showDialog='';
+          }
+          else if('show_edid_advanced'==param.act){
+              this.showDialog='edidAdvanced';
+          }
+          else if('hot_backup'==param.act){
+              this.showDialog='hotBackup'
+          }
+          else if('work_mode'==param.act){
+              this.showDialog='workMode';
+          }
+          else if('eq'==param.act){
+              console.log("eq");
+              this.showDialog='eq';
+          }
+          else if('vga'==param.act){
+              this.showDialog='vga';
           }
       }
   },
@@ -301,11 +360,16 @@ export default {
       monIpDialog,
       ipConfigDialog,
       edidDialog,
+      edidAdvancedDialog,
       screenCtrDialog,
       screenBrightDialog,
       tempDialog,
       versionDialog,
       deviceStatusDialog,
+      hotBackupDialog,
+      workModeDialog,
+      eqDialog,
+      vgaDialog,
   },
 };
 </script>

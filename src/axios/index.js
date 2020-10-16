@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const baseURL = '';//'http://192.168.0.100/';
+const baseURL = 'http://192.168.0.100/';//'http://192.168.0.100/';
 
 let http = axios.create({
   baseURL: baseURL,
   // withCredentials: true,
-  // headers: {
-  //   'Content-Type': 'application/x-www-form-urlencoded'
-  // },
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
   // transformRequest: [function (data) {
   //   let newData = '';
   //   for (let k in data) {
@@ -43,6 +43,7 @@ function apiAxios(method, url, params, response) {
         "verInfoRd.cgi":"version.json",
         "devCfgStaRd.cgi":"status.json",
         "srcGroupWr.cgi":"write_back.json",
+        "extCtrlRd.cgi":"screen_ctrl.json",
     };
       url=urlTrans[url];
       method='GET';

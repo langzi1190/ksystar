@@ -82,26 +82,41 @@
                     },
                     {
                         value:2,
-                        label:"当前屏组亮度同步"
+                        label:"当前屏亮度同步"
                     },
                     {
                         value:3,
-                        label:"当前屏亮度同步"
+                        label:"当前屏组亮度同步"
                     }
                 ],
                 syncRgb:1,
                 r:125,
                 g:125,
                 b:125,
+                colorType:1,
+                colorVal:125
             };
         },
         created(){
             this.displayList=this.globalEvent.screenInfo.scrGroupArr;
             this.curTabName=this.displayList[0].tabName;
+            console.log(this.displayList);
         },
         methods:{
             changeRgb(act){
-                console.log(act);
+                // console.log(act);
+                if(this.syncRgb==1){
+                    this.b=this.g=this.r;
+                }
+                this.colorType=act=='r'?1:(act=='g'?2:3);
+                if(act=='r'){
+                    this.colorVal=this.r;
+                }else if(act=='g'){
+                    this.colorVal=this.g;
+                }else if(act=='b'){
+                    this.colorVal=this.b;
+                }
+                this.syncWinRgb();
             },
             selectWin(index){
                 this.selectedWinIndex=index;
@@ -113,30 +128,47 @@
                     this.selectedTabIndex=curTab.index;
                 }
             },
-            op(act){
-                if(act){
-                    //保存
-                    if(this.syncType==1){
-                        //同步所有
-                        for(let i in this.displayList){
-                            for(let k in this.displayList[i].portArr){
-                                let portArr=this.displayList[i].portArr[k];
-                                portArr.briArr=[this.r,this.g,this.b];
-                            }
+            syncWinRgb(){
+                let cfgObj='x';
+                if(this.syncType==1){
+                    //同步所有
+                    for(let i in this.displayList){
+                        for(let k in this.displayList[i].portArr){
+                            let portArr=this.displayList[i].portArr[k];
+                            portArr.briArr=[this.r,this.g,this.b];
                         }
-                    }
-                    else if(this.syncType==2){
-                        //同步一组
-                        let portArr=this.displayList[this.selectedTabIndex].portArr;
-                        for(let i in portArr){
-                            portArr[i].briArr=[this.r,this.g,this.b];
-                        }
-                    }
-                    else if(this.syncType==3){
-                        //同步自己
-                        this.displayList[this.selectedTabIndex].portArr[this.selectedWinIndex].briArr=[this.r,this.g,this.b];
                     }
                 }
+                else if(this.syncType==3){
+                    //同步一组
+                    let portArr=this.displayList[this.selectedTabIndex].portArr;
+                    for(let i in portArr){
+                        portArr[i].briArr=[this.r,this.g,this.b];
+                    }
+                    cfgObj=this.selectedTabIndex;
+                }
+                else if(this.syncType==2){
+                    if(this.selectedWinIndex==-1){
+                        alert("未选中屏幕");
+                        return;
+                    }
+                    //同步自己
+                    this.displayList[this.selectedTabIndex].portArr[this.selectedWinIndex].briArr=[this.r,this.g,this.b];
+                    cfgObj=this.displayList[this.selectedTabIndex].portArr[this.selectedWinIndex].mapArr[0];
+                }
+
+                // console.log(cfgObj);
+                let param={
+                    cfgType:this.syncType,
+                    colorType:1,
+                    cfgObj,
+                    colorVal:this.colorVal,
+                };
+                this.$http.post("scrColorWr.cgi",param,(ret)=>{});
+            },
+            op(act){
+                if(act)
+                    this.syncWinRgb();
                 this.$emit('sub_event',{act:'close_kfs'});
             }
         }

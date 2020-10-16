@@ -165,7 +165,8 @@ export default {
                 for(let k in inCardArr[i].srcArr){
                     inCardArr[i].srcArr[k].id=id++;
                     inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
-                    inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);//'S'+(this.int(i)+1)+'_'+(this.int(k)+1);
+                    inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);
+                    inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);//(this.int(i)+1)+'_'+(this.int(k)+1);
                 }
             }
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;

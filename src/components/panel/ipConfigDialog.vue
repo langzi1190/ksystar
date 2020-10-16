@@ -114,8 +114,15 @@
             },
             op(act){
                 if(act){
-                    //todo 保存用户模式数据
-                    alert("暂无接口");
+                    let param={
+                        ipArr:this.ipArr,
+                        getArr:this.getArr,
+                        maskArr:this.maskArr
+                    };
+
+                    this.$http.post("ipCfgWr.cgi",param,(r)=>{
+
+                    });
                 }
 
                 this.$emit('sub_event',{act:'close_kfs'});

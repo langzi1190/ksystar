@@ -53,3 +53,4 @@ table {
 .label_group label{width:100px;display:inline-block;text-align:center;cursor:pointer;}
 .label_group input{margin-top:0;vertical-align: middle;}
 .top_part{display:flex;}
+.el-dialog__header{text-align:left;}

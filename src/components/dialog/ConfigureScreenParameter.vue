@@ -3,18 +3,24 @@
     <div class="set-screen">
       <div>
         <span>屏幕分辨率:</span>
-        <el-select v-model="resolutionValue" placeholder="请选择分辨率" size="mini" style="width:160px">
+        <el-select
+                v-model="resolutionValue"
+                placeholder="请选择分辨率"
+                size="mini"
+                style="width:115px">
           <el-option
             v-for="item in resolution"
+            v-show="item.videoId>-1"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
+        <div class="hideShow" v-show="resolutionValue=='' || resolutionValue=='-1'">{{rv}}</div>
       </div>
       <div>
         <span>屏幕刷新HZ:</span>
-        <el-select v-model="hertzValue" placeholder="请选择HZ" size="mini" style="width: 100px;">
+        <el-select v-model="hertzValue" placeholder="请选择HZ" size="mini" style="width: 85px;">
           <el-option
             v-for="item in hertz"
             :key="item.value"
@@ -165,6 +171,11 @@ const resolution = [
         videoId:0,
         value:'',
         label:'自定义'
+    },
+    {
+        videoId:-1,
+        value:'-1',
+        label:'自定义'
     }
 ];
 
@@ -179,19 +190,24 @@ const hertz = [
     label: "50HZ"
   }
 ];
-// import Rs from '@/components/dialog/ResolutionSet';
-// import Ts from '@/components/dialog/TimeSeq';
-const Rs=()=>{import('@/components/dialog/ResolutionSet');}
-const Ts=()=>{import('@/components/dialog/TimeSeq');}
+import Rs from '@/components/dialog/ResolutionSet';
+import Ts from '@/components/dialog/TimeSeq';
+// const Rs=()=>{import('@/components/dialog/ResolutionSet');}
+// const Ts=()=>{import('@/components/dialog/TimeSeq');}
 export default {
   props:['item','seq'],
   data() {
-      console.log(this.item.FormatW,this.item.FormatH);
+
+      let rv=this.item.FormatW+'*'+this.item.FormatH;
+      let videoId=this.item.VideoId;
+
     return {
         resolution,
         hertz,
-        resolutionValue:this.item.FormatW+'*'+this.item.FormatH,
+        rv,
+        resolutionValue:videoId==0?'-1':rv,
         videoId:-1,
+        beforeRv:'',//自定义 前分辨率
         hertzValue:this.item.FrameRate+'HZ',
         rowNum: this.item.Row,
         columnNum: this.item.Col,
@@ -201,6 +217,7 @@ export default {
     };
   },
     methods:{
+
         setParentData(k,v){
             this.item[k]=v;
             //k:Row,Col,hertzValue,lcdMode,resolutionValue
@@ -214,12 +231,23 @@ export default {
         },
         subEvent(param){
             if(param.act=='closeSetDialog'){
+                this.resolutionValue=this.beforeRv;//恢复分辨率
                 this.showSetting=false;
             }
             else if(param.act=='closeTimeSeqDialog'){
                 this.showTimeSeq=false;
             }
+            else if(param.act=='setResolution'){
+
+                this.resolutionValue='-1';//显示自定义
+
+                this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:param.x+'*'+param.y,videoId:0});
+                this.rv=param.x+'*'+param.y;
+                this.videoId=-1;
+                this.showSetting=false;
+            }
             else if(param.act=='showTimeSeq'){
+                this.resolutionValue=this.beforeRv;//恢复分辨率
                 this.showSetting=false;
                 this.showTimeSeq=true;
             }
@@ -227,7 +255,11 @@ export default {
     },
     watch:{
         resolutionValue(v,ov){
+            if(v=='-1'){
+                return ;
+            }
             if(v==''){
+                this.beforeRv=ov;
                 //自定义
                 this.showSetting=true;
                 return ;
@@ -239,7 +271,6 @@ export default {
                     }
                 });
             }
-
             this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:v,videoId:this.videoId});
             this.videoId=-1;
 
@@ -284,5 +315,6 @@ export default {
   span {
     padding-right: 6px;
   }
+  .hideShow{display:inline-block;}
 }
 </style>

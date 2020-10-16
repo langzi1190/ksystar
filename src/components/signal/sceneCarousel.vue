@@ -13,7 +13,7 @@
                 <i class="caret" @click="op('stop')" :class="{disabled:isPlay==0}">▉</i>
             </div>
             <div class="op_select">
-                <select v-model="mode">
+                <select v-model="mode" @change="modeChange">
                     <option value=0>单个轮巡循环</option>
                     <option value=1>全部轮巡循环</option>
                 </select>
@@ -101,6 +101,9 @@
                 this.selectedLevel=node.level;
                 // console.log(this.selectedScene.presetArr.includes(data));
             },
+            modeChange(v){
+                this.syncSceneList();
+            },
             userSceneTime(arr){
                 return "    "+arr[1]+','+this.doubleNum(arr[2])+':'+this.doubleNum(arr[3])+':'+this.doubleNum(arr[4]);
             },
@@ -142,13 +145,15 @@
                         this.selectedScene.presetArr.splice(index,1);
                     }
 
-
+                    this.syncSceneList();
                 }
                 else if('play'==act && 0==this.isPlay){
                     this.isPlay=1;
+                    this.syncSceneList();
                 }
                 else if('stop'==act  && 1==this.isPlay){
                     this.isPlay=0;
+                    this.syncSceneList();
                 }
                 else if('up'==act && 0==this.isPlay && Object.keys(this.selectedScene).length>0){
                     //上移动  sceneId 需要与数组顺序相同
@@ -158,7 +163,7 @@
                         if(index>0){
                             let scene=this.sceneList.splice(index,1);
                             this.sceneList.splice(index-1,0,scene[0]);
-                            this.updateTree();
+                            this.syncSceneList();
                         }
                     }
                     else{
@@ -167,7 +172,7 @@
                         if(index>0){
                             let scene=presetArr.splice(index,1);
                             presetArr.splice(index-1,0,scene[0]);
-                            this.updateTree();
+                            this.syncSceneList();
                         }
                     }
 
@@ -179,7 +184,7 @@
                         if(index<this.sceneList.length-1){
                             let scene=this.sceneList.splice(index,1);
                             this.sceneList.splice(index+1,0,scene[0]);
-                            this.updateTree();
+                            this.syncSceneList();
                         }
                     }
                     else{
@@ -188,12 +193,51 @@
                         if(index<this.sceneList.length-1){
                             let scene=presetArr.splice(index,1);
                             presetArr.splice(index+1,0,scene[0]);
-                            this.updateTree();
+                            this.syncSceneList();
                         }
                     }
 
 
                 }
+            },
+            syncSceneList(){
+                let param={
+                    funcSta:this.isPlay,
+                    mode:parseInt(this.mode),
+                    startSceneId:this.selectedScene.secenId==undefined?0:this.selectedScene.secenId,//todo??怎么传参
+                    sceneNum:this.sceneList.length,
+                    sceneArr:[
+                //         {
+                //             sceneId:0,
+                //             presetNum:0,
+                //             presetArr:[
+                //                 {
+                //                     dataArr:[1,2,3,4,5]
+                //                 }
+                //             ]
+                //         }
+                //
+                    ]
+                };
+                for(let i in this.sceneList){
+                    let scene={
+                        sceneId:parseInt(i),
+                        presetNum:this.sceneList[i].presetArr.length,
+                        presetArr:[]
+                    }
+                    let presetArr=this.sceneList[i].presetArr;
+                    for(let k in presetArr){
+                        let preset={
+                            dataArr:presetArr[k].dataArr
+                        }
+                        scene.presetArr.push(preset);
+                    }
+                    param.sceneArr.push(scene);
+                }
+
+                this.$http.post("scenePollingWr.cgi",param,(ret)=>{
+                    this.updateTree();
+                });
             },
             subEvent(param){
                 if('closeDialog'==param.act){
@@ -216,8 +260,8 @@
                         this.sceneList.push(scene)
                     }
 
-                    console.log(this.sceneList);
 
+                    this.syncSceneList();
                     this.syncLocalName();
                     this.showSceneDialog='';
                 }
