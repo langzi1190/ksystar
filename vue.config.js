@@ -24,4 +24,16 @@ module.exports = {
       .tap(options => Object.assign(options, { limit: 10240 }))
   },
   productionSourceMap: false,
+    // devServer: {
+    //     proxy: {
+    //         '/api': {
+    //             target: 'http://192.168.0.100',
+    //             changeOrigin: true,
+    //             ws: true,
+    //             pathRewrite: {
+    //                 '^/api': ''
+    //             }
+    //         },
+    //     }
+    // },
 }

@@ -46,20 +46,21 @@ function apiAxios(method, url, params, response) {
         "extCtrlRd.cgi":"screen_ctrl.json",
     };
       url=urlTrans[url];
-      method='GET';
   }
 
-  http({
-    method: method,
-    url: url,
-    data: method === 'POST' || method === 'PUT' ? params : null,
-    params: method === 'GET' || method === 'DELETE' ? params : null
-  }).then(function (res) {
-    response(res);
-  }).catch(function (err) {
-    alert(err);
-    response(err);
-  });
+
+    http({
+        method: method,
+        url: url,
+        data: method === 'POST' || method === 'PUT' ? params : null,
+        params: method === 'GET' || method === 'DELETE' ? params : null
+    }).then(function (res) {
+        response(res);
+    }).catch(function (err) {
+        response(err);
+    });
+
+
 }
 
 export default {

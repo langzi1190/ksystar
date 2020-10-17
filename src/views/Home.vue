@@ -155,68 +155,68 @@ import card from "@/components/operation/Card";
 import cardItem from "@/components/operation/CardItem";
 import cardChild from "@/components/operation/CardChild";
 
-const udialog = ()=>import("@/components/dialog");
-const signal = ()=>import("@/components/signal");
-const vdr = ()=>import("@/components/vdr");
-const attr = ()=>import("@/components/attr");
-const kfsDialog = ()=>import("@/components/panel/kfsDialog");
-const serialDialog = ()=>import("@/components/panel/serialDialog");
-const multiSyncDialog = ()=>import("@/components/panel/multiSyncDialog");
-const userModelDialog = ()=>import("@/components/panel/userModelDialog");
-const saveUserModelDialog = ()=>import("@/components/panel/saveUserModelDialog");
-const monIpDialog = ()=>import("@/components/panel/monIpDialog");
-const ipConfigDialog = ()=>import("@/components/panel/ipConfigDialog");
-const edidDialog = ()=>import("@/components/panel/edidDialog");
-const screenCtrDialog = ()=>import("@/components/panel/screenCtrDialog");
-const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
-const tempDialog = ()=>import("@/components/panel/tempDialog");
-const versionDialog = ()=>import("@/components/panel/versionDialog");
-const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
-const edidAdvancedDialog = ()=>import("@/components/panel/edidAdvancedDialog");
-const hotBackupDialog = ()=>import("@/components/panel/hotBackupDialog");
-const workModeDialog = ()=>import("@/components/panel/workModeDialog");
-const eqDialog = ()=>import("@/components/panel/eqDialog");
-const vgaDialog = ()=>import("@/components/panel/vgaDialog");
+// const udialog = ()=>import("@/components/dialog");
+// const signal = ()=>import("@/components/signal");
+// const vdr = ()=>import("@/components/vdr");
+// const attr = ()=>import("@/components/attr");
+// const kfsDialog = ()=>import("@/components/panel/kfsDialog");
+// const serialDialog = ()=>import("@/components/panel/serialDialog");
+// const multiSyncDialog = ()=>import("@/components/panel/multiSyncDialog");
+// const userModelDialog = ()=>import("@/components/panel/userModelDialog");
+// const saveUserModelDialog = ()=>import("@/components/panel/saveUserModelDialog");
+// const monIpDialog = ()=>import("@/components/panel/monIpDialog");
+// const ipConfigDialog = ()=>import("@/components/panel/ipConfigDialog");
+// const edidDialog = ()=>import("@/components/panel/edidDialog");
+// const screenCtrDialog = ()=>import("@/components/panel/screenCtrDialog");
+// const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
+// const tempDialog = ()=>import("@/components/panel/tempDialog");
+// const versionDialog = ()=>import("@/components/panel/versionDialog");
+// const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
+// const edidAdvancedDialog = ()=>import("@/components/panel/edidAdvancedDialog");
+// const hotBackupDialog = ()=>import("@/components/panel/hotBackupDialog");
+// const workModeDialog = ()=>import("@/components/panel/workModeDialog");
+// const eqDialog = ()=>import("@/components/panel/eqDialog");
+// const vgaDialog = ()=>import("@/components/panel/vgaDialog");
 
 
-// import udialog from "@/components/dialog";
+import udialog from "@/components/dialog";
 
-// import signal from "@/components/signal";
+import signal from "@/components/signal";
 
-// import vdr from "@/components/vdr";
+import vdr from "@/components/vdr";
 
-// import attr from "@/components/attr";
+import attr from "@/components/attr";
 
-// import kfsDialog from "@/components/panel/kfsDialog";
+import kfsDialog from "@/components/panel/kfsDialog";
 
-// import serialDialog from "@/components/panel/serialDialog";
+import serialDialog from "@/components/panel/serialDialog";
 
-// import multiSyncDialog from "@/components/panel/multiSyncDialog";
+import multiSyncDialog from "@/components/panel/multiSyncDialog";
 
-// import userModelDialog from "@/components/panel/userModelDialog";
+import userModelDialog from "@/components/panel/userModelDialog";
 
-// import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
+import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
 
-// import monIpDialog from "@/components/panel/monIpDialog";
+import monIpDialog from "@/components/panel/monIpDialog";
 
-// import ipConfigDialog from "@/components/panel/ipConfigDialog";
+import ipConfigDialog from "@/components/panel/ipConfigDialog";
 
-// import edidDialog from "@/components/panel/edidDialog";
+import edidDialog from "@/components/panel/edidDialog";
 
-// import screenCtrDialog from "@/components/panel/screenCtrDialog";
+import screenCtrDialog from "@/components/panel/screenCtrDialog";
 
-// import screenBrightDialog from "@/components/panel/screenBrightDialog";
+import screenBrightDialog from "@/components/panel/screenBrightDialog";
 
-// import tempDialog from "@/components/panel/tempDialog";
+import tempDialog from "@/components/panel/tempDialog";
 
-// import versionDialog from "@/components/panel/versionDialog";
+import versionDialog from "@/components/panel/versionDialog";
 
-// import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
-// import edidAdvancedDialog from "@/components/panel/edidAdvancedDialog";
-// import hotBackupDialog from "@/components/panel/hotBackupDialog";
-// import workModeDialog from "@/components/panel/workModeDialog";
-// import eqModeDialog from "@/components/panel/eqModeDialog";
-// import vgaDialog from "@/components/panel/vgaDialog";
+import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+import edidAdvancedDialog from "@/components/panel/edidAdvancedDialog";
+import hotBackupDialog from "@/components/panel/hotBackupDialog";
+import workModeDialog from "@/components/panel/workModeDialog";
+import eqDialog from "@/components/panel/eqDialog";
+import vgaDialog from "@/components/panel/vgaDialog";
 
 
 export default {
