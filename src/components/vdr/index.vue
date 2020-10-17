@@ -306,7 +306,7 @@
 
 
                 this.$http.post("winOpr.cgi",data,(ret)=>{
-                    console.log(ret.data);
+
                     this.loadScreenWindowItems();
                 });
             },
@@ -455,10 +455,12 @@
             syncWindowSize(){
                 let w=this.globalEvent.selectedWindowIndex;
                 let curWindow=this.globalEvent.windowItemsInfo.winArr[w];
+                // console.log(curWindow);
                 let data={
                     type:2,//移动
-                    scrGroupId:curWindow.scrGroupId,
+                    scrGroupId:this.globalEvent.curScreenIndex,
                     winId:curWindow.winId,
+                    srcCardId:curWindow.srcCardId,
                     srcGroupId:curWindow.srcGroupId,
                     srcId:curWindow.srcId,
                     layerId:curWindow.layerId,
@@ -471,7 +473,8 @@
                     winW:curWindow.winSizeArr[2],
                     winH:curWindow.winSizeArr[3],
                 };
-                this.$http.post("winOpr.cgi",data,(ret)=>{
+                console.log(data);
+                this.$http.post("winOpr.cgi",data,()=>{
                     console.log("vdr/index.vue .保存窗口 尺寸 位置....");
                     //如果都统一保存 然后再读取（ loadScreenWindowItems），就没必要修改属性（减少复杂度 代码量）。。。 调用
                 });
