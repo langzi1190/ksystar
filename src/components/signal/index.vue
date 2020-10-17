@@ -268,9 +268,11 @@ export default {
       height: 40px;
       line-height: 40px;
     }
-    .card_label{margin-right:3px;color:#f44f44;    width: 105px;text-align: left;display: inline-block;}
+    .card_label{margin-right:3px;color:#f44f44;    width: 105px;text-align: left;display: inline-block;position:relative;}
+    .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
+
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
     .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;height:30px;line-height:30px;}
     .list_item:nth-child(even){border:none;}
