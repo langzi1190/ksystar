@@ -17,7 +17,7 @@
                     <td>{{item.portName.length>2?item.portName[2]:''}}</td>
 
                     <td :class="{fail:item.memory==0}"><i :class="[item.memory==1?'el-icon-success':'el-icon-error']"></i></td>
-                    <td :class="{fail:item.video==0}"><i :class="[item.video==1?'el-icon-success':'el-icon-error']"></i></td>
+                    <td :class="{fail:item.vedio==0}"><i :class="[item.vedio==1?'el-icon-success':'el-icon-error']"></i></td>
                     <td :class="{fail:item.ctrl!=0}"><i :class="[item.ctrl==0?'el-icon-success':'el-icon-error']"></i></td>
                     <td>{{item.flashInfo}}</td>
                 </tr>

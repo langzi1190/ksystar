@@ -99,7 +99,7 @@ export default {
           for(let i in this.displayList){
               for(let k in this.displayList[i].portArr){
                   // this.displayList[i].portArr[k]=[validPos.shift()+1];
-                  this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()+1]);
+                  this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()]);
               }
           }
       },
@@ -131,6 +131,7 @@ export default {
           return flag;
       },
       subEvent(param){
+
           if(param.act=='Col' || param.act=='Row'){
               // if(!this.isValidCardCount()){
               //     return ;
@@ -138,12 +139,16 @@ export default {
               this.$refs.cs_array[param.seq].setArraySize(param.act,param.v)
           }
           else if(param.act=='resolutionValue'){
+              if(param.videoId==-1){
+                  console.log('videoId:',param.videoId);
+                  return ;
+              }
               let m=param.v.split('*');
               this.displayList[param.seq].FormatW=m[0];
               this.displayList[param.seq].FormatH=m[1];
               this.displayList[param.seq].VideoId=param.videoId;
               if(param.videoId==117){
-                  this.displayList[param.seq].FrameRate=30;//0:60,1:50, 2:30;
+                  this.displayList[param.seq].FrameRate=2;//30;//0:60,1:50, 2:30;
               }
               let portArr=this.displayList[param.seq].portArr;
               for(let i in portArr){
@@ -197,7 +202,11 @@ export default {
           for(let i in copyDisplayList){
               delete copyDisplayList[i].tabName;
               for(let k in copyDisplayList[i].portArr){
-                  copyDisplayList[i].FrameRate=copyDisplayList[i].FrameRate==30?2:(copyDisplayList[i].FrameRate==60?0:1);
+                  // copyDisplayList[i].FrameRate=copyDisplayList[i].FrameRate==30?2:(copyDisplayList[i].FrameRate==60?0:1);
+                  copyDisplayList[i].FormatH=parseInt(copyDisplayList[i].FormatH);
+                  copyDisplayList[i].FormatW=parseInt(copyDisplayList[i].FormatW);
+                  let size=copyDisplayList[i].portArr[k].sizeArr;
+                  copyDisplayList[i].portArr[k].sizeArr=size.map((v,k)=>{return parseInt(v);});
                   delete copyDisplayList[i].portArr[k].briArr;
                   delete copyDisplayList[i].portArr[k].conArr;
               }
@@ -206,6 +215,8 @@ export default {
               scrGroupNum:copyDisplayList.length,
               scrGroupArr:copyDisplayList
           };
+
+          console.log(screenInfo);
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
 
           });
@@ -219,7 +230,6 @@ export default {
         }
 
         this.globalEvent.selectedPort=this.selectedPort;
-
       },
 
   },

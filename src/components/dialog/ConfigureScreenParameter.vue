@@ -192,15 +192,13 @@ const hertz = [
 ];
 import Rs from '@/components/dialog/ResolutionSet';
 import Ts from '@/components/dialog/TimeSeq';
-// const Rs=()=>{import('@/components/dialog/ResolutionSet');}
-// const Ts=()=>{import('@/components/dialog/TimeSeq');}
 export default {
   props:['item','seq'],
   data() {
 
       let rv=this.item.FormatW+'*'+this.item.FormatH;
       let videoId=this.item.VideoId;
-
+      let frameRate=this.item.FrameRate==0?60:50;
     return {
         resolution,
         hertz,
@@ -208,7 +206,7 @@ export default {
         resolutionValue:videoId==0?'-1':rv,
         videoId:-1,
         beforeRv:'',//自定义 前分辨率
-        hertzValue:this.item.FrameRate+'HZ',
+        hertzValue:frameRate+'HZ',
         rowNum: this.item.Row,
         columnNum: this.item.Col,
         TimingMode: this.item.TimingMode,
@@ -239,12 +237,18 @@ export default {
             }
             else if(param.act=='setResolution'){
 
-                this.resolutionValue='-1';//显示自定义
 
                 this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:param.x+'*'+param.y,videoId:0});
                 this.rv=param.x+'*'+param.y;
-                this.videoId=-1;
+                // this.videoId=-1;
+
                 this.showSetting=false;
+                setTimeout(()=>{
+                    //不加延迟 会被 v-model 覆盖
+                    this.resolutionValue='-1';//显示自定义
+                },600);
+
+                console.log("自定义")
             }
             else if(param.act=='showTimeSeq'){
                 this.resolutionValue=this.beforeRv;//恢复分辨率
@@ -255,6 +259,7 @@ export default {
     },
     watch:{
         resolutionValue(v,ov){
+
             if(v=='-1'){
                 return ;
             }
@@ -264,19 +269,23 @@ export default {
                 this.showSetting=true;
                 return ;
             }
+
             if(this.videoId==-1){
                 resolution.forEach((ele,k)=>{
                     if(v==ele.value) {
                         this.videoId=ele.videoId;
                     }
                 });
+
             }
             this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:v,videoId:this.videoId});
             this.videoId=-1;
 
         },
         hertzValue(v,ov){
-            this.setParentData('FrameRate',v.replace('HZ',''));
+            v=v.replace('HZ','');
+            let s=v==30?2:(v==60?0:1);
+            this.setParentData('FrameRate',s);
         },
 
         rowNum(v,ov){

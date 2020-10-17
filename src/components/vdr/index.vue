@@ -37,7 +37,7 @@
             <windowItem
                     v-for="(item,index) in windowItems"
                     :item="item"
-                    :key="item.winSizeArr[0]"
+                    :key="item.k"
                     :seq="index"
                     ref="windowObj"
                     :ratio="ratio"
@@ -90,19 +90,22 @@
             this.globalEvent.$on("close_window_item",(param)=>{
                 //关闭窗口
                 let data={
-                    groupId:this.curScreenIndex
+                    groupId:this.globalEvent.curScreenIndex
                 };
                 if(param.act=='all'){
                     this.windowItems=[];
+                    this.$http.post("closeAllWin.cgi",data,(ret)=>{
+
+                    });
                 }
                 else{
                     this.windowItems.splice(this.globalEvent.selectedWindowIndex,1);
                     data.winId=this.globalEvent.selectedWindowIndex;
+                    this.$http.post("closeWin.cgi",data,(ret)=>{
+
+                    });
                 }
 
-                this.$http.post("closeWin.cgi",data,(ret)=>{
-                    console.log("vdr/index.vue 关闭窗口。。。");
-                });
 
 
                 if(this.windowItems.length==0){
@@ -260,6 +263,7 @@
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
                         win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,win.srcCardId,win.srcId);
+                        win.k='k'+parseInt(Math.random()*1000);
                     }
                     this.globalEvent.windowItemsInfo=ret.data;
                     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
@@ -513,7 +517,11 @@
                         that.dragRect.h=deltay;
                     };
                     let mu=function(){
-                        that.addWindowItem({act:'drag'});
+                        if(that.dragRect.w>30 && that.dragRect.h>30){
+                            //拖动特定 长宽 才生成窗口
+                            that.addWindowItem({act:'drag'});
+                        }
+
                         document.removeEventListener("mousemove",mm);
                         document.removeEventListener("mouseup",mu);
                     };
