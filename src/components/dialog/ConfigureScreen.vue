@@ -56,6 +56,11 @@ export default {
         screenInfo:{},
     };
   },
+    provide() {
+        return {
+            comScreen: this
+        }
+    },
   created() {
 
       this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
@@ -176,7 +181,7 @@ export default {
               this.showTab(this.displayList.length-1);
           }
           //同步窗口信息
-          this.syncScreen();
+          // this.syncScreen();
 
       },
       isSubmit(bool) {
@@ -185,12 +190,13 @@ export default {
                 //检查端口使用数量，
                 return ;
             }
-
            this.syncScreen();
         } else {
-          console.log("取消");
+            //重新加载
+            console.log("取消");
+            this.$emit("isDialogVisible", false); // 退出关闭弹窗
         }
-        this.$emit("isDialogVisible", false); // 退出关闭弹窗
+
       },
       syncScreen(){
           if(!this.isRepeatUsed()){
@@ -218,7 +224,7 @@ export default {
 
           console.log(screenInfo);
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
-
+              this.$emit("isDialogVisible", false); // 退出关闭弹窗
           });
       },
       portPut(io) {

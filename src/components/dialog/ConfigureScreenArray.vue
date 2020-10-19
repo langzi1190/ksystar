@@ -55,22 +55,24 @@
             return {
                 column:this.item.Col,
                 row:this.item.Row,
-                displayIndex:-1,
+                displayIndex:-1,//选中的子窗口
                 ranksRow:[],
                 ranksColumn:[],
                 portList:this.item.portArr
             };
         },
+        inject: ["comScreen"],
         watch:{
             "globalEvent.selectedPort":function (v,ov) {
-                if(this.displayIndex>-1 && this.displayIndex==this.seq){
+
+                if(this.displayIndex>-1 && this.comScreen.curTabName == this.comScreen.displayList[this.seq].tabName){
                     // console.log(this.displayIndex,this.seq);
                     this.$set(this.portList[this.displayIndex].mapArr,0,v);
+                    if(!this.comScreen.isRepeatUsed()){
+                        alert("该端口已被使用");
+                    }
                 }
 
-                // if(!this.isRepeatUsed()){
-                //     alert("该端口已被使用");
-                // }
             },
         },
         mounted(){
@@ -87,21 +89,6 @@
 
                 this.initScreenPlace();
             },
-            // isRepeatUsed(){
-            //     let flag=true;
-            //     let port=[];
-            //     for(let i in this.displayList){
-            //         for(let k in this.displayList[i].portArr){
-            //             port.push(this.displayList[i].portArr[k].mapArr[0]);
-            //         }
-            //     }
-            //
-            //     console.log(port);
-            //     if(port.length!=[...new Set(port)].length){
-            //         flag=false;
-            //     }
-            //     return flag;
-            // },
             initScreenPlace(){
                 //重排列
 

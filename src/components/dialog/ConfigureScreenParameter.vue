@@ -65,7 +65,7 @@
     </div>
 
       <Rs @sub_event="subEvent" :showSetting="showSetting"></Rs>
-      <Ts @sub_event="subEvent" :showSetting="showTimeSeq"></Ts>
+      <Ts @sub_event="subEvent" v-if="showTimeSeq" :showSetting="showTimeSeq"></Ts>
   </div>
 </template>
 
@@ -203,6 +203,7 @@ export default {
         resolution,
         hertz,
         rv,
+        w:0,h:0,
         resolutionValue:videoId==0?'-1':rv,
         videoId:-1,
         beforeRv:'',//自定义 前分辨率
@@ -251,8 +252,11 @@ export default {
                 console.log("自定义")
             }
             else if(param.act=='showTimeSeq'){
+                console.log(param);
                 this.resolutionValue=this.beforeRv;//恢复分辨率
-                this.showSetting=false;
+                this.w=param.x;//给时序设置用
+                this.h=param.y;
+                // this.showSetting=false;
                 this.showTimeSeq=true;
             }
         }
