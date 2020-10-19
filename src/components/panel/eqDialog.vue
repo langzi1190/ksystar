@@ -37,7 +37,22 @@
             }
         },
         created(){
-            console.log(this.showDialog);
+            // console.log(this.showDialog);
+            //读取 eq值
+            let num=this.globalEvent.selectedCard.label_info.split("_");
+            let param={
+                srcCardId:num[0]-0,
+                srcId:num[1]-0,
+            };
+            this.$http.post("srcEqRd.cgi",param,(ret)=>{
+                console.log("读取 eq");
+                for(let i in this.eqList){
+                    if(Number(this.eqList[i])==ret.eqVal){
+                        this.eq=i;
+                        break;
+                    }
+                }
+            });
         },
         methods:{
             submit(act){

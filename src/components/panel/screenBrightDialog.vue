@@ -53,7 +53,7 @@
 
                     <div class="inputNumber">
                         <span>B:</span>
-                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="b"  @change="changeRgb('b')" :min="1" :max="10"></el-input-number>
+                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="b"  @change="changeRgb('b')" :min="1" :max="255"></el-input-number>
                     </div>
                 </div>
             </div>
@@ -160,11 +160,12 @@
                 // console.log(cfgObj);
                 let param={
                     cfgType:this.syncType,
-                    colorType:1,
+                    colorType:this.colorType,
                     cfgObj,
                     colorVal:this.colorVal,
                 };
-                this.$http.post("scrColorWr.cgi",param,(ret)=>{});
+                console.log(param);
+                this.$http.post("scrColorWr.cgi",param,()=>{});
             },
             op(act){
                 if(act)

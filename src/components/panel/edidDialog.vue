@@ -1,10 +1,10 @@
 <template>
     <div class="edid_dialog">
         <el-dialog title="自定义EDID设置" :visible="showDialog=='edid'" @close="op('cancel')">
-            <div v-show="isChoose==1">
+            <div v-show="advanceType.includes(curPortType)">
                 <div class="item">
                     <span>设备号：</span>
-                    <el-input-number :min="1" :max="200" v-model="userModel" size="mini"></el-input-number>
+                    <el-input v-model="userModel" size="mini"></el-input>
                 </div>
                 <div class="item">
                     <span>宽度：</span>

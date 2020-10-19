@@ -164,41 +164,23 @@
 
 <script>
 
-
     export default {
         props:['showSetting'],
         data(){
             return {
                 isVisible: this.showSetting,
-                curScreen:{
-                    "TimingMode":	1,
-                    "FrameRate":	60,
-                    "FormatW":	this.$parent.w,
-                    "HFrontPorch": 88,
-                    "HSyncTime":	44,
-                    "HBackPorch":	148,
-                    "FormatH":	this.$parent.h,
-                    "VFrontPorch":	4,
-                    "VSyncTime":	5,
-                    "VBackPorch":	36,
-                    "ClkFreq":	148500,
-                    "HPolar":	0,
-                    "VPolar":	0,
-                },//this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
+                curScreen:this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
             };
         },
         watch:{
             showSetting(v,ov){
                 this.isVisible=v;
             },
-            // "globalEvent.curScreenIndex":function(v,ov){
-            //     this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
-            // }
+            "globalEvent.curScreenIndex":function(v,ov){
+                this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+            }
         },
         methods:{
-            calFrameRate(){
-
-            },
             copyObject(o){
                 return JSON.parse(JSON.stringify(o));
             },
