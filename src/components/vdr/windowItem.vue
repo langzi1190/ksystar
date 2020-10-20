@@ -1,5 +1,7 @@
 <template>
-    <div class="windowItem" :style="{
+    <div class="windowItem"
+         @dblclick="setSrcCard"
+         :style="{
         top:(partOrAll==0?ptop:0)+'%',
         left:(partOrAll==0?pleft:0)+'%',
         width:(partOrAll==0?pwidth:100)+'%',
@@ -16,7 +18,7 @@
             <div class="draw-area__dot draw-area__dot--l" data-type="left" @mousedown.stop="handleMouseDown"></div>
             <div class="draw-area__dot draw-area__dot--tl" data-type="top_left" @mousedown.stop="handleMouseDown"></div>
 
-            <div class="title"  data-type="move" @mousedown.stop="handleMouseDown">
+            <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
                     <span>Win-{{seq+1}}:{{item.label}}</span>
                 </div>
@@ -185,13 +187,15 @@
                         this.o_height=Math.ceil(this.pheight*this.$parent.totalHeight/100);
                         this.o_left=Math.ceil(this.pleft*this.$parent.totalWidth/100);
                         this.o_width=Math.ceil(this.pwidth*this.$parent.totalWidth/100);
+
+                        this.sendSizeEvent();
                     }
 
 
 
                 }
                 else if (val === "1") {
-
+                    //全屏
                     this.partOrAll=1;
 
                     this.o_top=this.o_left=0;
@@ -201,10 +205,12 @@
                     this.sendSizeEvent();
                 }
                 else if (val === "2") {
+                    //关闭
                     // this.$emit('sub_event',{act:'delete_window_item',seq:this.seq})
                     this.globalEvent.$emit("close_window_item",{act:'cur'});
                 }
                 else if(val==='3'){
+                    //扩张
                     //检测辅助线
                     [this.o_top,this.o_left,this.o_width,this.o_height]=this.$parent.getWindowSize([this.o_top,this.o_left,this.o_width,this.o_height]);
                     //保存 数据
@@ -230,6 +236,26 @@
                 }
 
             },
+            setSrcCard(){
+                //切换 信号源
+                let w=this.globalEvent.selectedWindowIndex;
+                let num=this.globalEvent.sourceCardNumber();
+                if(w>-1){
+                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
+                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
+
+                    //保存信号源信息
+                    let data={
+                        scrGroupId:this.globalEvent.curScreenIndex,
+                        winId:w,
+                        srcCardId:num[0],
+                        srcId:num[1]
+                    };
+                    this.$http.post("switchWinSrc.cgi",data,(ret)=>{
+                        console.log("signal/index.vue 切换窗口源信号");
+                    });
+                }
+            },
             handleMouseDown(ev){
                 if(this.partOrAll==1){
                     return ;
@@ -241,6 +267,11 @@
                 if(this.globalEvent.selectedWindowIndex!=this.seq){
                     //选则当前窗体
                     this.globalEvent.selectedWindowIndex=this.seq;
+                }
+
+                if(this.item.lock==1){
+                    //窗体锁定
+                    return ;
                 }
 
                 let old_x=ev.pageX;
@@ -399,6 +430,7 @@
                     let deltay=Math.abs(init_y-e.pageY);
                     if(deltax>5 || deltay>5){
                         that.stickSize=[];//窗口发生位移 则取消保存的位置,
+                        that.setSrcCard();//切换信号源
                         that.sendSizeEvent();
                     }
 

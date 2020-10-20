@@ -115,11 +115,12 @@
             op(act){
                 if(act){
                     let param={
-                        ipArr:this.ipArr,
-                        getArr:this.getArr,
-                        maskArr:this.maskArr
+                        ipArr:this.ipArr.map((v,k)=>parseInt(v)),
+                        gateArr:this.gateArr.map((v,k)=>parseInt(v)),
+                        maskArr:this.maskArr.map((v,k)=>parseInt(v))
                     };
 
+                    console.log(param);
                     this.$http.post("ipCfgWr.cgi",param,(r)=>{
 
                     });

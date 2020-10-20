@@ -26,10 +26,10 @@
                     <div>同步基准源：</div>
                     <el-select v-model="syncSignal" placeholder="同步基准源" size="mini">
                         <el-option
-                                v-for="item in signalListFlat"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="(item,index) in signalListFlat"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.value"
                         ></el-option>
                     </el-select>
 
@@ -57,7 +57,6 @@
                     children: 'srcArr',
                 },
                 showTree:false,
-                // selectedSignal:{},
                 syncSignal:'',//被选中的信号 label_extra
             }
         },
@@ -78,9 +77,12 @@
                     for(let k in cardArr[i].scrPropArr){
                         let src=cardArr[i].scrPropArr[k];
 
-                        this.syncSignal=this.globalEvent.signalCardName(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
+                        this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
                         if(src.syncEn==1){
-                            this.signalListFlat.push(this.globalEvent.signalCardName(i,k));
+                            this.signalListFlat.push({
+                                label:this.globalEvent.signalCardName(i,k),
+                                value:this.globalEvent.signalCardInfo(i,k)
+                            });
                             this.selectedKey.push(this.signalList[i].srcArr[k].id);
                         }
                     }
@@ -119,7 +121,10 @@
                 else{
                     //信号源
                     if(checked){
-                        this.signalListFlat.push(data.label_extra);
+                        this.signalListFlat.push({
+                            label:data.label_extra,
+                            value:data.label_info
+                        });
                     }
                     else{
                         this.delSourceId([data])
@@ -133,9 +138,9 @@
 
                 for(let k in this.signalListFlat){
                     for(let i in srcArr){
-                        if(this.signalListFlat[k]==srcArr[i].label_extra){
+                        if(this.signalListFlat[k].label==srcArr[i].label_extra){
                             sk.push(k);
-                            if(this.syncSignal==srcArr[i].label_extra){
+                            if(this.syncSignal==srcArr[i].label_info){
                                 this.syncSignal='';
                             }
                             break;
@@ -158,31 +163,16 @@
                         return ;
                     }
 
-                    // let param={
-                    //     inCardNum:this.signalList.length,
-                    //     funcSta:this.controlSync,//同步到 commonInfo
-                    //     inCardArr:[
-                    //         {
-                    //             inCardChnArr:[
-                    //                 {
-                    //                     syncEn:0,
-                    //                     syncCardId:0,
-                    //                     syncSrcId:9,
-                    //                 }
-                    //             ]
-                    //         }
-                    //     ]
-                    // };
                     let param={
                         inCardNum:this.signalList.length,
                         funcSta:this.syncEnable,//同步到 commonInfo
                         inCardArr:[]
                     };
 
-                    let s=this.syncSignal.replace('S','');
-                    s=s.split("_");
-                    let syncCardId=s[0]-1;
-                    let syncSrcId=s[1]-1;
+
+                    let s=this.syncSignal.split("_");
+                    let syncCardId=s[0]-0;
+                    let syncSrcId=s[1]-0;
                     for(let i in this.signalList){
                         let inCard={
                             inCardChnArr:[]
@@ -194,8 +184,14 @@
                                 syncCardId:syncCardId,
                                 syncSrcId:syncSrcId
                             };
-                            if(this.signalListFlat.includes(src)){
-                                inCardChn.syncEn=1;
+                            // if(this.signalListFlat.includes(src)){
+                            //     inCardChn.syncEn=1;
+                            // }
+                            for(let t in this.signalListFlat){
+                                if(this.signalListFlat[t].label==src){
+                                    inCardChn.syncEn=1;
+                                    break;
+                                }
                             }
 
                             inCard.inCardChnArr.push(inCardChn);
@@ -203,7 +199,7 @@
 
                         param.inCardArr.push(inCard);
                     }
-                    console.log(JSON.stringify(param));
+
                     this.$http.post("KfsWr.cgi",param,(ret)=>{
                         this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=param.funcSta;
                         this.$emit('sub_event',{act:'close_kfs'})

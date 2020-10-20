@@ -74,8 +74,7 @@
                         <div class="item_input">
                             <el-input
                                     size="mini"
-                                    v-model="curScreen.HPolar"
-                                    :disabled="true">
+                                    v-model="curScreen.HPolar">
                             </el-input>
                         </div>
                     </div>
@@ -89,7 +88,7 @@
                         <div class="item_input">
                             <el-input
                                     size="mini"
-                                    v-model="curScreen.FrameRate"
+                                    v-model="FrameRateInfo"
                                     :disabled="true">
                             </el-input>
                         </div>
@@ -146,8 +145,7 @@
                         <div class="item_input">
                             <el-input
                                     size="mini"
-                                    v-model="curScreen.VPolar"
-                                    :disabled="true">
+                                    v-model="curScreen.VPolar">
                             </el-input>
                         </div>
                     </div>
@@ -167,17 +165,32 @@
     export default {
         props:['showSetting'],
         data(){
+            let curScreenIndex=this.comScreen.curScreenIndex();//当前操作的屏幕
             return {
+                curScreenIndex,
                 isVisible: this.showSetting,
-                curScreen:this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
+                curScreen:this.copyObject(this.comScreen.displayList[curScreenIndex]),
+                FrameRateInfo:0
             };
         },
+        inject: ["comScreen"],
         watch:{
             showSetting(v,ov){
                 this.isVisible=v;
             },
-            "globalEvent.curScreenIndex":function(v,ov){
-                this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+            // "globalEvent.curScreenIndex":function(v,ov){
+            //     this.curScreen=this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+            // }
+        },
+        mounted(){
+            if(this.curScreen.FrameRate==0){
+                this.FrameRateInfo = 60;
+            }
+            else if(this.curScreen.FrameRate==1){
+                this.FrameRateInfo = 50;
+            }
+            else if(this.curScreen.FrameRate==2){
+                this.FrameRateInfo = 30;
             }
         },
         methods:{
@@ -191,9 +204,12 @@
                 }
                 else{
                     //提交
-                    console.log("xx");
-                    Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
-                    console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+                    // console.log("xx");
+                    // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
+                    // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+
+                    Object.assign(this.comScreen.displayList[this.curScreenIndex],this.curScreen);
+                    this.$emit('sub_event',{act:'closeTimeSeqDialog'});
                 }
             }
         }

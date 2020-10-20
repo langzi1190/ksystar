@@ -1,65 +1,82 @@
 <template>
-  <div class="attr" v-show="globalEvent.selectedWindowIndex>-1">
+  <div class="attr">
     <div class="close-all">
       <el-button type="primary"  @click="closeWindowItem('all')" size="mini" style="width:100%">关闭所有画面</el-button>
     </div>
-    <div class="control-btn">
-      <el-button size="mini" @click="sendEvent('update_window','top','')">置顶</el-button>
-      <el-button size="mini" @click="sendEvent('update_window','bottom','')">置底</el-button>
-      <el-button size="mini">锁定</el-button>
-      <el-button size="mini" @click="isPanorama=!isPanorama">
-        <span v-show="isPanorama">全景</span>
-        <span v-show="!isPanorama">局部</span>
-      </el-button>
-      <el-button size="mini" @click="sendEvent('update_window','window_size','1')">全屏</el-button>
-      <el-button size="mini" @click="sendEvent('update_window','window_size','3')">扩张</el-button>
-      <el-button size="mini" @click="sendEvent('update_window','window_size','0')">还原</el-button>
-      <el-button size="mini" @click="closeWindowItem('cur')">关闭</el-button>
+    <div v-show="globalEvent.selectedWindowIndex>-1">
+      <div class="control-btn">
+        <el-button size="mini" @click="sendEvent('update_window','top','')">置顶</el-button>
+        <el-button size="mini" @click="sendEvent('update_window','bottom','')">置底</el-button>
+        <el-button size="mini" @click="sendEvent('update_window','lock','')">锁定</el-button>
+        <el-button size="mini" @click="isPanorama=!isPanorama">
+          <span v-show="isPanorama">全景</span>
+          <span v-show="!isPanorama">局部</span>
+        </el-button>
+        <el-button size="mini" @click="sendEvent('update_window','window_size','1')">全屏</el-button>
+        <el-button size="mini" @click="sendEvent('update_window','window_size','3')">扩张</el-button>
+        <el-button size="mini" @click="sendEvent('update_window','window_size','0')">还原</el-button>
+        <el-button size="mini" @click="closeWindowItem('cur')">关闭</el-button>
+      </div>
+      <div class="title">
+        <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
+          <template slot="prepend">画面名称:</template>
+        </el-input>
+      </div>
+      <div>
+        <el-collapse v-model="activeName" accordion>
+          <el-collapse-item title="画面参数" name="1">
+            <div class="position-size">
+              <span>水平位置:</span>
+              <el-input-number @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>垂直位置:</span>
+              <el-input-number @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>水平大小:</span>
+              <el-input-number @change="change('width')" v-model="width" :min="400" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>垂直大小:</span>
+              <el-input-number @change="change('height')" v-model="height" :min="300" size="mini"></el-input-number>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item title="局部显示" name="2">
+            <div class="position-size">
+              <span>水平位置:</span>
+              <el-input-number v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>垂直位置:</span>
+              <el-input-number v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>水平大小:</span>
+              <el-input-number v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
+            </div>
+            <div class="position-size">
+              <span>垂直大小:</span>
+              <el-input-number v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
     </div>
-    <div class="title">
-      <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
-        <template slot="prepend">画面名称:</template>
-      </el-input>
-    </div>
-    <div>
-      <el-collapse v-model="activeName" accordion>
-        <el-collapse-item title="画面参数" name="1">
-          <div class="position-size">
-            <span>水平位置:</span>
-            <el-input-number @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>垂直位置:</span>
-            <el-input-number @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>水平大小:</span>
-            <el-input-number @change="change('width')" v-model="width" :min="400" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>垂直大小:</span>
-            <el-input-number @change="change('height')" v-model="height" :min="300" size="mini"></el-input-number>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item title="局部显示" name="2">
-          <div class="position-size">
-            <span>水平位置:</span>
-            <el-input-number v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>垂直位置:</span>
-            <el-input-number v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>水平大小:</span>
-            <el-input-number v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
-          </div>
-          <div class="position-size">
-            <span>垂直大小:</span>
-            <el-input-number v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
+    <div class="collapse_inner">
+      <div class="content-title">信号设置</div>
+      <div v-show="Object.keys(this.globalEvent.selectedCard).length>0">
+        <el-button @click="op('rename')" size="mini">更改名称</el-button>
+        <el-button @click="op('hotBackup')" size="mini">热备份</el-button>
+        <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>
+        <el-button @click="op('workMode')" size="mini">工作模式</el-button>
+        <!--<el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>-->
+        <el-button @click="op('setEq')" size="mini">EQ值设置</el-button>
+        <el-button @click="op('rdEdid')" size="mini">回读EDID</el-button>
+      </div>
+      <div style="text-align:center;color:#d0d0d0;" v-show="Object.keys(this.globalEvent.selectedCard).length==0">
+          未选中信号
+      </div>
     </div>
   </div>
 </template>
@@ -68,7 +85,7 @@
 export default {
     data() {
         return {
-            activeName: "1",
+            activeName: "0",
             isPanorama: true,
             label: "",
             num: 0,
@@ -141,6 +158,36 @@ export default {
             this.cwidth=curWindow.cropSizeArr[2];
             this.cheight=curWindow.cropSizeArr[3];
 
+        },
+        op(act){
+            if(act=='cancel'){
+                this.$emit('sub_event',{act:'close_kfs'});
+            }
+            else if(act=='sure'){
+                this.$emit('sub_event',{act:'close_kfs'});
+            }
+            else if(act=='showAdvanced'){
+                this.$emit('sub_event',{act:'show_edid_advanced'})
+            }
+            else if(act=='rename'){
+                let s=prompt("新输入新名称",this.globalEvent.selectedCard.label_extra);
+                if(s!==null && s!==undefined){
+                    this.globalEvent.selectedCard.label_extra=s;
+                    this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
+                }
+            }
+            else if(act=='hotBackup'){
+                this.$emit('sub_event',{act:"hot_backup"});
+            }
+            else if(act=='workMode'){
+                this.$emit('sub_event',{act:'work_mode'});
+            }
+            else if(act=='setEq'){
+                this.$emit('sub_event',{act:'eq'});
+            }
+            else if(act=='vga'){
+                this.$emit('sub_event',{act:'vga'});
+            }
         }
     },
     watch:{
@@ -207,6 +254,9 @@ export default {
 .el-button + .el-button {
   margin: 0;
 }
+.collapse_inner{text-align:left;}
+.collapse_inner .content-title{margin-bottom:15px;text-align:center;margin-top:30px;}
+.collapse_inner .el-button--mini{width:80px;    margin-left: 15px;margin-bottom: 10px;}
 /deep/ .el-collapse-item__header {
   height: 40px;
   line-height: 40px;

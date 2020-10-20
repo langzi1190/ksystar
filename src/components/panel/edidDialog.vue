@@ -19,26 +19,30 @@
                     <el-input size="mini"></el-input>
                 </div>
                 <div class="item">
+                    <span></span>
+                    <el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>
+                </div>
+                <div class="item">
                     <el-button size="mini" @click="op('sure')">确定</el-button>
                     <el-button size="mini" @click="op('cancel')">取消</el-button>
                 </div>
             </div>
 
 
-            <div style="background-color: #dcdcdc;border-radius: 5px;padding: 10px;" v-show="isChoose>0">
-                <div class="item" style="display:flex;justify-content: space-around">
-                    <el-button @click="op('rename')" size="mini">更改名称</el-button>
-                    <el-button @click="op('hotBackup')" size="mini">热备份</el-button>
-                    <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>
-                </div>
-                <div class="item" style="display: flex" v-show="advanceType.includes(curPortType)">
-                    <el-button @click="op('workMode')" size="mini">工作模式</el-button>
-                    <el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>
-                    <el-button @click="op('setEq')" size="mini">EQ值设置</el-button>
-                    <el-button @click="op('rdEdid')" size="mini">回读EDID</el-button>
+            <!--<div style="background-color: #dcdcdc;border-radius: 5px;padding: 10px;" v-show="isChoose>0">-->
+                <!--<div class="item" style="display:flex;justify-content: space-around">-->
+                    <!--<el-button @click="op('rename')" size="mini">更改名称</el-button>-->
+                    <!--<el-button @click="op('hotBackup')" size="mini">热备份</el-button>-->
+                    <!--<el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>-->
+                <!--</div>-->
+                <!--<div class="item" style="display: flex" v-show="advanceType.includes(curPortType)">-->
+                    <!--<el-button @click="op('workMode')" size="mini">工作模式</el-button>-->
+                    <!--<el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>-->
+                    <!--<el-button @click="op('setEq')" size="mini">EQ值设置</el-button>-->
+                    <!--<el-button @click="op('rdEdid')" size="mini">回读EDID</el-button>-->
 
-                </div>
-            </div>
+                <!--</div>-->
+            <!--</div>-->
 
         </el-dialog>
     </div>

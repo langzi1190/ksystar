@@ -43,17 +43,17 @@
                 <div style="float:right;">
                     <div class="inputNumber">
                         <span>R:</span>
-                        <el-input-number size="mini"  v-model="r"  @change="changeRgb('r')" :min="0" :max="255"></el-input-number>
+                        <el-input-number size="mini"  v-model="r"  @change="changeRgb('r')" :min="0" :max="128"></el-input-number>
                     </div>
 
                     <div class="inputNumber">
                         <span>G:</span>
-                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="g"  @change="changeRgb('g')" :min="0" :max="255"></el-input-number>
+                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="g"  @change="changeRgb('g')" :min="0" :max="128"></el-input-number>
                     </div>
 
                     <div class="inputNumber">
                         <span>B:</span>
-                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="b"  @change="changeRgb('b')" :min="1" :max="255"></el-input-number>
+                        <el-input-number size="mini" :disabled="syncRgb==1" v-model="b"  @change="changeRgb('b')" :min="1" :max="128"></el-input-number>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@
                 }
             },
             syncWinRgb(){
-                let cfgObj='x';
+                let cfgObj=0;
                 if(this.syncType==1){
                     //同步所有
                     for(let i in this.displayList){
@@ -160,7 +160,7 @@
                 // console.log(cfgObj);
                 let param={
                     cfgType:this.syncType,
-                    colorType:this.colorType,
+                    colorType:this.syncRgb==1?7:this.colorType,
                     cfgObj,
                     colorVal:this.colorVal,
                 };

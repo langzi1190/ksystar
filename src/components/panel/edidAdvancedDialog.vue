@@ -173,7 +173,7 @@
     const EDID_DT_CFGBYTE_V_SYNC_WIDTH_H_8K =60
 
     const EDID_DETAILED_TIMING_OFFSET  =0x36
-    const EDID_PER_DETAILED_TIMING_LEN =18
+    // const EDID_PER_DETAILED_TIMING_LEN =18
 
     const EDID_DT_CFGBYTE_PIXELCLOCK_L =0x00
     const EDID_DT_CFGBYTE_PIXELCLOCK_H =0x01
@@ -237,10 +237,10 @@
 
             },
             calEdid(){
-                let offset = EDID_DETAILED_TIMING_OFFSET_8K;
+
                 let EDID=[];
                 if(this.curScreen.FormatW>4096){
-
+                    let offset = EDID_DETAILED_TIMING_OFFSET_8K;
                     EDID=[
                         0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
                         0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
@@ -294,7 +294,7 @@
                 }
                 else{
                     {
-
+                        let offset = EDID_DETAILED_TIMING_OFFSET;
                         EDID=[
                             0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
                             0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
@@ -364,11 +364,12 @@
                 //提交
                 this.calEdid();
                 // console.log(this.EDID)
-                let num=this.globalEvent.selectedCard.label_info.split('_');
+                // let num=this.globalEvent.selectedCard.label_info.split('_');
+                let num=this.globalEvent.sourceCardNumber();
                 let param={
                     devId:0,
-                    srcCardId:num[0]-0,
-                    srcId:num[1]-0,
+                    srcCardId:num[0],
+                    srcId:num[1],
                     EdidDataArr:this.EDID
                 };
                 this.$http.post("srcEdidWr.cgi",param,()=>{});

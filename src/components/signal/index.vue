@@ -174,23 +174,23 @@ export default {
         handleNodeClick(data,node,tree){
             if(node.level==2){
                 this.globalEvent.selectedCard=data;
-                let w=this.globalEvent.selectedWindowIndex;
-                let num=this.globalEvent.sourceCardNumber();
-                if(w>-1){
-                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
-                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
-
-                    //保存信号源信息
-                    let data={
-                        scrGroupId:this.globalEvent.curScreenIndex,
-                        winId:w,
-                        srcCardId:num[0],
-                        srcId:num[1]
-                    };
-                    this.$http.post("switchWinScr.cgi",data,(ret)=>{
-                        console.log("signal/index.vue 切换窗口源信号");
-                    });
-                }
+                // let w=this.globalEvent.selectedWindowIndex;
+                // let num=this.globalEvent.sourceCardNumber();
+                // if(w>-1){
+                //     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
+                //     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
+                //
+                //     //保存信号源信息
+                //     let data={
+                //         scrGroupId:this.globalEvent.curScreenIndex,
+                //         winId:w,
+                //         srcCardId:num[0],
+                //         srcId:num[1]
+                //     };
+                //     this.$http.post("switchWinSrc.cgi",data,(ret)=>{
+                //         console.log("signal/index.vue 切换窗口源信号");
+                //     });
+                // }
             }
         },
         editScene(){
@@ -224,8 +224,8 @@ export default {
                 this.getSysInputInfo();
                 this.$parent.$refs.vdr.loadData();
 
-                // console.log("signal/index.vue 载入用户模式，重载接口");
-                console.log(ret.data);
+                console.log("signal/index.vue 载入用户模式，重载接口");
+                // console.log(ret.data);
 
             });
         }

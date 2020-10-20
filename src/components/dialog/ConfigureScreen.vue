@@ -2,6 +2,7 @@
   <el-dialog
     title="屏幕参数设置"
     :visible.sync="isVisible"
+    v-if="isVisible"
     width="900px"
     top="8vh"
     @close="isSubmit(false)"
@@ -31,8 +32,8 @@
       </div>
     </div>
     <span slot="footer" class="dialog-footer">
+       <el-button @click="isSubmit(true)" size="mini">确 定</el-button>
       <el-button @click="isSubmit(false)" size="mini">取 消</el-button>
-      <el-button type="primary" @click="isSubmit(true)" size="mini">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -80,7 +81,7 @@ export default {
       },
       syncScrInfoRd(){
           //屏幕墙
-          this.displayList=this.screenInfo.scrGroupArr;
+          this.displayList=JSON.parse(JSON.stringify(this.screenInfo.scrGroupArr));
           this.curTabName=this.displayList[0].tabName;
           console.log("configureScreen",this.curTabName);
       },
@@ -103,7 +104,6 @@ export default {
           });
           for(let i in this.displayList){
               for(let k in this.displayList[i].portArr){
-                  // this.displayList[i].portArr[k]=[validPos.shift()+1];
                   this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()]);
               }
           }
@@ -174,14 +174,9 @@ export default {
           else if(param.act=='add'){
               let emptyScreen=JSON.parse(JSON.stringify(this.displayList[param.seq]));//相当于复制当前的屏幕
               emptyScreen.tabName=this.newTabname();
-              // emptyScreen.portArr.splice(1,emptyScreen.Col*emptyScreen.Row-1);//只保留一个
-              // emptyScreen.Col=1;
-              // emptyScreen.Row=1;
               this.displayList.push(emptyScreen);
               this.showTab(this.displayList.length-1);
           }
-          //同步窗口信息
-          // this.syncScreen();
 
       },
       isSubmit(bool) {
@@ -193,7 +188,6 @@ export default {
            this.syncScreen();
         } else {
             //重新加载
-            console.log("取消");
             this.$emit("isDialogVisible", false); // 退出关闭弹窗
         }
 
@@ -222,8 +216,9 @@ export default {
               scrGroupArr:copyDisplayList
           };
 
-          console.log(screenInfo);
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
+              // this.globalEvent.screenInfo=screenInfo;
+              this.globalEvent.$emit("reload_data");
               this.$emit("isDialogVisible", false); // 退出关闭弹窗
           });
       },
@@ -237,6 +232,17 @@ export default {
 
         this.globalEvent.selectedPort=this.selectedPort;
       },
+      curScreenIndex(){
+          //当前选中的屏幕
+          let seq=-1;
+          for(let i in this.displayList){
+              if(this.curTabName==this.displayList[i].tabName){
+                  seq=i;
+                  break;
+              }
+          }
+          return seq;
+      }
 
   },
   components: {

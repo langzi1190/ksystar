@@ -8,13 +8,13 @@
                     <th>FPGA 版本</th>
                 </tr>
                 <tr v-for="(item,index) in inputCard" style="background-color:pink">
-                    <td>{{index+1}}</td>
+                    <td>{{inputCard.length-index}}</td>
                     <td>输入卡</td>
                     <td>{{item.ARM}}</td>
                     <td>{{item.FPGA}}</td>
                 </tr>
                 <tr v-for="(item,index) in outCard" style="background-color:#ff9900;">
-                    <td>{{index+1}}</td>
+                    <td>{{outCard.length-index}}</td>
                     <td>输出卡</td>
                     <td>{{item.ARM}}</td>
                     <td>{{item.FPGA}}</td>
@@ -48,8 +48,8 @@
                 ctrlCard:this.globalEvent.versionInfo.ctrlCardArr,
                 syncCard:this.globalEvent.versionInfo.syncCardArr,
                 monitorCard:this.globalEvent.versionInfo.monitorCardArr,
-                inputCard:this.globalEvent.versionInfo.inputCardArr,
-                outCard:this.globalEvent.versionInfo.outCardArr,
+                inputCard:this.globalEvent.versionInfo.inputCardArr.reverse(),
+                outCard:this.globalEvent.versionInfo.outCardArr.reverse(),
 
             };
         },

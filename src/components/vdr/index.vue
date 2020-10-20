@@ -28,11 +28,13 @@
                 @wheel="mouseWheel"
                 :style="`height: ${ratioHeight}px; width: ${ratioWidth}px; position: relative;`"
         >
-            <div class="dragRect" :style="{
-                left:dragRect.x+'px',
-                top:dragRect.y+'px',
-                width:dragRect.w+'px',
-                height:dragRect.h+'px'
+            <div class="dragRect"
+                 v-show="dragRect.w>0"
+                 :style="{
+                    left:dragRect.x+'px',
+                    top:dragRect.y+'px',
+                    width:dragRect.w+'px',
+                    height:dragRect.h+'px'
                 }"></div>
             <windowItem
                     v-for="(item,index) in windowItems"
@@ -119,29 +121,34 @@
             });
             this.globalEvent.$on('update_window',(param)=>{
                 //修改窗口属性
+                let k =this.globalEvent.selectedWindowIndex;
                 if(param.act=='top' || param.act=='bottom'){
                     //置顶,置底,设置为当前最大值，
                     let maxIndexPos=param.act=='top'?this.getMaxIndexPos():this.getMinIndexPos();
 
-                    this.windowItems[maxIndexPos[0]].layerId=this.windowItems[this.globalEvent.selectedWindowIndex].layerId;
-                    this.windowItems[this.globalEvent.selectedWindowIndex].layerId=maxIndexPos[1];
+                    this.windowItems[maxIndexPos[0]].layerId=this.windowItems[k].layerId;
+                    this.windowItems[k].layerId=maxIndexPos[1];
                     //子组件更新参数
                     // console.log(param);
                     // console.log(maxIndexPos[0],this.globalEvent.selectedWindowIndex);
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
-                    this.$refs.windowObj[this.globalEvent.selectedWindowIndex].setProp(param);
+                    this.$refs.windowObj[k].setProp(param);
 
                     this.$http.post("winLayerWr.cgi",{
                         type:param.act=='top'?1:0,
                         groupId:this.globalEvent.curScreenIndex,
-                        windId:this.globalEvent.selectedWindowIndex
+                        winId:k
                     },(ret)=>{
                         console.log("vdr/index.vue 置顶，置底。。。。");
                     });
                 }
                 else if(param.act=='window_size'){
                     //全屏,扩张，还原
-                    this.$refs.windowObj[this.globalEvent.selectedWindowIndex].windowEdit(param.v);
+                    this.$refs.windowObj[k].windowEdit(param.v);
+                }
+                else if(param.act=='lock'){
+                    this.windowItems[k].lock=1-this.windowItems[k].lock;
+                    this.$parent.positionLock=this.windowItems[k].lock==1;
                 }
 
             });
@@ -163,6 +170,11 @@
                 }
                 this.syncWindowSize();
             });
+
+            this.globalEvent.$on("reload_data",()=>{
+                //configurescrren.vue 设置完毕 重新载入数据
+                this.loadData();
+            })
             this.loadData();
         },
         computed:{
@@ -215,7 +227,7 @@
                     if(i<curScreen.Col){
                         this.totalWidth+=parseInt(portArr[i].sizeArr[0]);
                     }
-                    if(i%(curScreen.Col+1)==0){
+                    if(i%curScreen.Col==0){
                         this.totalHeight+=parseInt(portArr[i].sizeArr[1]);
                     }
 
@@ -243,6 +255,8 @@
                     }
                 }
 
+                console.log(this.lineV);
+
                 this.globalEvent.totalWidth=this.totalWidth;
                 this.globalEvent.totalHeight=this.totalHeight;
                 this.initScreenPanel();
@@ -262,6 +276,7 @@
                 this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
+                        win.lock=0;//锁定
                         win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,win.srcCardId,win.srcId);
                         win.k='k'+parseInt(Math.random()*1000);
                     }
@@ -371,7 +386,7 @@
 
                 if(e.wheelDelta>0){
                     //变大
-                    this.scale=this.scale+0.001;
+                    this.scale=this.scale+0.01;
 
                     if(this.scale>4){
                         this.scale=4;
@@ -379,7 +394,7 @@
                 }
                 else{
                     //变小
-                    this.scale=this.scale-0.001;
+                    this.scale=this.scale-0.01;
                     if(this.scale<0.05){
                         this.scale=0.05;
                     }
@@ -473,7 +488,7 @@
                     winW:curWindow.winSizeArr[2],
                     winH:curWindow.winSizeArr[3],
                 };
-                console.log(data);
+
                 this.$http.post("winOpr.cgi",data,()=>{
                     console.log("vdr/index.vue .保存窗口 尺寸 位置....");
                     //如果都统一保存 然后再读取（ loadScreenWindowItems），就没必要修改属性（减少复杂度 代码量）。。。 调用
@@ -516,8 +531,15 @@
                             return ;
                         }
 
-                        that.dragRect.w=deltax;
-                        that.dragRect.h=deltay;
+                        if(e.pageX-pos.left<=that.ratioWidth){
+                            that.dragRect.w=deltax;
+                        }
+                        if(e.pageY-pos.top<=that.ratioHeight)
+                        {
+                            that.dragRect.h=deltay;
+                        }
+
+
                     };
                     let mu=function(){
                         if(that.dragRect.w>30 && that.dragRect.h>30){

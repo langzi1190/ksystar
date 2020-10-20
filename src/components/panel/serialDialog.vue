@@ -56,7 +56,7 @@
             op(act){
                 if(act){
                     let param={
-                        com2CtrlMode:this.control_mode,
+                        com2CtrlMode:parseInt(this.control_mode),
                         com1BaudId:this.com1,
                         com2BaudId:this.com2,
                     };

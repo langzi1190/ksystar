@@ -54,7 +54,7 @@
               <card-item
                 title="位置锁定"
                 :isChecked="positionLock===true"
-                @click.native="positionLock=!positionLock"
+                @click.native="winLock"
               ></card-item>
             </card>
           </div>
@@ -110,7 +110,7 @@
       <div class="content-compile" v-show="true">
         <div class="content-title">画面编辑</div>
         <div class="content-attr">
-          <attr></attr>
+          <attr @sub_event="subEvent"></attr>
         </div>
       </div>
     </center>
@@ -146,6 +146,7 @@
       <workModeDialog @sub_event="subEvent" v-if="showDialog=='workMode'" :showDialog="showDialog"></workModeDialog>
       <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
       <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
+      <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
   </div>
 </template>
 
@@ -217,6 +218,7 @@ import hotBackupDialog from "@/components/panel/hotBackupDialog";
 import workModeDialog from "@/components/panel/workModeDialog";
 import eqDialog from "@/components/panel/eqDialog";
 import vgaDialog from "@/components/panel/vgaDialog";
+import resetDialog from "@/components/panel/resetDialog";
 
 
 export default {
@@ -239,6 +241,13 @@ export default {
         // scale:1,
     };
   },
+    watch:{
+      "globalEvent.selectedWindowIndex":function (v) {
+          if(v>-1){
+              this.positionLock=this.globalEvent.windowItemsInfo.winArr[v].lock==1;
+          }
+      }
+    },
   methods: {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
@@ -250,18 +259,16 @@ export default {
       if (setFn === "6") {
         this.isEcho = false;
       }
-      if( setFn==='3' && confirm("确定恢复出厂设置？")){
-          this.$http.get("factory.cgi",{},(ret)=>{
-              window.location.reload(true);
-          });
+      if( setFn==='3'){
+           this.showDialog='reset';
       }
       else if(setFn=='8'){
-          this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
+          this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
 
           });
       }
       else if(setFn=='9'){
-          this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
+          this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
 
           });
       } else if(setFn=='10'){
@@ -277,12 +284,9 @@ export default {
           });
       }
     },
-    // 设置:1-创建画面、2-屏幕配置
+    // 设置:2-屏幕配置
       setting(setFn) {
 
-        if (setFn === "1") {
-          console.log("创建画面");
-        }
         if (setFn === "2") {
           this.dialogTitle = "ConfigureScreen";
           this.dialogVisible = true;
@@ -310,6 +314,14 @@ export default {
               this.devType=ret.data.devType;
               this.globalEvent.versionInfo=ret.data;
           });
+      },
+      winLock(){
+          //位置锁定
+          this.positionLock=!this.positionLock;
+          let w=this.globalEvent.selectedWindowIndex;
+          if(w>-1){
+              this.globalEvent.windowItemsInfo.winArr[w].lock=this.positionLock?1:0;
+          }
       },
       subEvent(param){
           console.log(param);
@@ -370,6 +382,7 @@ export default {
       workModeDialog,
       eqDialog,
       vgaDialog,
+      resetDialog,
   },
 };
 </script>

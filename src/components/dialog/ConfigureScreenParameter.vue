@@ -41,7 +41,6 @@
         <el-input-number
           v-model="rowNum"
           :min="1"
-          :max="10"
           size="mini"
           style="width: 100px;"
         ></el-input-number>
@@ -51,7 +50,6 @@
         <el-input-number
           v-model="columnNum"
           :min="1"
-          :max="10"
           size="mini"
           style="width: 100px;"
         ></el-input-number>
@@ -199,21 +197,21 @@ export default {
       let rv=this.item.FormatW+'*'+this.item.FormatH;
       let videoId=this.item.VideoId;
       let frameRate=this.item.FrameRate==0?60:50;
-    return {
-        resolution,
-        hertz,
-        rv,
-        w:0,h:0,
-        resolutionValue:videoId==0?'-1':rv,
-        videoId:-1,
-        beforeRv:'',//自定义 前分辨率
-        hertzValue:frameRate+'HZ',
-        rowNum: this.item.Row,
-        columnNum: this.item.Col,
-        TimingMode: this.item.TimingMode,
-        showSetting:false,
-        showTimeSeq:false
-    };
+      return {
+          resolution,
+          hertz,
+          rv,
+          w:0,h:0,
+          resolutionValue:videoId==0?'-1':rv,
+          videoId:-1,
+          beforeRv:'',//自定义 前分辨率
+          hertzValue:frameRate+'HZ',
+          rowNum: this.item.Row,
+          columnNum: this.item.Col,
+          TimingMode: this.item.TimingMode,
+          showSetting:false,
+          showTimeSeq:false
+      };
   },
     methods:{
 
@@ -293,17 +291,23 @@ export default {
         },
 
         rowNum(v,ov){
-            // if(this.rowNum*this.columnNum>this.globalEvent.validOutCardCount){
-            //     alert("超出可用输出卡数量");
-            //     return ;
-            // }
+            if(v*this.item.Col>this.globalEvent.validOutCardCount){
+                // alert("超出可用输出卡数量");
+                this.$nextTick(()=>{
+                    this.rowNum=ov;
+                })
+                return ;
+            }
             this.setParentData('Row',v);
         },
         columnNum(v,ov){
-            // if(this.rowNum*this.columnNum>this.globalEvent.validOutCardCount){
-            //     alert("超出可用输出卡数量");
-            //     return ;
-            // }
+            if(this.item.Row*v>this.globalEvent.validOutCardCount){
+                // alert("超出可用输出卡数量");
+                this.$nextTick(()=>{
+                    this.columnNum=ov;
+                })
+                return ;
+            }
             this.setParentData('Col',v);
         },
         TimingMode(v,ov){
