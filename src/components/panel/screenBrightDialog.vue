@@ -14,7 +14,10 @@
                     >
                         <div class="winItemWrapper">
                             <div class="winItem"
-                                 :class="{winItemCur:selectedWinIndex==wIndex && curTabName==item.tabName}"
+                                 :class="{
+                                    winItemCur:selectedWinIndex==wIndex && curTabName==item.tabName,
+                                    cl_left:(wIndex+1)%(item.Col+1)==0
+                                 }"
                                  @click="selectWin(wIndex)"
                                  v-for="(w,wIndex) in item.portArr">
                                 <div><span>屏号：</span><span>{{wIndex+1}}</span></div>
@@ -178,10 +181,10 @@
 
 <style>
     .screen_bright_dialog .el-dialog{width:800px;}
-    .winItemWrapper{display:flex;flex-wrap:wrap;
+    .winItemWrapper{clear:both;
         background-color:#dcdcdc;
         align-content: baseline; width: 722px;height: 400px;    border: 1px solid #dcdcdc;box-sizing: border-box;overflow:auto;}
-    .winItem{text-align:center;
+    .winItem{text-align:center;float:left;
         background-color:#fcf166;
         border-right:1px solid #dcdcdc;
         border-bottom:1px solid #dcdcdc;
@@ -191,6 +194,7 @@
         cursor:pointer;
         width:144px;
         height:144px;}
+    .cl_left{clear:left;}
     .winItemCur{background-color:orange;}
     .winItem span{display:inline-block;width:70px;text-align:left;}
     .winItem span:nth-child(odd){text-align:right;}

@@ -106,36 +106,64 @@
         created(){
             this.$http.get("extCtrlRd.cgi",{},(ret)=>{
                 let info=ret.data;
+                let stopCmdArr=info.stopCmdArr.map((v,k)=>{
+                    return v.map((a,b)=>this.toHex(a)).join(' ');
+                });
+                let startCmdArr=info.startCmdArr.map((v,k)=>{
+                    return v.map((a,b)=>this.toHex(a)).join(' ');
+                });
+
                 this.baud=info.comBaud;
                 this.commuDly=info.commuDly;
                 this.shutAble=info.funcSta;
                 this.scrMode=info.scrMode;
                 this.screenType=info.scrType;
-                this.shutCode=info.stopCmdArr.join('\n');
-                this.startCode=info.startCmdArr.join('\n');
+                this.shutCode=stopCmdArr.join('\n');
+                this.startCode=startCmdArr.join('\n');
             });
         },
         methods:{
+            toHex(v){
+                return '0x'+Number(v).toString(16).toUpperCase().padStart(2,'0');
+            },
             op(act){
                 if('cancel'==act){
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else if('sure'==act){
-                    let startCmdArr=this.startCode.split('\n');
-                    let stopCmdArr=this.shutCode.split('\n');
+                    let startCmdArr=[];
+                    let stopCmdArr=[];
+                    this.startCode.split('\n').forEach((value,key,ouArr)=>{
+                        let mid=value.split(" ");
+                        let midArr=[];
+                        mid.forEach((v,k,arr)=>{
+                            midArr.push(Number(v));
+                        })
+                        startCmdArr.push(midArr);
+                    });
+                    this.shutCode.split('\n').forEach((value,key,outArr)=>{
+                        let mid=value.split(" ");
+                        let midArr=[];
+                        mid.forEach((v,k,arr)=>{
+                            midArr.push(Number(v));
+                        })
+                        stopCmdArr.push(midArr);
+                    });
+
+
+
                     let param={
                         funcSta:this.shutAble,
                         scrType:this.screenType,//this.screenType=='无'?0:1,
                         scrMode:parseInt(this.scrMode),
                         comBaud:this.baud,
                         commuDly:this.commuDly,
-                        startBytes:this.startCode.replace(/\n/g,'').length,//todo 长度怎么算
+                        startCmdNum:startCmdArr.length,
                         startCmdArr:startCmdArr,
-                        stopBytes:this.shutCode.replace(/\n/g,'').length,
+                        stopCmdNum:stopCmdArr.length,
                         stopCmdArr:stopCmdArr,
                     };
                     console.log(param);
-
                     this.$http.post("extCtrlWr.cgi",param,(r)=>{
                         this.$emit('sub_event',{act:'close_kfs'});
                     });

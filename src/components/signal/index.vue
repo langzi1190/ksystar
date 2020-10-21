@@ -82,7 +82,24 @@ export default {
     mounted(){
 
        this.getSysInputInfo();
+        this.globalEvent.$on("work_mode_change",()=>{
+            //信号源工作模式发生改变 修改前端名称 workModeDialog
+            let inCardArr=this.inputCardList;
+            for(let i in inCardArr){
+                for(let k in inCardArr[i].srcArr){
 
+                    if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+                    else if(inCardArr[i].srcArr[k].ITESrcType==17 || inCardArr[i].srcArr[k].ITESrcType==18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType+''+inCardArr[i].srcArr[k].ITESrcType];
+                    }
+                    else{
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+                }
+            }
+        });
         // this.$http.get("scenePollingRd.cgi",{},(ret)=>{
         //     this.scenePollingList=ret.data;
         // });
@@ -124,7 +141,7 @@ export default {
                return h('span',data.label)
             }
             else if(node.level==2){
-                if(data.resolArr[1]>200 && data.resolArr[0]>300){
+                if(this.globalEvent.isValidResolution(data.resolArr)){
                     return h('span',{
                         class:{
                             'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
@@ -164,12 +181,23 @@ export default {
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
                     inCardArr[i].srcArr[k].id=id++;
-                    inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+                    else if(inCardArr[i].srcArr[k].ITESrcType==17 || inCardArr[i].srcArr[k].ITESrcType==18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType+''+inCardArr[i].srcArr[k].ITESrcType];
+                    }
+                    else{
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+
                     inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);
                     inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);//(this.int(i)+1)+'_'+(this.int(k)+1);
                 }
             }
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
+            // this.globalEvent.$emit('load_input_card');//通知窗口信号源加载完成
+
         },
         handleNodeClick(data,node,tree){
             if(node.level==2){

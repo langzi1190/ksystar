@@ -148,7 +148,15 @@
                 }
                 else if(param.act=='lock'){
                     this.windowItems[k].lock=1-this.windowItems[k].lock;
-                    this.$parent.positionLock=this.windowItems[k].lock==1;
+                }
+                else if(param.act=='partOrAll'){
+                    this.windowItems[k].partOrAll=1-this.windowItems[k].partOrAll;
+                    // if(this.windowItems[k].partOrAll==0){
+                    //     this.windowItems[k].cropSizeArr=[0,0,0,0];
+                    //
+                    // }
+                    this.windowItems[k].cropSizeArr=param.v;
+                    this.syncWindowSize();
                 }
 
             });
@@ -159,6 +167,11 @@
                 //更新窗口属性
                 if(['cleft','ctop','cwidth','cheight'].includes(param.act)){
                     this.globalEvent.windowItemsInfo.winArr[w].cropSizeArr[posMap[param.act]]=param.v;
+
+                    if(this.globalEvent.windowItemsInfo.winArr[w].partOrAll==0){
+                        //全局 不下发参数
+                        return ;
+                    }
                 }
                 else if(param.act=='label'){
                     // this.$refs.windowObj[w].label=param.v;
@@ -175,6 +188,14 @@
                 //configurescrren.vue 设置完毕 重新载入数据
                 this.loadData();
             })
+
+            this.globalEvent.$on("source_card_name_change",()=>{
+                //信号源改名，attr/index.uve
+                for(let i in this.windowItems){
+                    let win=this.windowItems[i];
+                    win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                }
+            });
             this.loadData();
         },
         computed:{
@@ -255,7 +276,6 @@
                     }
                 }
 
-                console.log(this.lineV);
 
                 this.globalEvent.totalWidth=this.totalWidth;
                 this.globalEvent.totalHeight=this.totalHeight;
@@ -277,13 +297,21 @@
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
                         win.lock=0;//锁定
-                        win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,win.srcCardId,win.srcId);
+                        win.zoom=0;//扩张，还原
+                        win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                        win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                        if(!this.globalEvent.isValidResolution(win.resolution)){
+                            win.resolution=['信号丢失']
+                        }
+                        win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
                         win.k='k'+parseInt(Math.random()*1000);
                     }
                     this.globalEvent.windowItemsInfo=ret.data;
                     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
                     this.syncLocalName();
                 });
+
+
             },
 
             addWindowItem(param){
@@ -367,23 +395,6 @@
             },
 
             mouseWheel(e) {
-                // let wh_ratio=this.totalWidth/this.totalHeight;
-                // if(e.wheelDelta>0){
-                //     //变大
-                //     this.ratio=this.ratio+0.001;
-                //
-                //     if(this.ratio>4){
-                //         this.ratio=4;
-                //     }
-                // }
-                // else{
-                //     //变小
-                //     this.ratio=this.ratio-0.001;
-                //     if(this.ratio<0.05){
-                //         this.ratio=0.05;
-                //     }
-                // }
-
                 if(e.wheelDelta>0){
                     //变大
                     this.scale=this.scale+0.01;
@@ -518,7 +529,10 @@
                 let pos=this.getLocation(panel);
 
                 panel.addEventListener("mousedown",function (e) {
-
+                    if(that.globalEvent.panelLock){
+                        //位置锁定
+                        return ;
+                    }
                     originPos.x=e.pageX;
                     originPos.y=e.pageY;
                     that.dragRect.x=originPos.x-pos.left;

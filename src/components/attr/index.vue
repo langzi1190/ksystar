@@ -7,8 +7,8 @@
       <div class="control-btn">
         <el-button size="mini" @click="sendEvent('update_window','top','')">置顶</el-button>
         <el-button size="mini" @click="sendEvent('update_window','bottom','')">置底</el-button>
-        <el-button size="mini" @click="sendEvent('update_window','lock','')">锁定</el-button>
-        <el-button size="mini" @click="isPanorama=!isPanorama">
+        <el-button size="mini" :type="lockStr" @click="sendEvent('update_window','lock','')">锁定</el-button>
+        <el-button size="mini" @click="sendEvent('update_window','partOrAll')">
           <span v-show="isPanorama">全景</span>
           <span v-show="!isPanorama">局部</span>
         </el-button>
@@ -97,6 +97,9 @@ export default {
             width:1,
             height:1,
 
+            lockStr:'',
+            isLock:0,
+
             ctop:0,//局部显示
             cleft:0,
             cwidth:0,
@@ -129,6 +132,8 @@ export default {
                 this.resetValue('height',this.totalHeight-this.top);
                 return ;
             }
+
+
             this.sendEvent('update_window_pos_by_side',act,this[act])
         },
         resetValue(prop,v){
@@ -141,6 +146,22 @@ export default {
         },
         sendEvent(eventName,act,v=0){
             //发送 窗体参数更新事件 update_window 接受组件 vdr/index.vue
+            if(act=='partOrAll'){
+                this.isPanorama=!this.isPanorama;
+                if(this.isPanorama){
+                    this.ctop=0;
+                    this.cleft=0;
+                    this.cwidth=0;
+                    this.ctop=0;
+                    v=[0,0,0,0];
+                }
+                else{
+                    v=[this.cleft-0,this.ctop-0,this.cwidth-0,this.cheight-0];
+                }
+            }
+            else if(act=='lock'){
+                this.isLock=1-this.isLock;
+            }
             this.globalEvent.$emit(eventName,{act,v});
         },
         setCurWindow(seq){
@@ -158,6 +179,8 @@ export default {
             this.cwidth=curWindow.cropSizeArr[2];
             this.cheight=curWindow.cropSizeArr[3];
 
+            this.isPanorama=curWindow.partOrAll==0;
+            this.isLock=curWindow.lock;
         },
         op(act){
             if(act=='cancel'){
@@ -174,6 +197,7 @@ export default {
                 if(s!==null && s!==undefined){
                     this.globalEvent.selectedCard.label_extra=s;
                     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
+                    this.globalEvent.$emit("source_card_name_change");
                 }
             }
             else if(act=='hotBackup'){
@@ -199,6 +223,14 @@ export default {
                 this.setCurWindow(v);
             }
         },
+        isLock(v,o){
+            if(v==1){
+                this.lockStr='primary';
+            }
+            else{
+                this.lockStr='';
+            }
+        }
         // top(v,ov){
         //     this.sendEvent('update_window_pos_by_side','top',v);
         // },

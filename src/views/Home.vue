@@ -53,8 +53,8 @@
             <card title="锁定">
               <card-item
                 title="位置锁定"
-                :isChecked="positionLock===true"
-                @click.native="winLock"
+                :isChecked="globalEvent.panelLock"
+                @click.native="globalEvent.panelLock=!globalEvent.panelLock"
               ></card-item>
             </card>
           </div>
@@ -234,20 +234,20 @@ export default {
         dialogVisible: false, // 弹出对话框
         dialogTitle: "",
         drawCenter: true,
-        positionLock: false, //位置锁定
+        // positionLock: false, //位置锁定
         showDialog:'',
         showEdidDialog:false,
         devType:''
         // scale:1,
     };
   },
-    watch:{
-      "globalEvent.selectedWindowIndex":function (v) {
-          if(v>-1){
-              this.positionLock=this.globalEvent.windowItemsInfo.winArr[v].lock==1;
-          }
-      }
-    },
+    // watch:{
+    //   "globalEvent.selectedWindowIndex":function (v) {
+    //       if(v>-1){
+    //           this.positionLock=this.globalEvent.windowItemsInfo.winArr[v].lock==1;
+    //       }
+    //   }
+    // },
   methods: {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
@@ -315,14 +315,14 @@ export default {
               this.globalEvent.versionInfo=ret.data;
           });
       },
-      winLock(){
-          //位置锁定
-          this.positionLock=!this.positionLock;
-          let w=this.globalEvent.selectedWindowIndex;
-          if(w>-1){
-              this.globalEvent.windowItemsInfo.winArr[w].lock=this.positionLock?1:0;
-          }
-      },
+      // winLock(){
+      //     //位置锁定
+      //     this.positionLock=!this.positionLock;
+      //     let w=this.globalEvent.selectedWindowIndex;
+      //     if(w>-1){
+      //         this.globalEvent.windowItemsInfo.winArr[w].lock=this.positionLock?1:0;
+      //     }
+      // },
       subEvent(param){
           console.log(param);
           if('close_kfs'==param.act){

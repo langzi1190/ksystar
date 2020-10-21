@@ -2,10 +2,10 @@
     <div class="windowItem"
          @dblclick="setSrcCard"
          :style="{
-        top:(partOrAll==0?ptop:0)+'%',
-        left:(partOrAll==0?pleft:0)+'%',
-        width:(partOrAll==0?pwidth:100)+'%',
-        height:(partOrAll==0?pheight:100)+'%',
+        top:(zoom==0?ptop:0)+'%',
+        left:(zoom==0?pleft:0)+'%',
+        width:(zoom==0?pwidth:100)+'%',
+        height:(zoom==0?pheight:100)+'%',
         zIndex:zIndex
     }">
         <div class="draw-area__dots vdr-child" :class="{show_dot:seq==globalEvent.selectedWindowIndex}">
@@ -20,7 +20,7 @@
 
             <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:{{item.label}}</span>
+                    <span>Win-{{seq+1}}:{{item.inputCardLabel}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
@@ -38,11 +38,11 @@
                 </div>
             </div>
             <div class="content">
-                <p>Title:Hello</p>
-                <p>X: {{ o_left }}</p>
-                <p>Y: {{ o_top }}</p>
-                <p>Width: {{ o_width }}</p>
-                <p>Height: {{ o_height }}</p>
+                <p>画面名称:{{this.item.label}}</p>
+                <p>画面位置: [{{ o_left }},{{ o_top }}]</p>
+                <p>画面大小: [{{ o_width }},{{ o_height }}]</p>
+                <p :class="{alertColor:this.item.resolution.length==1}">分辨率：[{{this.item.resolution.join(',')}}]</p>
+                <p>{{item.partOrAll==0?'全景显示':'局部显示'}} <span v-show="item.partOrAll==1">[ {{item.cropSizeArr.join(',')}} ]</span></p>
                 <div  data-type="move" @mousedown.stop="handleMouseDown" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
             </div>
         </div>
@@ -55,12 +55,14 @@
         props:['ratio','item','seq'],
         data(){
 
+            console.log(this.item);
+
             let pleft=this.item.winSizeArr[0]*100/this.$parent.totalWidth;
             let ptop=this.item.winSizeArr[1]*100/this.$parent.totalHeight;
             let pwidth=this.item.winSizeArr[2]*100/this.$parent.totalWidth;
             let pheight=this.item.winSizeArr[3]*100/this.$parent.totalHeight;
 
-            if(this.item.partOrAll==1){
+            if(this.item.zoom==1){
                 ptop=pleft=0;
                 pwidth=pheight=100;
 
@@ -72,7 +74,7 @@
                 pwidth:pwidth,
                 pheight:pheight,
 
-                partOrAll:this.item.partOrAll,
+                zoom:this.item.zoom,
 
                 top:parseInt(ptop*this.$parent.ratioHeight/100),//相对当前面板的坐标,目标拖拽使用
                 left:parseInt(pleft*this.$parent.ratioWidth/100),
@@ -168,8 +170,12 @@
                 this.width=Math.ceil(this.pwidth*this.$parent.ratioWidth/100);
             },
             windowEdit(val) {
+                if(this.globalEvent.panelLock){
+                    //位置锁定
+                    return ;
+                }
                 if (val === "0") {
-                    this.partOrAll=0;
+                    this.zoom=0;
                     if(this.stickSize.length>0){
                         //还原拖拽前的位置 大小、原始数据变换 会在 watch中执行
                         [this.ptop,this.pleft,this.pwidth,this.pheight]=this.stickSize;
@@ -196,7 +202,7 @@
                 }
                 else if (val === "1") {
                     //全屏
-                    this.partOrAll=1;
+                    this.zoom=1;
 
                     this.o_top=this.o_left=0;
                     this.o_width=this.$parent.totalWidth;
@@ -252,12 +258,19 @@
                         srcId:num[1]
                     };
                     this.$http.post("switchWinSrc.cgi",data,(ret)=>{
+                        let win=this.globalEvent.windowItemsInfo.winArr[w];
+                        win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                        win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                        if(!this.globalEvent.isValidResolution(win.resolution)){
+                            win.resolution=['信号丢失']
+                        }
+
                         console.log("signal/index.vue 切换窗口源信号");
                     });
                 }
             },
             handleMouseDown(ev){
-                if(this.partOrAll==1){
+                if(this.zoom==1){
                     return ;
                 }
                 ev.stopPropagation();
@@ -269,8 +282,8 @@
                     this.globalEvent.selectedWindowIndex=this.seq;
                 }
 
-                if(this.item.lock==1){
-                    //窗体锁定
+                if(this.item.lock==1 || this.globalEvent.panelLock){
+                    //窗体锁定,位置锁定
                     return ;
                 }
 
@@ -448,7 +461,7 @@
     .windowItem{
         position:absolute;box-sizing: border-box;
     }
-
+    .vdr-child .content .alertColor{color:#f44f44;}
     .draw-area__dots{
         position: absolute;
         top: 0;

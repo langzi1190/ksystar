@@ -4,25 +4,30 @@ let gobalEvent =new Vue({
     data:{
         pType:{
             'p0':'DEFAULLT',
-            'p1':'CV',
+            'p1':'CVBS',
             'p2':'DVI',
             'p3':'VGA',
             'p4':'HDMI',
             'p5':'SDI',
             'p6':'YPBPR',
             'p7':'SVIDEO',
-            'p8':'DUAL_DVI',
-            'p9':'HDMI_4K30',
+            'p8':'D_DVI',
+            'p9':'HDMI4K',
             'p10':'DP',
             'p11':'NET',
             'p12':'FIBER',
-            'p13':'HDBASET',
-            'p14':'CV2',
+            'p13':'BaseT',
+            'p14':'CVBS',
             'p15':'USB',
-            'p16':'HDMI4K_DP4K',
-            'p17':'HDMISDI',
-            'p18':'HDMIDP4K30',
+            'p16':'HDDP4K',
+            'p17':'HS',
+            'p18':'HDDP4K30',
+            'p1617':'DP4K60',
+            'p1618':'HD4K60',
+            'p1817':'DP4K30',
+            'p1818':'HD4K30',
             'p255':'NONE'},
+        panelLock:false,//模拟区域不允许操作
         validOutCardCount:0,//有效输出屏总数
         totalWidth:0,//屏幕墙尺寸
         totalHeight:0,
@@ -96,9 +101,9 @@ let gobalEvent =new Vue({
 
             return s;
         },
-        windowItemName(screenId,cardId,srcId){
-            let k="window_item_"+cardId+"_"+srcId;
-            let s=this.signalCardName(cardId,srcId);
+        windowItemName(screenId,i){
+            let k="window_item_"+i;
+            let s='';
             if(this.windowItemLocalName[k]!==undefined){
                 s=this.windowItemLocalName[k];
             }
@@ -175,7 +180,7 @@ let gobalEvent =new Vue({
                 key=key+"_"+this.curScreenIndex;
                 this.windowItemLocalName={};
                 for(let i in dataList){
-                    let k="window_item_"+dataList[i].srcCardId+"_"+dataList[i].srcId;
+                    let k="window_item_"+i;
                     this.windowItemLocalName[k]=dataList[i].label;
                 }
 
@@ -193,6 +198,10 @@ let gobalEvent =new Vue({
 
                 localStorage.setItem(key,JSON.stringify(this.sourceCardLocalName));
             }
+        },
+        isValidResolution(resolArr){
+            //从分辨率判断，输入信号是否存在
+            return resolArr[1]>200 && resolArr[0]>300
         },
         uploadFile(con={}){
             let param=Object.assign({input:'',uploadBtn:''},con);

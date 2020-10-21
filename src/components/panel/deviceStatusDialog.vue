@@ -20,7 +20,7 @@
                         <td :class="{fail:item.memory==0}"><i :class="[item.memory==1?'el-icon-success':'el-icon-error']"></i></td>
                         <td :class="{fail:item.vedio==0}"><i :class="[item.vedio==1?'el-icon-success':'el-icon-error']"></i></td>
                         <td :class="{fail:item.ctrl!=0}"><i :class="[item.ctrl==0?'el-icon-success':'el-icon-error']"></i></td>
-                        <td>{{item.flashInfo}}</td>
+                        <td :class="{fail:item.flash_ok==0}"><i :class="[item.flash_ok==1?'el-icon-success':'el-icon-error']"></i></td>
                     </tr>
                 </tbody>
 
@@ -48,36 +48,36 @@
         'type6':'控制卡',
         'type7':'同步卡',
     };
-    const portType={
-        "type0":"DEFAULT",
-        "type1":"CV",
-        "type2":"DVI",
-        "type3":"VGA",
-        "type4":"HDMI",
-        "type5":"SDI",
-        "type6":"YPBPR",
-        "type7":"SVIDEO",
-        "type8":"DUAL_DVI",
-        "type9":"HDMI_4K30",
-        "type10":"DP",
-        "type11":"NET",
-        "type12":"FIBER",
-        "type13":"HDBASET",
-        "type14":"CV2",
-        "type15":"USB",
-        "type16":"HDMI4K_DP4K",
-        "type17":"HDMISDI",
-        "type18":"HDMIDP4K30",
-        "type255":"NONE",
-    };
-    const flashType={
-        'type0':'NONE',
-        'type1':'ALL_UNLOCK',
-        'type2':'128_BOOT_LOCK',
-        'type3':'256_BOOT_LOCK',
-        'type4':'ALL_LOCK',
-        'type5':'KEEP',
-    };
+    // const portType={
+    //     "type0":"DEFAULT",
+    //     "type1":"CV",
+    //     "type2":"DVI",
+    //     "type3":"VGA",
+    //     "type4":"HDMI",
+    //     "type5":"SDI",
+    //     "type6":"YPBPR",
+    //     "type7":"SVIDEO",
+    //     "type8":"DUAL_DVI",
+    //     "type9":"HDMI_4K30",
+    //     "type10":"DP",
+    //     "type11":"NET",
+    //     "type12":"FIBER",
+    //     "type13":"HDBASET",
+    //     "type14":"CV2",
+    //     "type15":"USB",
+    //     "type16":"HDMI4K_DP4K",
+    //     "type17":"HDMISDI",
+    //     "type18":"HDMIDP4K30",
+    //     "type255":"NONE",
+    // };
+    // const flashType={
+    //     'type0':'NONE',
+    //     'type1':'ALL_UNLOCK',
+    //     'type2':'128_BOOT_LOCK',
+    //     'type3':'256_BOOT_LOCK',
+    //     'type4':'ALL_LOCK',
+    //     'type5':'KEEP',
+    // };
     export default {
         props:['showDialog'],
         data(){
@@ -92,7 +92,7 @@
             this.$http.get("devCfgStaRd.cgi",{},(ret)=>{
                 // this.validCardCount=0;
                 let cardArrReverse=[];
-
+                let portType=this.globalEvent.pType;
                 for(let i in ret.data.cardArr){
                     ret.data.cardArr[i].cardName=cardType['type'+ret.data.cardArr[i].cardType];//cardType?读取的是 16进制？
 
@@ -100,10 +100,13 @@
                     ret.data.cardArr[i].portName=[];
                     let portTypeArr=ret.data.cardArr[i].portTypeArr;
                     for(let k in portTypeArr){
-                        ret.data.cardArr[i].portName.push(portType['type'+portTypeArr[k]]);
+
+                        ret.data.cardArr[i].portName.push(portType['p'+portTypeArr[k]]);
+
                     }
 
-                    ret.data.cardArr[i].flashInfo=flashType['type'+ret.data.cardArr[i].flashPrt]
+                    // ret.data.cardArr[i].flashInfo=flashType['type'+ret.data.cardArr[i].flashPrt]
+                    ret.data.cardArr[i].flash_ok=(ret.data.cardArr[i].flashPrt==2 ||ret.data.cardArr[i].flashPrt==3)?1:0;
 
                     if(ret.data.cardArr[i].cardType!=3){
                         cardArrReverse.push(JSON.parse(JSON.stringify(ret.data.cardArr[i])));
