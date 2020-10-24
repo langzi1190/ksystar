@@ -62,7 +62,7 @@
         <el-tab-pane label="工具">
           <div class="card-s">
             <card title="高级菜单">
-              <card-item title="用户"></card-item>
+              <card-item title="用户" @click.native="showDialog='user'"></card-item>
               <card-item @click.native="showDialog='screenBright'" title="亮度"></card-item>
               <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
               <card-item @click.native="showDialog='multi'" title="多机同步"></card-item>
@@ -147,6 +147,7 @@
       <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
       <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
       <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
+      <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
   </div>
 </template>
 
@@ -219,6 +220,7 @@ import workModeDialog from "@/components/panel/workModeDialog";
 import eqDialog from "@/components/panel/eqDialog";
 import vgaDialog from "@/components/panel/vgaDialog";
 import resetDialog from "@/components/panel/resetDialog";
+import userDialog from "@/components/panel/userDialog";
 
 
 export default {
@@ -354,6 +356,11 @@ export default {
           else if('vga'==param.act){
               this.showDialog='vga';
           }
+          else if('rdEdid'==param.act){
+              this.$http.post("srcEdidRd.cgi",{},(ret)=>{
+                  console.log(ret);
+              });
+          }
       }
   },
   components: {
@@ -383,6 +390,7 @@ export default {
       eqDialog,
       vgaDialog,
       resetDialog,
+      userDialog,
   },
 };
 </script>

@@ -72,10 +72,18 @@
                             行极性：
                         </div>
                         <div class="item_input">
-                            <el-input
-                                    size="mini"
-                                    v-model="curScreen.HPolar">
-                            </el-input>
+                            <!--<el-input-->
+                                    <!--size="mini"-->
+                                    <!--v-model="curScreen.HPolar">-->
+                            <!--</el-input>-->
+                            <el-select v-model="curScreen.HPolar" size="mini">
+                                <el-option
+                                        v-for="(item,index) in polarList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                ></el-option>
+                            </el-select>
                         </div>
                     </div>
                 </div>
@@ -143,10 +151,18 @@
                             列极性：
                         </div>
                         <div class="item_input">
-                            <el-input
-                                    size="mini"
-                                    v-model="curScreen.VPolar">
-                            </el-input>
+                            <!--<el-input-->
+                                    <!--size="mini"-->
+                                    <!--v-model="curScreen.VPolar">-->
+                            <!--</el-input>-->
+                            <el-select v-model="curScreen.VPolar" size="mini">
+                                <el-option
+                                        v-for="(item,index) in polarList"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                ></el-option>
+                            </el-select>
                         </div>
                     </div>
                 </div>
@@ -170,7 +186,8 @@
                 curScreenIndex,
                 isVisible: this.showSetting,
                 curScreen:this.copyObject(this.comScreen.displayList[curScreenIndex]),
-                FrameRateInfo:0
+                FrameRateInfo:0,
+                polarList:[{label:'POSITIVE',value:1},{label:'NEGTIVE',value:0}]
             };
         },
         inject: ["comScreen"],
@@ -183,6 +200,7 @@
             // }
         },
         mounted(){
+            console.log(this.curScreen);
             if(this.curScreen.FrameRate==0){
                 this.FrameRateInfo = 60;
             }
@@ -208,7 +226,21 @@
                     // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
                     // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
 
+                    // this.curScreen.ClkFreq=parseInt(this.curScreen.ClkFreq);
+                    // this.curScreen.FormatH=parseInt(this.curScreen.FormatH);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
+                    for(let  i in this.curScreen){
+                        if(i!='tabName' && typeof this.curScreen[i] == 'string'){
+                            this.curScreen[i]=parseInt(this.curScreen[i]);
+                        }
+                    }
                     Object.assign(this.comScreen.displayList[this.curScreenIndex],this.curScreen);
+                    console.log(this.curScreen);
                     this.$emit('sub_event',{act:'closeTimeSeqDialog'});
                 }
             }
@@ -220,6 +252,7 @@
     .time_seq{width: 540px;margin: 0 auto;}
     .time_seq > div{width:50%;padding:0;height:auto;}
     .time_seq .left_body{border:none;}
+    .time_seq .right_body .el-select--mini{margin-top:0;}
     .row_item{display:flex;margin-bottom:20px;height:30px;line-height:30px;width:80%;}
     .item_title{width:45%;text-align:left;}
     .item_input{width:55%}

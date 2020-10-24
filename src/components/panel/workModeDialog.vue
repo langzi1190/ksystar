@@ -35,13 +35,14 @@
         methods:{
             submit(act){
                 if(act){
-                    let num=this.globalEvent.sourceCardNumber;
+                    let num=this.globalEvent.sourceCardNumber();
                     let param={
                         srcCardId:num[0],
                         srcId:num[1],
                         mode:this.workMode-0
                     };
                     this.globalEvent.selectedCard.ITESrcType=param.mode;
+                    console.log(param);
                     this.$http.post('switchDpHd.cgi',param,()=>{
                         this.$emit('sub_event',{act:'close_kfs'});
                         this.globalEvent.$emit('work_mode_change');//发送给signal

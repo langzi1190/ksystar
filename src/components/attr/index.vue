@@ -1,21 +1,21 @@
 <template>
   <div class="attr">
     <div class="close-all">
-      <el-button type="primary"  @click="closeWindowItem('all')" size="mini" style="width:100%">关闭所有画面</el-button>
+      <el-button type="primary" :disabled="globalEvent.panelLock"  @click="closeWindowItem('all')" size="mini" style="width:100%">关闭所有画面</el-button>
     </div>
     <div v-show="globalEvent.selectedWindowIndex>-1">
       <div class="control-btn">
-        <el-button size="mini" @click="sendEvent('update_window','top','')">置顶</el-button>
-        <el-button size="mini" @click="sendEvent('update_window','bottom','')">置底</el-button>
-        <el-button size="mini" :type="lockStr" @click="sendEvent('update_window','lock','')">锁定</el-button>
-        <el-button size="mini" @click="sendEvent('update_window','partOrAll')">
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','top','')">置顶</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','bottom','')">置底</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" :type="lockStr" @click="sendEvent('update_window','lock','')">锁定</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','partOrAll')">
           <span v-show="isPanorama">全景</span>
           <span v-show="!isPanorama">局部</span>
         </el-button>
-        <el-button size="mini" @click="sendEvent('update_window','window_size','1')">全屏</el-button>
-        <el-button size="mini" @click="sendEvent('update_window','window_size','3')">扩张</el-button>
-        <el-button size="mini" @click="sendEvent('update_window','window_size','0')">还原</el-button>
-        <el-button size="mini" @click="closeWindowItem('cur')">关闭</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')">全屏</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')">扩张</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')">还原</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')">关闭</el-button>
       </div>
       <div class="title">
         <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
@@ -27,37 +27,37 @@
           <el-collapse-item title="画面参数" name="1">
             <div class="position-size">
               <span>水平位置:</span>
-              <el-input-number @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>垂直位置:</span>
-              <el-input-number @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>水平大小:</span>
-              <el-input-number @change="change('width')" v-model="width" :min="400" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('width')" v-model="width" :min="400" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>垂直大小:</span>
-              <el-input-number @change="change('height')" v-model="height" :min="300" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('height')" v-model="height" :min="300" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
           <el-collapse-item title="局部显示" name="2">
             <div class="position-size">
               <span>水平位置:</span>
-              <el-input-number v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>垂直位置:</span>
-              <el-input-number v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>水平大小:</span>
-              <el-input-number v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
               <span>垂直大小:</span>
-              <el-input-number v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
+              <el-input-number :disabled="globalEvent.panelLock" v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -69,10 +69,10 @@
         <el-button @click="op('rename')" size="mini">更改名称</el-button>
         <el-button @click="op('hotBackup')" size="mini">热备份</el-button>
         <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>
-        <el-button @click="op('workMode')" size="mini">工作模式</el-button>
+        <el-button @click="op('workMode')" size="mini"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">工作模式</el-button>
         <!--<el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>-->
-        <el-button @click="op('setEq')" size="mini">EQ值设置</el-button>
-        <el-button @click="op('rdEdid')" size="mini">回读EDID</el-button>
+        <el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">EQ值设置</el-button>
+        <el-button @click="op('rdEdid')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">回读EDID</el-button>
       </div>
       <div style="text-align:center;color:#d0d0d0;" v-show="Object.keys(this.globalEvent.selectedCard).length==0">
           未选中信号
@@ -85,6 +85,7 @@
 export default {
     data() {
         return {
+            advanceType:[16,18],
             activeName: "0",
             isPanorama: true,
             label: "",
@@ -211,6 +212,10 @@ export default {
             }
             else if(act=='vga'){
                 this.$emit('sub_event',{act:'vga'});
+            }
+            else if(act=='rdEdid'){
+                console.log("回读。。。。 ");
+                this.$emit('sub_event',{act:'rdEdid'});
             }
         }
     },

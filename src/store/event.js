@@ -69,7 +69,7 @@ let gobalEvent =new Vue({
             let num=[0,0];
             if(label_info!==undefined){
                 num=label_info.split("_");
-                num=num.map((v)=>{return parseInt(v);});
+                num=num.map((v,k)=>parseInt(v));
             }
             return num;
         },

@@ -50,21 +50,28 @@
                 <div class="dialog_body">
                     <div class="left_body">
                         <div class="b_tip">开机命令：</div>
-                        <el-input
-                                :disabled="shutAble==0"
-                                type="textarea"
-                                :rows="4"
-                                v-model="startCode">
-                        </el-input>
+                        <!--<el-input-->
+                                <!--:disabled="shutAble==0"-->
+                                <!--type="textarea"-->
+                                <!--:rows="4"-->
+                                <!--v-model="startCode">-->
+                        <!--</el-input>-->
+                        <div class="textarea_wrapper">
+                            <textarea @click.stop="" v-model="startCode" :style="{width:startAreaW+'px'}"></textarea>
+                        </div>
+
                     </div>
                     <div class="right_body">
                         <div class="b_tip">关机命令：</div>
-                        <el-input
-                                :disabled="shutAble==0"
-                                type="textarea"
-                                :rows="4"
-                                v-model="shutCode">
-                        </el-input>
+                        <!--<el-input-->
+                                <!--:disabled="shutAble==0"-->
+                                <!--type="textarea"-->
+                                <!--:rows="4"-->
+                                <!--v-model="shutCode">-->
+                        <!--</el-input>-->
+                        <div class="textarea_wrapper">
+                            <textarea @click.stop="" v-model="shutCode" :style="{width:shutAreaW+'px'}"></textarea>
+                        </div>
                     </div>
                 </div>
             </fieldset>
@@ -101,7 +108,31 @@
                 shutAble:0,
                 shutCode:'',
                 startCode:'',
+                startAreaW:10,
+                shutAreaW:10,
             };
+        },
+        watch:{
+            startCode(v,ov){
+
+                let lArr=v.split("\n");
+                let maxLen=0;
+                for(let i in lArr){
+                    maxLen=Math.max(lArr[i].split(' ').length,maxLen);
+                }
+
+                this.startAreaW=maxLen*40;
+            },
+            shutCode(v,ov){
+
+                let lArr=v.split("\n");
+                let maxLen=0;
+                for(let i in lArr){
+                    maxLen=Math.max(lArr[i].split(' ').length,maxLen);
+                }
+
+                this.shutAreaW=maxLen*40;
+            }
         },
         created(){
             this.$http.get("extCtrlRd.cgi",{},(ret)=>{
@@ -134,20 +165,45 @@
                     let startCmdArr=[];
                     let stopCmdArr=[];
                     this.startCode.split('\n').forEach((value,key,ouArr)=>{
-                        let mid=value.split(" ");
-                        let midArr=[];
-                        mid.forEach((v,k,arr)=>{
-                            midArr.push(Number(v));
-                        })
-                        startCmdArr.push(midArr);
+                        if(value!=''){
+                            let mid=value.split(" ");
+                            let midArr=[];
+                            mid.forEach((v,k,arr)=>{
+                                if(v!=''){
+                                    if(v.substr(0,2)=='0x'){
+                                        midArr.push(Number(v));
+                                    }
+                                    else{
+                                        midArr.push(Number('0x'+v));
+                                    }
+                                }
+
+
+                            })
+                            if(midArr.length>0)
+                                startCmdArr.push(midArr);
+                        }
+
                     });
                     this.shutCode.split('\n').forEach((value,key,outArr)=>{
-                        let mid=value.split(" ");
-                        let midArr=[];
-                        mid.forEach((v,k,arr)=>{
-                            midArr.push(Number(v));
-                        })
-                        stopCmdArr.push(midArr);
+                        if(value!=''){
+                            let mid=value.split(" ");
+                            let midArr=[];
+                            mid.forEach((v,k,arr)=>{
+                                if(v!=''){
+                                    if(v.substr(0,2)=='0x'){
+                                        midArr.push(Number(v));
+                                    }
+                                    else{
+                                        midArr.push(Number('0x'+v));
+                                    }
+                                }
+
+                            })
+                            if(midArr.length>0)
+                                stopCmdArr.push(midArr);
+                        }
+
                     });
 
 
@@ -188,5 +244,14 @@
     fieldset .dialog_body > div{max-height:150px;}
     fieldset .dialog_body > div .b_tip{margin-left:15px;}
     .dialog_body .el-textarea{margin:10px;width:280px;}
+
+    .textarea_wrapper{    width: 280px;
+        height: 100px;
+        border: 1px solid #dcdcdc;
+        margin: 5px auto;
+        border-radius: 5px;
+        overflow: auto;
+        padding: 5px;}
+    .textarea_wrapper textarea{border:none;outline:none;min-width:270px;min-height:90px;}
 
 </style>

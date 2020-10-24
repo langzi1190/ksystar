@@ -12,7 +12,7 @@
                                  :name="item.tabName"
                                  :label="'屏幕墙-'+(index+1)"
                     >
-                        <div class="winItemWrapper">
+                        <div class="winItemWrapper" :style="{width:item.Row*144+'px'}">
                             <div class="winItem"
                                  :class="{
                                     winItemCur:selectedWinIndex==wIndex && curTabName==item.tabName,
@@ -183,7 +183,7 @@
     .screen_bright_dialog .el-dialog{width:800px;}
     .winItemWrapper{clear:both;
         background-color:#dcdcdc;
-        align-content: baseline; width: 722px;height: 400px;    border: 1px solid #dcdcdc;box-sizing: border-box;overflow:auto;}
+        align-content: baseline;min-height:400px; min-width:722px; border: 1px solid #dcdcdc;box-sizing: border-box;overflow:auto;}
     .winItem{text-align:center;float:left;
         background-color:#fcf166;
         border-right:1px solid #dcdcdc;
@@ -203,5 +203,6 @@
     .b_op{margin-top:15px;}
     .choose_rgb{line-height:30px;margin-left:15px;cursor:pointer;}
     .choose_rgb input{vertical-align: middle;}
+    .screen_bright_dialog .el-tab-pane{overflow:auto;}
 
 </style>

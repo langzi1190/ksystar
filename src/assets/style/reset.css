@@ -54,3 +54,10 @@ table {
 .label_group input{margin-top:0;vertical-align: middle;}
 .top_part{display:flex;}
 .el-dialog__header{text-align:left;}
+/*input::-webkit-outer-spin-button,*/
+/*input::-webkit-inner-spin-button {*/
+	/*-webkit-appearance: none;*/
+/*}*/
+/*input[type="number"] {*/
+	/*-moz-appearance: textfield;*/
+/*}*/

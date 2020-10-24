@@ -196,6 +196,14 @@
                     win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
                 }
             });
+
+            this.globalEvent.$on("change_src_card",(param)=>{
+                let w=this.globalEvent.selectedWindowIndex;
+                if(w>-1){
+                    this.$refs.windowObj[w].setSrcCard(param.v);
+                }
+
+            });
             this.loadData();
         },
         computed:{

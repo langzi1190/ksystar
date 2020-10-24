@@ -2,10 +2,10 @@
     <div class="windowItem"
          @dblclick="setSrcCard"
          :style="{
-        top:(zoom==0?ptop:0)+'%',
-        left:(zoom==0?pleft:0)+'%',
-        width:(zoom==0?pwidth:100)+'%',
-        height:(zoom==0?pheight:100)+'%',
+        top:ptop+'%',
+        left:pleft+'%',
+        width:pwidth+'%',
+        height:pheight+'%',
         zIndex:zIndex
     }">
         <div class="draw-area__dots vdr-child" :class="{show_dot:seq==globalEvent.selectedWindowIndex}">
@@ -55,7 +55,6 @@
         props:['ratio','item','seq'],
         data(){
 
-            console.log(this.item);
 
             let pleft=this.item.winSizeArr[0]*100/this.$parent.totalWidth;
             let ptop=this.item.winSizeArr[1]*100/this.$parent.totalHeight;
@@ -67,14 +66,13 @@
                 pwidth=pheight=100;
 
             }
-            console.log(pleft);
             return {
                 ptop:ptop,//比例位置
                 pleft:pleft,
                 pwidth:pwidth,
                 pheight:pheight,
 
-                zoom:this.item.zoom,
+                zoom:this.item.zoom,//最大化
 
                 top:parseInt(ptop*this.$parent.ratioHeight/100),//相对当前面板的坐标,目标拖拽使用
                 left:parseInt(pleft*this.$parent.ratioWidth/100),
@@ -208,6 +206,20 @@
                     this.o_width=this.$parent.totalWidth;
                     this.o_height=this.$parent.totalHeight;
 
+                    if(this.stickSize.length==0)
+                        this.stickSize=[this.ptop,this.pleft,this.pwidth,this.pheight];//如果拖动距离超过10像素则清空
+                    [this.ptop,this.pleft,this.pwidth,this.pheight]=[this.o_top,this.o_left,this.o_width,this.o_height]
+                        .map((v,k)=>{
+                            if(k==0 || k==3){
+                                return Math.min(100,Math.ceil(v/this.$parent.totalHeight*100));
+                            }
+                            else{
+                                return Math.min(100,Math.ceil(v/this.$parent.totalWidth*100));
+                            }
+                        });
+                    this.percent2Ratio();
+
+
                     this.sendSizeEvent();
                 }
                 else if (val === "2") {
@@ -242,10 +254,13 @@
                 }
 
             },
-            setSrcCard(){
+            setSrcCard(v){
                 //切换 信号源
                 let w=this.globalEvent.selectedWindowIndex;
                 let num=this.globalEvent.sourceCardNumber();
+                if(v!==undefined){
+                    num=v.split('_');
+                }
                 if(w>-1){
                     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
                     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
@@ -270,9 +285,9 @@
                 }
             },
             handleMouseDown(ev){
-                if(this.zoom==1){
-                    return ;
-                }
+                // if(this.zoom==1){
+                //     return ;
+                // }
                 ev.stopPropagation();
                 ev.preventDefault();
                 var that=this;
@@ -350,6 +365,7 @@
                             r2=parseInt(that.left)+delta_x;
                             r3=that.width-delta_x;
 
+                            console.log(r,r1,r2,r3);
                             if(
                                 Math.min(r,0)>=0
                                 && (r1+r)<=that.$parent.ratioHeight
@@ -431,11 +447,10 @@
 
                     // console.log(that.left,that.top,that.width,that.height);
 
-                    that.ptop=that.top/that.$parent.ratioHeight*100;
-                    that.pleft=that.left/that.$parent.ratioWidth*100;
-                    that.pheight=that.height/that.$parent.ratioHeight*100;
-                    that.pwidth=that.width/that.$parent.ratioWidth*100;
-
+                    that.ptop=Math.min(100,that.top/that.$parent.ratioHeight*100);
+                    that.pleft=Math.min(100,that.left/that.$parent.ratioWidth*100);
+                    that.pheight=Math.min(100,that.height/that.$parent.ratioHeight*100);
+                    that.pwidth=Math.min(100,that.width/that.$parent.ratioWidth*100);
 
                 }
                 let mu=function (e) {

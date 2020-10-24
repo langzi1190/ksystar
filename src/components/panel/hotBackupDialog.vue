@@ -106,7 +106,7 @@
                     this.globalEvent.selectedCard.bakSrcId=param.bakSrcId;
 
                     this.$http.post("srcBakWr.cgi",param,()=>{
-
+                        this.$emit('sub_event',{act:'close_kfs'});
                     });
                 }
                 else{

@@ -146,6 +146,12 @@ export default {
                         class:{
                             'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
                         },
+                        attrs:{
+                            'data-info':data.label_info
+                        },
+                        on: {
+                            dblclick: this.dbSelectSrcCard
+                        },
                     },[
                         h('span',{
                             attrs:{
@@ -160,6 +166,12 @@ export default {
                           class:{
                               'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
                           },
+                          on: {
+                              dblclick: this.dbSelectSrcCard
+                          },
+                          attrs:{
+                              'data-info':data.label_info
+                          }
                         },[
                         h('span',{
                             attrs:{
@@ -172,6 +184,10 @@ export default {
 
 
             }
+        },
+        dbSelectSrcCard(e,v2){
+            // console.log(e.target.parentElement.dataset.info);
+            this.globalEvent.$emit("change_src_card",{v:e.target.parentElement.dataset.info});
         },
         syscInputInfo(signal_list){
             let inCardArr=signal_list.inCardArr;
@@ -192,7 +208,7 @@ export default {
                     }
 
                     inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);
-                    inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);//(this.int(i)+1)+'_'+(this.int(k)+1);
+                    inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);
                 }
             }
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
@@ -296,7 +312,8 @@ export default {
       height: 40px;
       line-height: 40px;
     }
-    .card_label{margin-right:3px;color:#f44f44;    width: 105px;text-align: left;display: inline-block;position:relative;}
+    .el-tree-node__content{user-select:none;}
+    .card_label{margin-right:3px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
     .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}

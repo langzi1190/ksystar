@@ -32,8 +32,8 @@
             </div>
             <div style="text-align:center">
                  <span slot="footer" class="dialog-footer">
+                       <el-button type="primary" @click="isSubmit" size="mini">确 定</el-button>
                      <el-button @click="cancelSubmit" size="mini">取 消</el-button>
-                     <el-button type="primary" @click="isSubmit" size="mini">确 定</el-button>
                 </span>
             </div>
         </el-dialog>

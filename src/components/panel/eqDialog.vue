@@ -46,8 +46,10 @@
             };
             this.$http.post("srcEqRd.cgi",param,(ret)=>{
                 console.log("读取 eq");
+                console.log(ret);
                 for(let i in this.eqList){
                     if(Number(this.eqList[i])==ret.eqVal){
+                        console.log(ret.eqVal)
                         this.eq=i;
                         break;
                     }
