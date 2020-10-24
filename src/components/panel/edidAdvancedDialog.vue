@@ -210,7 +210,7 @@
                     ClkFreq:526080,
                     FormatW:3840,
                     FormatH:2160,
-                    FrameRate:0,
+                    FrameRate:60,
                     HFrontPorch:48,
                     HSyncTime:32,
                     HBackPorch:80,

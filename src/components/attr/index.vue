@@ -65,12 +65,13 @@
     </div>
     <div class="collapse_inner">
       <div class="content-title">信号设置</div>
+      <div class="src_card_name">{{this.globalEvent.selectedCard.label_extra}}</div>
       <div v-show="Object.keys(this.globalEvent.selectedCard).length>0">
         <el-button @click="op('rename')" size="mini">更改名称</el-button>
         <el-button @click="op('hotBackup')" size="mini">热备份</el-button>
         <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>
         <el-button @click="op('workMode')" size="mini"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">工作模式</el-button>
-        <!--<el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>-->
+        <el-button @click="op('edidSingle')"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)" size="mini">设置EDID</el-button>
         <el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">EQ值设置</el-button>
         <el-button @click="op('rdEdid')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">回读EDID</el-button>
       </div>
@@ -110,7 +111,11 @@ export default {
     created(){
         this.globalEvent.$on('update_side_attr',()=>{
             //接受 来自主操作面板的参数改动 windowItem.vue
-            this.setCurWindow(this.globalEvent.selectedWindowIndex);
+            console.log("update_side_attr",this.globalEvent.selectedWindowIndex);
+            if(this.globalEvent.selectedWindowIndex>-1){
+                this.setCurWindow(this.globalEvent.selectedWindowIndex);
+            }
+
         });
     },
     methods:{
@@ -190,8 +195,8 @@ export default {
             else if(act=='sure'){
                 this.$emit('sub_event',{act:'close_kfs'});
             }
-            else if(act=='showAdvanced'){
-                this.$emit('sub_event',{act:'show_edid_advanced'})
+            else if(act=='edidSingle'){
+                this.$emit('sub_event',{act:'show_edid_single'})
             }
             else if(act=='rename'){
                 let s=prompt("新输入新名称",this.globalEvent.selectedCard.label_extra);
@@ -251,55 +256,59 @@ export default {
     }
 };
 </script>
-
 <style lang="scss" scoped>
-.attr {
-  padding: 0 10px;
-  .close-all {
-    padding-top: 6px;
-  }
-  .control-btn {
-    padding: 6px 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .el-button {
-      margin-top: 6px;
+  .attr {
+    padding: 0 10px;
+    .close-all {
+      padding-top: 6px;
+    }
+    .control-btn {
+      padding: 6px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .el-button {
+        margin-top: 6px;
+      }
+    }
+    .title {
+      padding-top: 6px;
+      padding-bottom: 6px;
+      /deep/ .el-input-group__prepend {
+        padding: 0 6px;
+      }
+    }
+    .position-size {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 6px;
+      color: #909399;
+      .el-input-number {
+        width: 120px;
+      }
     }
   }
-  .title {
-    padding-top: 6px;
+  .el-button--mini {
+    padding: 6px 8px;
+  }
+  .el-button + .el-button {
+    margin: 0;
+  }
+  .src_card_name{    background-color: #f3f2f0;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    color: #505050;
+    margin: 10px 0;}
+  .collapse_inner{text-align:left;}
+  .collapse_inner .content-title{margin-bottom:15px;text-align:center;margin-top:30px;}
+  .collapse_inner .el-button--mini{width:80px;margin-left: 15px;margin-bottom: 10px;}
+  .el-collapse-item__header {
+    height: 40px;
+    line-height: 40px;
+  }
+  .el-collapse-item__content {
     padding-bottom: 6px;
-    /deep/ .el-input-group__prepend {
-      padding: 0 6px;
-    }
   }
-  .position-size {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 6px;
-    color: #909399;
-    .el-input-number {
-      width: 120px;
-    }
-  }
-}
-.el-button--mini {
-  padding: 6px 8px;
-}
-.el-button + .el-button {
-  margin: 0;
-}
-.collapse_inner{text-align:left;}
-.collapse_inner .content-title{margin-bottom:15px;text-align:center;margin-top:30px;}
-.collapse_inner .el-button--mini{width:80px;    margin-left: 15px;margin-bottom: 10px;}
-/deep/ .el-collapse-item__header {
-  height: 40px;
-  line-height: 40px;
-}
-/deep/ .el-collapse-item__content {
-  padding-bottom: 6px;
-}
-
 </style>

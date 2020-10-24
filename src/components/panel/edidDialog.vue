@@ -1,6 +1,6 @@
 <template>
     <div class="edid_dialog">
-        <el-dialog title="自定义EDID设置" :visible="showDialog=='edid'" @close="op('cancel')">
+        <el-dialog title="自定义EDID设置" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
             <div>
                 <div class="item">
                     <span>设备号：</span>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="item">
                     <span></span>
-                    <el-button  v-show="advanceType.includes(curPortType)" @click="op('showAdvanced')" size="mini">设置EDID</el-button>
+                    <el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>
                 </div>
                 <div class="item">
                     <el-button size="mini" @click="op('sure')">确定</el-button>

@@ -219,7 +219,6 @@
                 //screen_info.json
                 this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
 
-
                     for(let i in ret.data.scrGroupArr){
                         ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
                     }
@@ -302,6 +301,8 @@
             loadScreenWindowItems(){
                 this.windowItems=[];
                 this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                    // console.log(ret.data);
+                    //
                     for(let i in ret.data.winArr){
                         let win=ret.data.winArr[i];
                         win.lock=0;//锁定
@@ -318,7 +319,6 @@
                     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
                     this.syncLocalName();
                 });
-
 
             },
 
@@ -394,11 +394,21 @@
                     color:"#505050",
                     fontSize:"50px",
                 };
+
                 let row=parseInt(index/this.col);//位于第几行
                 style.top=row==0?'30px':(this.lineH[2*row-1])*this.ratio+30+'px';
 
                 let col=index%this.col;//位于第几列
                 style.left=col==0?'30px':(this.lineV[2*col-1])*this.ratio+30+'px';
+
+                // if(this.ratio<0.25){
+                //     let scale=this.ratio/0.25;
+                //     // style.top=style.top.replace('px','')*scale+'px';
+                //     // style.left=style.left.replace('px','')*scale+'px';
+                //     style.top=style.top.replace('px','')/this.ratioHeight();
+                //     style.transform='scale('+scale+')';
+                //     console.log(style);
+                // }
                 return style;
             },
 
@@ -420,10 +430,10 @@
                 }
                 this.initScreenPanel();
 
-                clearTimeout(this.refreshWindowItemsEvent)
-                this.refreshWindowItemsEvent=setTimeout(()=>{
-                    this.loadScreenWindowItems();
-                },500);
+                // clearTimeout(this.refreshWindowItemsEvent)
+                // this.refreshWindowItemsEvent=setTimeout(()=>{
+                //     this.loadScreenWindowItems();
+                // },500);
 
             },
             getWindowSize(wSize){

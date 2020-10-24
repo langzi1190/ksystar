@@ -10,18 +10,33 @@
                     <th width="120">FLASH保护 OK</th>
                 </tr>
                 <tbody>
-                    <tr v-for="(item,index) in cardArrReverse">
-                        <td>{{cardArrReverse.length-index}}</td>
-                        <td>{{item.cardName}}</td>
-                        <td>{{item.portName.length>0?item.portName[0]:''}}</td>
-                        <td>{{item.portName.length>1?item.portName[1]:''}}</td>
-                        <td>{{item.portName.length>2?item.portName[2]:''}}</td>
+                    <template  v-for="(item,index) in cardArrReverse">
+                        <tr v-if="item.cardType==3">
+                            <td>{{cardArrReverse.length-index}}</td>
+                            <td>空卡</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
 
-                        <td :class="{fail:item.memory==0}"><i :class="[item.memory==1?'el-icon-success':'el-icon-error']"></i></td>
-                        <td :class="{fail:item.vedio==0}"><i :class="[item.vedio==1?'el-icon-success':'el-icon-error']"></i></td>
-                        <td :class="{fail:item.ctrl!=0}"><i :class="[item.ctrl==0?'el-icon-success':'el-icon-error']"></i></td>
-                        <td :class="{fail:item.flash_ok==0}"><i :class="[item.flash_ok==1?'el-icon-success':'el-icon-error']"></i></td>
-                    </tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr v-else>
+                            <td>{{cardArrReverse.length-index}}</td>
+                            <td>{{item.cardName}}</td>
+                            <td>{{item.portName.length>0?item.portName[0]:''}}</td>
+                            <td>{{item.portName.length>1?item.portName[1]:''}}</td>
+                            <td>{{item.portName.length>2?item.portName[2]:''}}</td>
+
+                            <td :class="{fail:item.memory==0}"><i :class="[item.memory==1?'el-icon-success':'el-icon-error']"></i></td>
+                            <td :class="{fail:item.vedio==0}"><i :class="[item.vedio==1?'el-icon-success':'el-icon-error']"></i></td>
+                            <td :class="{fail:item.ctrl!=0}"><i :class="[item.ctrl==0?'el-icon-success':'el-icon-error']"></i></td>
+                            <td :class="{fail:item.flash_ok==0}"><i :class="[item.flash_ok==1?'el-icon-success':'el-icon-error']"></i></td>
+                        </tr>
+                    </template>
+
                 </tbody>
 
                 <tr style="background-color:lightblue">
@@ -48,28 +63,7 @@
         'type6':'控制卡',
         'type7':'同步卡',
     };
-    // const portType={
-    //     "type0":"DEFAULT",
-    //     "type1":"CV",
-    //     "type2":"DVI",
-    //     "type3":"VGA",
-    //     "type4":"HDMI",
-    //     "type5":"SDI",
-    //     "type6":"YPBPR",
-    //     "type7":"SVIDEO",
-    //     "type8":"DUAL_DVI",
-    //     "type9":"HDMI_4K30",
-    //     "type10":"DP",
-    //     "type11":"NET",
-    //     "type12":"FIBER",
-    //     "type13":"HDBASET",
-    //     "type14":"CV2",
-    //     "type15":"USB",
-    //     "type16":"HDMI4K_DP4K",
-    //     "type17":"HDMISDI",
-    //     "type18":"HDMIDP4K30",
-    //     "type255":"NONE",
-    // };
+
     // const flashType={
     //     'type0':'NONE',
     //     'type1':'ALL_UNLOCK',
@@ -109,6 +103,9 @@
                     ret.data.cardArr[i].flash_ok=(ret.data.cardArr[i].flashPrt==2 ||ret.data.cardArr[i].flashPrt==3)?1:0;
 
                     if(ret.data.cardArr[i].cardType!=3){
+                        cardArrReverse.push(JSON.parse(JSON.stringify(ret.data.cardArr[i])));
+                    }
+                    else{
                         cardArrReverse.push(JSON.parse(JSON.stringify(ret.data.cardArr[i])));
                     }
                 }

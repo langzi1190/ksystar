@@ -269,9 +269,10 @@
                     let data={
                         scrGroupId:this.globalEvent.curScreenIndex,
                         winId:w,
-                        srcCardId:num[0],
-                        srcId:num[1]
+                        srcCardId:num[0]-0,
+                        srcId:num[1]-0
                     };
+
                     this.$http.post("switchWinSrc.cgi",data,(ret)=>{
                         let win=this.globalEvent.windowItemsInfo.winArr[w];
                         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
@@ -458,7 +459,7 @@
                     let deltay=Math.abs(init_y-e.pageY);
                     if(deltax>5 || deltay>5){
                         that.stickSize=[];//窗口发生位移 则取消保存的位置,
-                        that.setSrcCard();//切换信号源
+                        // that.setSrcCard();//切换信号源
                         that.sendSizeEvent();
                     }
 

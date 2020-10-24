@@ -100,7 +100,7 @@
           <!-- 窗口编辑面板 -->
           <div class="draw-panel">
             <div class="draw-content" :class="{'draw-center':(drawCenter&&!isEcho)}">
-              <vdr ref="vdr" @alignCenter="alignCenter"></vdr>
+              <vdr ref="vdr"  v-if="updateFlip"  @alignCenter="alignCenter"></vdr>
             </div>
           </div>
           <!-- 回显 -->
@@ -135,7 +135,7 @@
       <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
-      <edidDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edid'"></edidDialog>
+      <edidDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
       <edidAdvancedDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edidAdvanced'"></edidAdvancedDialog>
       <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
       <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
@@ -239,7 +239,8 @@ export default {
         // positionLock: false, //位置锁定
         showDialog:'',
         showEdidDialog:false,
-        devType:''
+        devType:'',
+        updateFlip:true
         // scale:1,
     };
   },
@@ -317,6 +318,15 @@ export default {
               this.globalEvent.versionInfo=ret.data;
           });
       },
+      reloadMainPane(){
+          //刷新界面
+          this.updateFlip=false;
+          this.$nextTick(()=>{
+              setTimeout(()=>{
+                  this.updateFlip=true;
+              },300);
+          })
+      },
       // winLock(){
       //     //位置锁定
       //     this.positionLock=!this.positionLock;
@@ -355,6 +365,9 @@ export default {
           }
           else if('vga'==param.act){
               this.showDialog='vga';
+          }
+          else if('show_edid_single'==param.act){
+              this.showDialog='edidSingle';
           }
           else if('rdEdid'==param.act){
               this.$http.post("srcEdidRd.cgi",{},(ret)=>{

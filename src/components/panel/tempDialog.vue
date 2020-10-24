@@ -71,6 +71,8 @@
             };
         },
         destroyed(){
+            color_index=0;
+            tempArr=[];
             clearTimeout(timeout_event);
         },
         mounted(){

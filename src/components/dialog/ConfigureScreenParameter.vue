@@ -196,7 +196,9 @@ export default {
 
       let rv=this.item.FormatW+'*'+this.item.FormatH;
       let videoId=this.item.VideoId;
-      let frameRate=this.item.FrameRate==0?60:50;
+      // console.log('fbl');
+      // console.log(this.item);
+      // let frameRate=this.item.FrameRate==0?60:50;
       return {
           resolution,
           hertz,
@@ -205,7 +207,7 @@ export default {
           resolutionValue:videoId==0?'-1':rv,
           videoId:-1,
           beforeRv:'',//自定义 前分辨率
-          hertzValue:frameRate+'HZ',
+          hertzValue:this.item.FrameRate+'HZ',
           rowNum: this.item.Row,
           columnNum: this.item.Col,
           TimingMode: this.item.TimingMode,
@@ -286,8 +288,8 @@ export default {
         },
         hertzValue(v,ov){
             v=v.replace('HZ','');
-            let s=v==30?2:(v==60?0:1);
-            this.setParentData('FrameRate',s);
+            // let s=v==30?2:(v==60?0:1);
+            this.setParentData('FrameRate',parseInt(v));
         },
 
         rowNum(v,ov){

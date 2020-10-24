@@ -153,7 +153,7 @@ export default {
               this.displayList[param.seq].FormatH=m[1];
               this.displayList[param.seq].VideoId=param.videoId;
               if(param.videoId==117){
-                  this.displayList[param.seq].FrameRate=2;//30;//0:60,1:50, 2:30;
+                  this.displayList[param.seq].FrameRate=30;//30;//0:60,1:50, 2:30;
               }
               let portArr=this.displayList[param.seq].portArr;
               for(let i in portArr){

@@ -48,7 +48,7 @@
                 ctrlCard:this.globalEvent.versionInfo.ctrlCardArr,
                 syncCard:this.globalEvent.versionInfo.syncCardArr,
                 monitorCard:this.globalEvent.versionInfo.monitorCardArr,
-                inputCard:this.globalEvent.versionInfo.inputCardArr.reverse(),
+                inputCard:this.globalEvent.versionInfo.inCardArr.reverse(),
                 outCard:this.globalEvent.versionInfo.outCardArr.reverse(),
 
             };

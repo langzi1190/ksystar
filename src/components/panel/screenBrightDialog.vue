@@ -12,11 +12,14 @@
                                  :name="item.tabName"
                                  :label="'屏幕墙-'+(index+1)"
                     >
-                        <div class="winItemWrapper" :style="{width:item.Row*144+'px'}">
+                        <div class="winItemWrapper" :style="{
+                        width:item.Col*144+'px',
+                        height:item.Row*165+'px',
+                        }">
                             <div class="winItem"
                                  :class="{
                                     winItemCur:selectedWinIndex==wIndex && curTabName==item.tabName,
-                                    cl_left:(wIndex+1)%(item.Col+1)==0
+                                    cl_left: wIndex%item.Col==0
                                  }"
                                  @click="selectWin(wIndex)"
                                  v-for="(w,wIndex) in item.portArr">
@@ -103,7 +106,6 @@
         created(){
             this.displayList=this.globalEvent.screenInfo.scrGroupArr;
             this.curTabName=this.displayList[0].tabName;
-            console.log(this.displayList);
         },
         methods:{
             changeRgb(act){
@@ -126,10 +128,12 @@
                 [this.r,this.g,this.b]=this.displayList[this.selectedTabIndex].portArr[index].briArr;
             },
             tabChange(curTab,e){
+
                 if(this.selectedTabIndex!=curTab.index){
                     this.selectedWinIndex=-1;
                     this.selectedTabIndex=curTab.index;
                 }
+                this.selectWin(0);
             },
             syncWinRgb(){
                 let cfgObj=0;
@@ -167,7 +171,7 @@
                     cfgObj,
                     colorVal:this.colorVal,
                 };
-                console.log(param);
+
                 this.$http.post("scrColorWr.cgi",param,()=>{});
             },
             op(act){
@@ -203,6 +207,6 @@
     .b_op{margin-top:15px;}
     .choose_rgb{line-height:30px;margin-left:15px;cursor:pointer;}
     .choose_rgb input{vertical-align: middle;}
-    .screen_bright_dialog .el-tab-pane{overflow:auto;}
+    .screen_bright_dialog .el-tab-pane{overflow:auto;max-height:500px;}
 
 </style>

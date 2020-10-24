@@ -266,8 +266,12 @@ export default {
 
                 this.getCommonInfo();
                 this.getSysInputInfo();
-                this.$parent.$refs.vdr.loadData();
+                this.$nextTick(()=>{
+                    this.$parent.$refs.vdr.loadData();
+                })
 
+                // this.$parent.reloadMainPane();
+                // this.$emit('sub_event',{act:'update_main_panel'});
                 console.log("signal/index.vue 载入用户模式，重载接口");
                 // console.log(ret.data);
 
@@ -312,7 +316,7 @@ export default {
       height: 40px;
       line-height: 40px;
     }
-    .el-tree-node__content{user-select:none;}
+    .el-tree-node__content{user-select:none;overflow:hidden;width:180px;white-space: nowrap;text-overflow: ellipsis;}
     .card_label{margin-right:3px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
     .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}

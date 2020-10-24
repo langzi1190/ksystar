@@ -17,6 +17,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.ClkFreq">
                             </el-input>
@@ -28,6 +29,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.FormatW"
                                     :disabled="true">
@@ -40,6 +42,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.HFrontPorch">
                             </el-input>
@@ -51,6 +54,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.HSyncTime">
                             </el-input>
@@ -62,6 +66,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.HBackPorch">
                             </el-input>
@@ -95,8 +100,9 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
-                                    v-model="FrameRateInfo"
+                                    v-model="curScreen.FrameRate"
                                     :disabled="true">
                             </el-input>
                         </div>
@@ -107,6 +113,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.FormatH"
                                     :disabled="true">
@@ -119,6 +126,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.VFrontPorch">
                             </el-input>
@@ -130,6 +138,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.VSyncTime">
                             </el-input>
@@ -141,6 +150,7 @@
                         </div>
                         <div class="item_input">
                             <el-input
+                                    @change="changeFrame"
                                     size="mini"
                                     v-model="curScreen.VBackPorch">
                             </el-input>
@@ -185,7 +195,20 @@
             return {
                 curScreenIndex,
                 isVisible: this.showSetting,
-                curScreen:this.copyObject(this.comScreen.displayList[curScreenIndex]),
+                curScreen:{
+                    ClkFreq:526080,
+                    FormatW:3840,
+                    FormatH:2160,
+                    FrameRate:60,
+                    HFrontPorch:48,
+                    HSyncTime:32,
+                    HBackPorch:80,
+                    VFrontPorch:12,
+                    VSyncTime:8,
+                    VBackPorch:12,
+                    VPolar:0,
+                    HPolar:1,
+                },//this.copyObject(this.comScreen.displayList[curScreenIndex]),
                 FrameRateInfo:0,
                 polarList:[{label:'POSITIVE',value:1},{label:'NEGTIVE',value:0}]
             };
@@ -200,20 +223,39 @@
             // }
         },
         mounted(){
-            console.log(this.curScreen);
-            if(this.curScreen.FrameRate==0){
-                this.FrameRateInfo = 60;
-            }
-            else if(this.curScreen.FrameRate==1){
-                this.FrameRateInfo = 50;
-            }
-            else if(this.curScreen.FrameRate==2){
-                this.FrameRateInfo = 30;
-            }
+            // Object.assign(this.curScreen,this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+            this.curScreen=JSON.parse(JSON.stringify(this.curScreen,this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]));
+            this.calFrameRate();
+            // console.log(this.curScreen);
+            // if(this.curScreen.FrameRate==0){
+            //     this.FrameRateInfo = 60;
+            // }
+            // else if(this.curScreen.FrameRate==1){
+            //     this.FrameRateInfo = 50;
+            // }
+            // else if(this.curScreen.FrameRate==2){
+            //     this.FrameRateInfo = 30;
+            // }
         },
         methods:{
-            copyObject(o){
-                return JSON.parse(JSON.stringify(o));
+            // copyObject(o){
+            //     return JSON.parse(JSON.stringify(o));
+            // },
+            changeFrame(){
+                this.calFrameRate();
+            },
+            calFrameRate(){
+
+                for(let k in this.curScreen){
+                    if(k!='tabName' && typeof this.curScreen[k] =='string'){
+
+                    }this.curScreen[k]=parseInt(this.curScreen[k]);
+
+                }
+                let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
+                let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
+                this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal;
+
             },
             isSubmit(on){
                 if(!on){
@@ -222,25 +264,12 @@
                 }
                 else{
                     //提交
-                    // console.log("xx");
-                    // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
-                    // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
-
-                    // this.curScreen.ClkFreq=parseInt(this.curScreen.ClkFreq);
-                    // this.curScreen.FormatH=parseInt(this.curScreen.FormatH);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
-                    // this.curScreen.FormatW=parseInt(this.curScreen.FormatW);
                     for(let  i in this.curScreen){
                         if(i!='tabName' && typeof this.curScreen[i] == 'string'){
                             this.curScreen[i]=parseInt(this.curScreen[i]);
                         }
                     }
                     Object.assign(this.comScreen.displayList[this.curScreenIndex],this.curScreen);
-                    console.log(this.curScreen);
                     this.$emit('sub_event',{act:'closeTimeSeqDialog'});
                 }
             }

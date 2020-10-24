@@ -62,9 +62,34 @@
         },
         mounted(){
             this.signalList=this.globalEvent.inputCardList;
-            if(this.syncEnable==1){
-                this.reloadTree();
+            // if(this.syncEnable==1){
+            //     this.reloadTree();
+            // }
+
+            for(let i in this.signalList){
+                for(let k in this.signalList[i].srcArr){
+                    this.signalListFlat.push({
+                        label:this.globalEvent.signalCardName(i,k),
+                        value:this.globalEvent.signalCardInfo(i,k)
+                    });
+                }
             }
+
+            console.log(this.globalEvent.commonInfo);
+
+            let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
+
+            for(let i in cardArr){
+                for(let k in cardArr[i].scrPropArr){
+                    let src=cardArr[i].scrPropArr[k];
+
+                    this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
+                    if(src.syncEn==1){
+                        this.selectedKey.push(this.signalList[i].srcArr[k].id);
+                    }
+                }
+            }
+
 
             this.showTree=true;
         },
@@ -79,12 +104,17 @@
 
                         this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
                         if(src.syncEn==1){
-                            this.signalListFlat.push({
-                                label:this.globalEvent.signalCardName(i,k),
-                                value:this.globalEvent.signalCardInfo(i,k)
-                            });
+                            // this.signalListFlat.push({
+                            //     label:this.globalEvent.signalCardName(i,k),
+                            //     value:this.globalEvent.signalCardInfo(i,k)
+                            // });
                             this.selectedKey.push(this.signalList[i].srcArr[k].id);
                         }
+
+                        this.signalListFlat.push({
+                            label:this.globalEvent.signalCardName(i,k),
+                            value:this.globalEvent.signalCardInfo(i,k)
+                        });
                     }
                 }
 
@@ -106,30 +136,21 @@
             handleCheckClick(data, checked, indeterminate){
                 // console.log(data, checked, indeterminate);
 
-                if(data.label_extra===undefined){
-                    //选择 信号卡
-                    // if(checked){
-                    //     for(let i in data.srcArr)
-                    //         this.signalListFlat.push(data.srcArr[i].label_extra);
-                    // }
-                    // else{
-                    //     //不选择 清空
-                    //     this.delSourceId(data.srcArr);
-                    // }
-
-                }
-                else{
-                    //信号源
-                    if(checked){
-                        this.signalListFlat.push({
-                            label:data.label_extra,
-                            value:data.label_info
-                        });
-                    }
-                    else{
-                        this.delSourceId([data])
-                    }
-                }
+                // if(data.label_extra===undefined){
+                //
+                // }
+                // else{
+                //     //信号源
+                //     if(checked){
+                //         this.signalListFlat.push({
+                //             label:data.label_extra,
+                //             value:data.label_info
+                //         });
+                //     }
+                //     else{
+                //         this.delSourceId([data])
+                //     }
+                // }
 
             },
             delSourceId(srcArr){

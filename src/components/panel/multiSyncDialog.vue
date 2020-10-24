@@ -52,14 +52,14 @@
                 syncList:['关','开'],
                 controlSync:0,
 
-                cardIdList:[],
+                cardIdList:['None'],
                 sourceIdList:[],
                 cardId:0,
                 sourceId:0,
             };
         },
         mounted(){
-            console.log("多机同步");
+
             this.controlSync=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
             for(let i in this.globalEvent.inputCardList){
                 this.cardIdList.push(++i);
@@ -75,7 +75,7 @@
         methods:{
             selectCard(index){
                 let inputCard=this.globalEvent.inputCardList;
-                this.sourceIdList=[];
+                this.sourceIdList=['None'];
                 this.sourceId=0;
                 for(let i in inputCard[index].srcArr){
                     this.sourceIdList.push(++i);
