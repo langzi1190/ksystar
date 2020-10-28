@@ -204,6 +204,7 @@
     export default {
         props:['showDialog'],
         data(){
+            console.log(this.$parent.showDialog);
             return {
                 EDID:[],
                 curScreen:{
@@ -358,7 +359,7 @@
             //     });
             // },
             cancelSubmit(){
-                this.$emit('sub_event',{act:'close_kfs'});
+                this.$emit('sub_event',{act:'close_edid_advanced'});
             },
             submit(){
                 //提交

@@ -64,7 +64,9 @@
                         eqVal:Number(this.eqList[this.eq])
                     };
 
-                   this.$http.post("srcEqWr.cgi",param,()=>{});
+                   this.$http.post("srcEqWr.cgi",param,()=>{
+                       this.$emit('sub_event',{act:'close_kfs'});
+                   });
                 }else{
                     this.$emit('sub_event',{act:'close_kfs'});
                 }

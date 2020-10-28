@@ -61,7 +61,7 @@
         <el-button type="primary" size="mini" @click="opScreen('add')">添加屏幕墙</el-button>
       </div>
     </div>
-
+    <div style="margin-top:5px;margin-bottom:10px;font-size:12px;color:#409EFF;">提示：单击深灰色背景表格可以更改屏幕参数</div>
       <Rs @sub_event="subEvent" :showSetting="showSetting"></Rs>
       <Ts @sub_event="subEvent" v-if="showTimeSeq" :showSetting="showTimeSeq"></Ts>
   </div>

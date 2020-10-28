@@ -10,14 +10,13 @@
   >
     <div class="setting">
       <div class="setting-port">
+        <div style="margin-bottom:10px;margin-top:5px;">设备输出布局：</div>
         <ul>
           <li v-for="(val,index) in portList" :class="{port_on:portList[totalPort-index-1]==1}" :key="index" @click="portPut(index)">
             Port {{totalPort-index}}
           </li>
         </ul>
-        <div class="mapping">
-          <el-button type="primary" @click="autoMap" size="mini">自动映射</el-button>
-        </div>
+
       </div>
       <div class="setting-parameter">
         <el-tabs type="border-card" v-model="curTabName">
@@ -31,10 +30,13 @@
         </el-tabs>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
+
+
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="autoMap" size="mini">自动映射</el-button>
        <el-button @click="isSubmit(true)" size="mini">确 定</el-button>
       <el-button @click="isSubmit(false)" size="mini">取 消</el-button>
-    </span>
+    </div>
   </el-dialog>
 </template>
 
@@ -212,10 +214,11 @@ export default {
               }
           }
           let screenInfo={
-              scrGroupNum:copyDisplayList.length,
+              ScrGroupNum:copyDisplayList.length,
               scrGroupArr:copyDisplayList
           };
 
+          console.log(screenInfo);
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
               // this.globalEvent.screenInfo=screenInfo;
               this.globalEvent.$emit("reload_data");
@@ -283,11 +286,11 @@ export default {
         cursor: pointer;
       }
     }
-    .mapping {
-      display: flex;
-      justify-content: center;
-      padding-top: 6px;
-    }
+    /*.mapping {*/
+      /*display: flex;*/
+      /*justify-content: center;*/
+      /*padding-top: 6px;*/
+    /*}*/
   }
   .setting-parameter {
     width: 556px;
@@ -377,7 +380,7 @@ export default {
       right: 0px;
     }
     /deep/ .el-tabs__content {
-      height: 422px;
+      height: 450px;
       padding: 8px;
     }
     /deep/ .el-tabs__item {
@@ -394,4 +397,6 @@ export default {
     background-color:#f44f44;
   }
 }
+#popup .dialog-footer{    display: flex;
+  justify-content: space-around;}
 </style>

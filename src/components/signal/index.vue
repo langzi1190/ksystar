@@ -100,6 +100,7 @@ export default {
                 }
             }
         });
+
         // this.$http.get("scenePollingRd.cgi",{},(ret)=>{
         //     this.scenePollingList=ret.data;
         // });
@@ -141,46 +142,69 @@ export default {
                return h('span',data.label)
             }
             else if(node.level==2){
-                if(this.globalEvent.isValidResolution(data.resolArr)){
-                    return h('span',{
+                return h('span',{
+                    class:{
+                        'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
+                    },
+                    attrs:{
+                        'data-info':data.label_info
+                    },
+                    on: {
+                        dblclick: this.dbSelectSrcCard
+                    },
+                },[
+                    h('span',{
+                        // attrs:{
+                        //     class:'card_label card_label_valid'
+                        // },
                         class:{
-                            'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
-                        },
-                        attrs:{
-                            'data-info':data.label_info
-                        },
-                        on: {
-                            dblclick: this.dbSelectSrcCard
-                        },
-                    },[
-                        h('span',{
-                            attrs:{
-                                class:'card_label card_label_valid'
-                            }
-                        },data.label),
-                        data.label_extra
-                    ])
-                }
-                else{
-                    return h('span',{
-                          class:{
-                              'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
-                          },
-                          on: {
-                              dblclick: this.dbSelectSrcCard
-                          },
-                          attrs:{
-                              'data-info':data.label_info
-                          }
-                        },[
-                        h('span',{
-                            attrs:{
-                                class:'card_label'
-                            }
-                        },data.label),
-                        data.label_extra
-                    ])
-                }
+                            'card_label':true,
+                            'card_label_valid':this.globalEvent.isValidResolution(data.resolArr),
+                            'card_back_up':data.bakFuncSta==1
+                        }
+                    },data.label),
+                    data.label_extra
+                ])
+                // if(this.globalEvent.isValidResolution(data.resolArr)){
+                //     return h('span',{
+                //         class:{
+                //             'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
+                //         },
+                //         attrs:{
+                //             'data-info':data.label_info
+                //         },
+                //         on: {
+                //             dblclick: this.dbSelectSrcCard
+                //         },
+                //     },[
+                //         h('span',{
+                //             attrs:{
+                //                 class:'card_label card_label_valid'
+                //             }
+                //         },data.label),
+                //         data.label_extra
+                //     ])
+                // }
+                // else{
+                //     return h('span',{
+                //           class:{
+                //               'selected_card':this.globalEvent.selectedCard.label_extra && data.label_extra==this.globalEvent.selectedCard.label_extra
+                //           },
+                //           on: {
+                //               dblclick: this.dbSelectSrcCard
+                //           },
+                //           attrs:{
+                //               'data-info':data.label_info
+                //           }
+                //         },[
+                //         h('span',{
+                //             attrs:{
+                //                 class:'card_label'
+                //             }
+                //         },data.label),
+                //         data.label_extra
+                //     ])
+                // }
 
 
             }
@@ -327,6 +351,7 @@ export default {
     .list_item:nth-child(even){border:none;}
     .el-collapse-item__content{max-height:500px;overflow:auto;}
   .selected_card .card_label{color:#00cc99;}
+  .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:0;background-color:#505050;}
   .list_item_cur{background-color:#00cc99;color:#fff;}
 }
 </style>

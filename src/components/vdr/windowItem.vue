@@ -20,7 +20,7 @@
 
             <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:{{item.inputCardLabel}}</span>
+                    <span>Win-{{seq+1}}:{{item.inputCardLabel}} {{item.lock==1?'[已锁定]':''}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
@@ -41,6 +41,7 @@
                 <p>画面名称:{{this.item.label}}</p>
                 <p>画面位置: [{{ o_left }},{{ o_top }}]</p>
                 <p>画面大小: [{{ o_width }},{{ o_height }}]</p>
+                <p>类型:[{{globalEvent.inputCardList[item.srcCardId].srcArr[item.srcId].label}}]</p>
                 <p :class="{alertColor:this.item.resolution.length==1}">分辨率：[{{this.item.resolution.join(',')}}]</p>
                 <p>{{item.partOrAll==0?'全景显示':'局部显示'}} <span v-show="item.partOrAll==1">[ {{item.cropSizeArr.join(',')}} ]</span></p>
                 <div  data-type="move" @mousedown.stop="handleMouseDown" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
@@ -122,6 +123,11 @@
             },
             sendSizeEvent(){
                 // console.log("init_size",this.o_width);
+                if(this.$parent.isOutResource({})){
+                    console.log('size_event');
+                    alert(this.globalEvent.alert.outResource);
+                    return;
+                }
                 this.sendEvent({pos:0,v:this.o_left,seq:this.seq});
                 this.sendEvent({pos:1,v:this.o_top,seq:this.seq});
                 this.sendEvent({pos:2,v:this.o_width,seq:this.seq});
@@ -273,6 +279,13 @@
                         srcId:num[1]-0
                     };
 
+                    if(this.$parent.isOutResource({})){
+                        //检测是否超资源
+                        this.loadScreenWindowItems();
+                        console.log('set_src_card');
+                        alert(this.globalEvent.alert.outResource);
+                        return ;
+                    }
                     this.$http.post("switchWinSrc.cgi",data,(ret)=>{
                         let win=this.globalEvent.windowItemsInfo.winArr[w];
                         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);

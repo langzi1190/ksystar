@@ -44,7 +44,9 @@ let gobalEvent =new Vue({
         commonInfo:{},
         sceneCarousel:{},//用户场景轮巡
         versionInfo:{},
-
+        alert:{
+            outResource:"没有足够的板卡资源，操作失败",
+        },
         keys:{
             'srcGroup':'src_group_name',//源组
             'sceneCarouse':'scene_carouse_name',//轮巡

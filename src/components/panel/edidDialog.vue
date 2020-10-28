@@ -4,19 +4,19 @@
             <div>
                 <div class="item">
                     <span>设备号：</span>
-                    <el-input v-model="userModel" size="mini"></el-input>
+                    <el-input v-model="devNo" size="mini"></el-input>
                 </div>
                 <div class="item">
                     <span>宽度：</span>
-                    <el-input-number  v-model="userModel" size="mini"></el-input-number>
+                    <el-input-number  v-model="width" size="mini"></el-input-number>
                 </div>
                 <div class="item">
                     <span>高度：</span>
-                    <el-input-number  v-model="userModel" size="mini"></el-input-number>
+                    <el-input-number  v-model="height" size="mini"></el-input-number>
                 </div>
                 <div class="item">
                     <span>帧率：</span>
-                    <el-input size="mini"></el-input>
+                    <el-input size="mini" v-model="frame"></el-input>
                 </div>
                 <div class="item">
                     <span></span>
@@ -53,10 +53,12 @@
         props:['showDialog'],
         data(){
 
-            console.log(this.globalEvent.selectedCard);
             let isChoose=Object.keys(this.globalEvent.selectedCard).length;
             return {
-                userModel:1,
+                devNo:1,
+                width:3840,
+                height:2160,
+                frame:60,
                 isChoose:isChoose,
                 curPortType:isChoose==0?-1:this.globalEvent.selectedCard.portType,
                 advanceType:[16,18]

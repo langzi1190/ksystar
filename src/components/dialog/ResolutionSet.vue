@@ -13,7 +13,7 @@
                     水平分辨率
                 </div>
                 <div>
-                    <el-input-number v-model="x" :min="400" size="mini"></el-input-number>
+                    <el-input-number @change="change('x')" v-model="x" :min="400" size="mini"></el-input-number>
                 </div>
             </div>
             <div class="inline_input">
@@ -21,7 +21,7 @@
                     垂直分辨率
                 </div>
                 <div>
-                    <el-input-number v-model="y" :min="300" size="mini"></el-input-number>
+                    <el-input-number @change="change('y')" v-model="y" :min="300" size="mini"></el-input-number>
                 </div>
             </div>
             <div class="inline_input">
@@ -57,6 +57,21 @@
             }
         },
         methods:{
+            change(act){
+                if(this.x*this.y>2600000){
+                    alert("垂直分辨率*水平分辨率不能大于2600000");
+                    if(act=='x'){
+                        this.$nextTick(()=>{
+                            this.x=parseInt(2600000/this.y);
+                        })
+                    }
+                    else{
+                        this.$nextTick(()=>{
+                            this.y=parseInt(2600000/this.x);
+                        })
+                    }
+                }
+            },
             showTimeSeq(){
                 this.$emit('sub_event',{act:'showTimeSeq',x:this.x,y:this.y});
             },

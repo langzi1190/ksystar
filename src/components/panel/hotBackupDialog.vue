@@ -92,11 +92,11 @@
             },
             submit(act){
                 if(act){
-                    let num=this.globalEvent.selectedCard.label_info.split('_');
+                    let num=this.globalEvent.sourceCardNumber();//this.globalEvent.selectedCard.label_info.split('_');
                     let param={
                         funcSta:this.enable?1:0,
-                        srcCardId:num[0]-0,
-                        srcId:num[1]-0,
+                        srcCardId:num[0],
+                        srcId:num[1],
                         bakSrcCardId:this.cardNumber,
                         bakSrcId:this.sourceCardList[this.sourceCard]-1
 
@@ -106,6 +106,7 @@
                     this.globalEvent.selectedCard.bakSrcId=param.bakSrcId;
 
                     this.$http.post("srcBakWr.cgi",param,()=>{
+                        param.act='back_up_enable';
                         this.$emit('sub_event',{act:'close_kfs'});
                     });
                 }

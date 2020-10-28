@@ -75,7 +75,7 @@
                 }
             }
 
-            console.log(this.globalEvent.commonInfo);
+            // console.log(this.globalEvent.commonInfo);
 
             let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
 

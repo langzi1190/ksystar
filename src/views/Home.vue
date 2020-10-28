@@ -136,7 +136,7 @@
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
       <edidDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
-      <edidAdvancedDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edidAdvanced'"></edidAdvancedDialog>
+      <edidAdvancedDialog @sub_event="subEvent" :showDialog="showEdidAdvancedDialog" v-if="showEdidAdvancedDialog=='edidAdvanced'"></edidAdvancedDialog>
       <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
       <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
       <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
@@ -148,6 +148,7 @@
       <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
       <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
       <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
+      <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
   </div>
 </template>
 
@@ -221,6 +222,7 @@ import eqDialog from "@/components/panel/eqDialog";
 import vgaDialog from "@/components/panel/vgaDialog";
 import resetDialog from "@/components/panel/resetDialog";
 import userDialog from "@/components/panel/userDialog";
+import showEdidDialog from "@/components/panel/showEdidDialog";
 
 
 export default {
@@ -238,9 +240,11 @@ export default {
         drawCenter: true,
         // positionLock: false, //位置锁定
         showDialog:'',
+        showEdidAdvancedDialog:'',
         showEdidDialog:false,
         devType:'',
-        updateFlip:true
+        updateFlip:true,
+        edidData:[],
         // scale:1,
     };
   },
@@ -351,7 +355,10 @@ export default {
               this.showDialog='';
           }
           else if('show_edid_advanced'==param.act){
-              this.showDialog='edidAdvanced';
+              this.showEdidAdvancedDialog='edidAdvanced';
+          }
+          else if('close_edid_advanced'==param.act){
+              this.showEdidAdvancedDialog='';
           }
           else if('hot_backup'==param.act){
               this.showDialog='hotBackup'
@@ -370,8 +377,10 @@ export default {
               this.showDialog='edidSingle';
           }
           else if('rdEdid'==param.act){
-              this.$http.post("srcEdidRd.cgi",{},(ret)=>{
-                  console.log(ret);
+              let num=this.globalEvent.sourceCardNumber();
+              this.$http.post("srcEdidRd.cgi",{srcCardid:num[0],srcId:num[1]},(ret)=>{
+                  this.edidData=ret.data.EdidDataArr;
+                  this.showDialog='showEdid';
               });
           }
       }
@@ -404,6 +413,7 @@ export default {
       vgaDialog,
       resetDialog,
       userDialog,
+      showEdidDialog,
   },
 };
 </script>

@@ -49,8 +49,7 @@
 </template>
 
 <script>
-
-
+    let originW=document.body.clientWidth;
     import windowItem from "@/components/vdr/windowItem";
     export default {
         data: function() {
@@ -205,6 +204,16 @@
 
             });
             this.loadData();
+
+            window.addEventListener('resize',(e)=>{
+                let curW=document.body.clientWidth;
+                let z=curW/originW;//缩小的尺寸
+                originW=curW;
+
+                this.scale=z*this.scale;
+
+                this.initScreenPanel();
+            })
         },
         computed:{
             ratioWidth(){
@@ -309,6 +318,7 @@
                         win.zoom=0;//扩张，还原
                         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
                         win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                        // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
                         if(!this.globalEvent.isValidResolution(win.resolution)){
                             win.resolution=['信号丢失']
                         }
@@ -356,10 +366,145 @@
                 };
 
 
+
+
+
+                if(this.isOutResource(data)){
+                    console.log('add_window');
+                    alert(this.globalEvent.alert.outResource);
+                    this.loadScreenWindowItems();
+                    return ;
+                }
+
+
+
                 this.$http.post("winOpr.cgi",data,(ret)=>{
 
                     this.loadScreenWindowItems();
                 });
+            },
+            isOutResource(newWin={}){
+                //已有窗口 + 新窗口
+                let totalWins=JSON.parse(JSON.stringify(this.windowItems));
+                for(let i in totalWins){
+                    totalWins[i].winLeft=totalWins[i].winSizeArr[0];
+                    totalWins[i].winTop=totalWins[i].winSizeArr[1];
+                    totalWins[i].winW=totalWins[i].winSizeArr[2];
+                    totalWins[i].winH=totalWins[i].winSizeArr[3];
+                }
+
+                if(Object.keys(newWin).length>0){
+                    totalWins.push(JSON.parse(JSON.stringify(newWin)));
+                }
+
+                let outCardPort={};//不同板卡的 端口分组
+                let outCardUsedRes={};//板卡已用资源
+                for(let i in this.curScreen.portArr){
+
+                    let port=this.curScreen.portArr[i].mapArr[0];
+                    let cardSeq=parseInt(port/6);//板卡号
+                    let cardKey='card'+cardSeq;
+                    if(typeof outCardPort[cardKey] == 'undefined'){
+                        outCardPort[cardKey]=[];
+                        outCardUsedRes[cardKey]=0;
+                    }
+                    outCardPort[cardKey].push(port);//属于同一板卡的端口
+                }
+                //计算每个窗口跨过的端口
+                for(let i in totalWins){
+
+                    let crossCards=this.getWindowCrossCard(totalWins[i],outCardPort);
+                    let port=this.globalEvent.inputCardList[totalWins[i].srcCardId].srcArr[totalWins[i].srcId];
+
+                    // console.log(crossCards);
+
+                    let resourceType=1;//默认资源数为1
+                    if((port.portType==16 && port.ITESrcType==18) || (port.portType==16 && port.ITESrcType==17)){
+                        resourceType=4;
+                    }
+                    else if((port.portType==18 && port.ITESrcType==18) || (port.ITESrcType==18 && port.ITESrcType==17)){
+                        resourceType=2;
+                    }
+                    // if((port.portType==16 || port.portType==18 )&& port.ITESrcType==17){
+                    //     resourceType=4;
+                    // }
+                    // else if(port.portType==18 && port.ITESrcType==18){
+                    //     resourceType=2;
+                    // }
+
+                    // for(let k in crossCards){
+                    //     for(let cardKey in outCardPort){
+                    //         if(outCardPort[cardKey].includes(crossPorts[k])){
+                    //             outCardUsedRes[cardKey]+=resourceType;
+                    //         }
+                    //     }
+                    // }
+                    // console.log(resourceType);
+                    for(let k in crossCards){
+                        outCardUsedRes[crossCards[k]]+=resourceType;
+                    }
+                }
+
+                console.log(outCardUsedRes);
+                let outResource=false;
+                for(let k in outCardUsedRes){
+                    if(outCardUsedRes[k]>8){
+                        outResource=true;
+                        break;
+                    }
+                }
+
+                return outResource;
+            },
+            getWindowCrossCard(win,outCardPort){
+                //获取 窗口跨越的板卡
+                //左上角
+                let w=0;
+                let h=0;
+                let startCol=-1,endCol=0;
+                let startRow=-1,endRow=0;
+                let winRight=win.winLeft+win.winW;//右坐标
+                let winBottom=win.winTop+win.winH;//底部坐标
+                let cards=[];
+                for(let i=0 ;i< this.curScreen.Col;i++){
+                    w+=this.curScreen.portArr[i].sizeArr[0];
+                    if(win.winLeft<=w-1 && startCol==-1){
+                        startCol=i;
+                    }
+                    if(winRight>w){
+                        endCol=Math.min(i+1,this.curScreen.Col-1);
+                    }
+                }
+                for(let i=0 ;i<this.curScreen.Row;i++){
+                    let l=this.curScreen.Col*i;
+                    h+=this.curScreen.portArr[l].sizeArr[1];
+                    if(win.winTop<=h-1 && startRow==-1){
+                        startRow=i;
+                    }
+                    if(winBottom>h){
+                        // console.log(win.winTop,win.winH,winBottom,h);
+                        endRow=Math.min(i+1,this.curScreen.Row-1);
+                    }
+                }
+
+                // console.log(startCol,endCol,startRow,endRow);
+
+                for(let i=startCol;i<=endCol;i++){
+                    for(let j=startRow;j<=endRow;j++){
+                        let k=this.curScreen.Col*j+parseInt(i);
+
+                        // console.log(k);
+
+                        for(let cardKey in outCardPort){
+                            if(outCardPort[cardKey].includes(this.curScreen.portArr[k].mapArr[0])){
+                                cards.push(cardKey);//记录 端口占用的板卡号
+                            }
+                        }
+
+                    }
+                }
+
+                return [...new Set(cards)];
             },
             syncLocalName(){
                 this.globalEvent.syncLocalName("windowItem",this.windowItems)
@@ -401,6 +546,13 @@
                 let col=index%this.col;//位于第几列
                 style.left=col==0?'30px':(this.lineV[2*col-1])*this.ratio+30+'px';
 
+                if(this.ratioWidth<400){
+                    let r=this.ratioWidth/400;
+                    style.fontSize=50*r+'px';
+                    style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
+                    style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
+                }
+
                 // if(this.ratio<0.25){
                 //     let scale=this.ratio/0.25;
                 //     // style.top=style.top.replace('px','')*scale+'px';
@@ -415,7 +567,7 @@
             mouseWheel(e) {
                 if(e.wheelDelta>0){
                     //变大
-                    this.scale=this.scale+0.01;
+                    this.scale=this.scale+0.03;
 
                     if(this.scale>4){
                         this.scale=4;
@@ -423,7 +575,7 @@
                 }
                 else{
                     //变小
-                    this.scale=this.scale-0.01;
+                    this.scale=this.scale-0.03;
                     if(this.scale<0.05){
                         this.scale=0.05;
                     }
@@ -518,6 +670,13 @@
                     winH:curWindow.winSizeArr[3],
                 };
 
+                if(this.isOutResource({})){
+                    console.log("sync_window_size");
+                    alert(this.globalEvent.alert.outResource);
+                    this.loadScreenWindowItems();
+                    return ;
+                }
+
                 this.$http.post("winOpr.cgi",data,()=>{
                     console.log("vdr/index.vue .保存窗口 尺寸 位置....");
                     //如果都统一保存 然后再读取（ loadScreenWindowItems），就没必要修改属性（减少复杂度 代码量）。。。 调用
@@ -574,13 +733,14 @@
 
                     };
                     let mu=function(){
+                        document.removeEventListener("mousemove",mm);
+                        document.removeEventListener("mouseup",mu);
+
                         if(that.dragRect.w>30 && that.dragRect.h>30){
                             //拖动特定 长宽 才生成窗口
                             that.addWindowItem({act:'drag'});
                         }
 
-                        document.removeEventListener("mousemove",mm);
-                        document.removeEventListener("mouseup",mu);
                     };
                     document.addEventListener("mousemove",mm);
                     document.addEventListener("mouseup",mu);

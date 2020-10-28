@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://192.168.0.100/';//'http://192.168.0.100/';
+const baseURL = '';//'http://192.168.0.100/';
 
 let http = axios.create({
   baseURL: baseURL,
@@ -44,6 +44,7 @@ function apiAxios(method, url, params, response) {
         "devCfgStaRd.cgi":"status.json",
         "srcGroupWr.cgi":"write_back.json",
         "extCtrlRd.cgi":"screen_ctrl.json",
+        "srcEdidRd.cgi":"edid_data.json",
     };
       url=urlTrans[url];
       method='GET';

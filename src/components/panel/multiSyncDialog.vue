@@ -94,6 +94,7 @@
                     }
                     this.$http.post("multiSyncWr.cgi",{funcSta:this.controlSync,srcCardId:this.cardId,srcId:this.sourceId},(ret)=>{
                         this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=this.controlSync;
+                        this.$emit('sub_event',{act:'close_kfs'});
                     });
                 }
             }
