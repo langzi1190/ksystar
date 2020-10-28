@@ -45,6 +45,8 @@ function apiAxios(method, url, params, response) {
         "srcGroupWr.cgi":"write_back.json",
         "extCtrlRd.cgi":"screen_ctrl.json",
         "srcEdidRd.cgi":"edid_data.json",
+        "syncInputInfoRd_t.cgi":"usemodeltest_singal.json",
+        "syncWinInfoRd_t.cgi":"usemodel_test_windows.json",
     };
       url=urlTrans[url];
       method='GET';

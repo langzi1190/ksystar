@@ -43,6 +43,7 @@
             </div>
           </el-collapse-item>
           <el-collapse-item title="局部显示" name="2">
+            <div style="margin-bottom:10px;">源分辨率：{{srcWidth}}*{{srcHeight}}</div>
             <div class="position-size">
               <span>水平位置:</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
@@ -105,13 +106,16 @@ export default {
             ctop:0,//局部显示
             cleft:0,
             cwidth:0,
-            cheight:0
+            cheight:0,
+
+            srcWidth:0,//信号源分辨率
+            srcHeight:0,
         };
     },
     created(){
         this.globalEvent.$on('update_side_attr',()=>{
             //接受 来自主操作面板的参数改动 windowItem.vue
-            console.log("update_side_attr",this.globalEvent.selectedWindowIndex);
+            // console.log("update_side_attr",this.globalEvent.selectedWindowIndex);
             if(this.globalEvent.selectedWindowIndex>-1){
                 this.setCurWindow(this.globalEvent.selectedWindowIndex);
             }
@@ -136,6 +140,23 @@ export default {
             }
             if(act=='height' && this.height+this.top>this.totalHeight){
                 this.resetValue('height',this.totalHeight-this.top);
+                return ;
+            }
+
+            if(act=='ctop' && this.cropOutBound()){
+                this.resetValue('ctop',this.srcHeight-this.ctop);
+                return ;
+            }
+            if(act=='cheight' && this.cropOutBound()){
+                this.resetValue('cheight',this.srcHeight-this.ctop);
+                return ;
+            }
+            if(act=='cleft' && this.cropOutBound()){
+                this.resetValue('cleft',this.srcWidth-this.width);
+                return ;
+            }
+            if(act=='cwidth' && this.cropOutBound()){
+                this.resetValue('cwidth',this.srcWidth-this.cleft);
                 return ;
             }
 
@@ -174,6 +195,7 @@ export default {
             //初始化当前参数
             let curWindow=this.globalEvent.windowItemsInfo.winArr[seq];
 
+
             this.label=curWindow.label;
             this.left=curWindow.winSizeArr[0];
             this.top=curWindow.winSizeArr[1];
@@ -187,6 +209,23 @@ export default {
 
             this.isPanorama=curWindow.partOrAll==0;
             this.isLock=curWindow.lock;
+
+            if(curWindow.resolution.length==1){
+                this.srcWidth=300;
+                this.srcHeight=200;
+            }else{
+                this.srcWidth=curWindow.resolution[0];
+                this.srcHeight=curWindow.resolution[1];
+            }
+
+        },
+        cropOutBound(){
+            if(parseInt(this.ctop)+parseInt(this.cheight)>this.srcHeight){
+                return true;
+            }
+            if(parseInt(this.cleft)+parseInt(this.cwidth)>this.srcWidth){
+                return true;
+            }
         },
         op(act){
             if(act=='cancel'){

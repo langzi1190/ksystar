@@ -8,7 +8,7 @@
           <span class="content-list-title">信号管理</span>
         </template>
 
-        <div class="content-list">
+        <div class="content-list" :style="{maxHeight:contestListHeight}">
           <el-tree :data="inputCardList" :props="paramMap" :render-content="renderContent" @node-click="handleNodeClick"></el-tree>
         </div>
 
@@ -18,7 +18,7 @@
           <img class="header-icon" src="@/assets/images/UserMode.png" />
           <span class="content-list-title">用户模式</span>
         </template>
-        <div class="content-list">
+        <div class="content-list" :style="{maxHeight:contestListHeight}">
           <template v-for="(item,index) in userSceneList">
             <div class="list_item" :class="{list_item_cur:item.value==1}" @click="selectedSceneIndex=index">
               {{item.label}}
@@ -36,7 +36,7 @@
           <img class="header-icon" src="@/assets/images/Round.png" />
           <span class="content-list-title">场景轮巡</span>
         </template>
-        <div class="content-list">
+        <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <sceneCarousel v-if="activeName==2"></sceneCarousel>
         </div>
       </el-collapse-item>
@@ -45,7 +45,7 @@
           <img class="header-icon" src="@/assets/images/signal.png" />
           <span class="content-list-title">信号源分组</span>
         </template>
-        <div class="content-list">
+        <div class="content-list"  :style="{maxHeight:contestListHeight}">
             <sourceGroup v-if="activeName==3"></sourceGroup>
         </div>
       </el-collapse-item>
@@ -76,11 +76,15 @@ export default {
             paramMap:{
                 children: 'srcArr',
             },
+            contestListHeight:'auto'
 
         };
     },
     mounted(){
-
+        this.calContentListHeight();
+        window.addEventListener("resize",(e)=>{
+            this.calContentListHeight();
+        })
        this.getSysInputInfo();
         this.globalEvent.$on("work_mode_change",()=>{
             //信号源工作模式发生改变 修改前端名称 workModeDialog
@@ -112,6 +116,11 @@ export default {
         // int(i){
         //     return parseInt(i);
         // },
+        calContentListHeight(){
+            let curH=document.body.clientHeight;
+
+            this.contestListHeight=(curH-386)+'px';
+        },
         getSysInputInfo(){
             this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
                 this.syscInputInfo(ret.data);

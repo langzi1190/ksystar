@@ -1,6 +1,5 @@
 <template>
     <div class="windowItem"
-         @dblclick="setSrcCard"
          :style="{
         top:ptop+'%',
         left:pleft+'%',
@@ -67,6 +66,7 @@
                 pwidth=pheight=100;
 
             }
+
             return {
                 ptop:ptop,//比例位置
                 pleft:pleft,
@@ -169,9 +169,9 @@
             percent2Ratio(){
                 //比例数据 转化 为相对数据
                 this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
-                this.height=Math.ceil(this.pheight*this.$parent.ratioHeight/100);
+                this.height=Math.min(Math.ceil(this.pheight*this.$parent.ratioHeight/100),this.$parent.ratioHeight);
                 this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
-                this.width=Math.ceil(this.pwidth*this.$parent.ratioWidth/100);
+                this.width=Math.min(Math.ceil(this.pwidth*this.$parent.ratioWidth/100),this.$parent.ratioWidth);
             },
             windowEdit(val) {
                 if(this.globalEvent.panelLock){
@@ -253,10 +253,6 @@
                     //修改 拖拽坐标 可以在窗口放大后 拖拽
                     this.percent2Ratio();
                     this.sendSizeEvent();
-                    // this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
-                    // this.height=Math.ceil(this.pheight*this.$parent.ratioHeight/100);
-                    // this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
-                    // this.width=Math.ceil(this.pwidth*this.$parent.ratioWidth/100);
                 }
 
             },
@@ -374,12 +370,12 @@
                             // that.height=that.height-delta_y;
                             // that.left=parseInt(that.left)+delta_x;
                             // that.width=that.width-delta_x;
-                            r=parseInt(that.top)+delta_y;
-                            r1=that.height-delta_y;
-                            r2=parseInt(that.left)+delta_x;
-                            r3=that.width-delta_x;
+                            r=parseInt(that.top+delta_y);
 
-                            console.log(r,r1,r2,r3);
+                            r1=Math.floor(that.height-delta_y);
+                            r2=parseInt(that.left)+delta_x;
+                            r3=Math.floor(that.width-delta_x);
+
                             if(
                                 Math.min(r,0)>=0
                                 && (r1+r)<=that.$parent.ratioHeight
@@ -465,6 +461,10 @@
                     that.pleft=Math.min(100,that.left/that.$parent.ratioWidth*100);
                     that.pheight=Math.min(100,that.height/that.$parent.ratioHeight*100);
                     that.pwidth=Math.min(100,that.width/that.$parent.ratioWidth*100);
+
+                    that.pwidth=that.pwidth>99?100:that.pwidth;
+                    that.pheight=that.pheight>99?100:that.pheight;
+
 
                 }
                 let mu=function (e) {
