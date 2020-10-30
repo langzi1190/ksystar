@@ -49,7 +49,8 @@
 </template>
 
 <script>
-    let originW=document.body.clientWidth;
+    // let originW=document.body.clientWidth;
+    let originW=window.innerWidth;
     import windowItem from "@/components/vdr/windowItem";
     export default {
         data: function() {
@@ -207,7 +208,8 @@
             this.loadData();
 
             window.addEventListener('resize',(e)=>{
-                let curW=document.body.clientWidth;
+                // let curW=document.body.clientWidth;
+                let curW=window.innerWidth;
                 let z=curW/originW;//缩小的尺寸
                 originW=curW;
 

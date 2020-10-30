@@ -119,7 +119,7 @@ export default {
         calContentListHeight(){
             let curH=document.body.clientHeight;
 
-            this.contestListHeight=(curH-386)+'px';
+            this.contestListHeight=(curH-366)+'px';
         },
         getSysInputInfo(){
             this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
@@ -340,7 +340,7 @@ export default {
     }
     .content-list {
       border-top: 1px solid #ebeef5;
-      max-width:205px;
+      max-width:200px;
       overflow:auto;
     }
     .content-list-title:hover {

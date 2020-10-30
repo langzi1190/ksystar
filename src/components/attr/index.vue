@@ -330,6 +330,11 @@ export default {
         width: 120px;
       }
     }
+
+    .el-collapse-item__header {
+      height: 35px;
+      line-height: 35px;
+    }
   }
   .el-button--mini {
     padding: 6px 8px;
@@ -346,10 +351,6 @@ export default {
   .collapse_inner{text-align:left;}
   .collapse_inner .content-title{margin-bottom:15px;text-align:center;margin-top:30px;}
   .collapse_inner .el-button--mini{width:80px;margin-left: 15px;margin-bottom: 10px;}
-  .el-collapse-item__header {
-    height: 40px;
-    line-height: 40px;
-  }
   .el-collapse-item__content {
     padding-bottom: 6px;
   }

@@ -109,7 +109,7 @@
       </div>
       <div class="content-compile" v-show="true">
         <div class="content-title">画面编辑</div>
-        <div class="content-attr">
+        <div class="content-attr" :style="{maxHeight:maxHeight+'px','overflow-y':'auto'}">
           <attr @sub_event="subEvent"></attr>
         </div>
       </div>
@@ -234,6 +234,10 @@ export default {
       this.globalEvent.$on('sync',()=>{
           this.preinstall('sync');
       });
+      this.maxHeight=window.innerHeight-200;
+      window.addEventListener("resize",()=>{
+          this.maxHeight=window.innerHeight-200;
+      })
     },
   data() {
     return {
@@ -251,6 +255,7 @@ export default {
         updateFlip:true,
         edidData:[],
         edidParam:{},//高级edid设置使用
+        maxHeight:500,
         // scale:1,
     };
   },
@@ -503,6 +508,10 @@ export default {
         /*}*/
       }
     }
+    .el-collapse-item__header {
+      height: 35px;
+      line-height: 35px;
+    }
     .content-compile {
       flex: 0 0 210px;
       border-left: 1px solid #dcdfe6;
@@ -544,5 +553,6 @@ export default {
       }
     }
   }
+
 }
 </style>
