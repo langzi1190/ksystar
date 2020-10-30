@@ -206,7 +206,7 @@
                     VFrontPorch:12,
                     VSyncTime:8,
                     VBackPorch:12,
-                    VPolar:0,
+                    VPolar:1,
                     HPolar:1,
                 },//this.copyObject(this.comScreen.displayList[curScreenIndex]),
                 // FrameRateInfo:0,
@@ -256,7 +256,7 @@
                 }
                 let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
                 let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
-                this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal;
+                this.curScreen.FrameRate=Number(this.curScreen.ClkFreq*1000/hTotal/vTotal).toFixed(2);
 
             },
             isSubmit(on){
@@ -430,7 +430,7 @@
                     timing.VBackPorch = timing.VBackPorch + nOffset;
                 }
 
-                timing.FrameRate=nFrame;
+                timing.FrameRate=nFrame.toFixed(2);
                 return timing;
             }
         }

@@ -207,6 +207,7 @@
             console.log(this.$parent.showDialog);
             return {
                 EDID:[],
+                devId:0,
                 curScreen:{
                     ClkFreq:526080,
                     FormatW:3840,
@@ -222,6 +223,13 @@
             };
         },
         mounted(){
+            if(this.$parent.showDialog=='edid'){
+                this.devId=this.$parent.edidParam.devId;
+                this.curScreen.FormatW=this.$parent.edidParam.w;
+                this.curScreen.FormatH=this.$parent.edidParam.h;
+                this.curScreen.FrameRate=this.$parent.edidParam.f;
+                console.log(this.curScreen);
+            }
             this.calFrameRate();
         },
         methods:{
@@ -234,7 +242,7 @@
                 }
                 let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
                 let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
-                this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal;
+                this.curScreen.FrameRate=Number(this.curScreen.ClkFreq*1000/hTotal/vTotal).toFixed(2);
 
             },
             calEdid(){
@@ -368,12 +376,18 @@
                 // let num=this.globalEvent.selectedCard.label_info.split('_');
                 let num=this.globalEvent.sourceCardNumber();
                 let param={
-                    devId:0,
+                    devId:parseInt(this.devId),
                     srcCardId:num[0],
                     srcId:num[1],
                     EdidDataArr:this.EDID
                 };
-                this.$http.post("srcEdidWr.cgi",param,()=>{});
+                if(this.$parent.showDialog=='edid'){
+                    param.srcCardid=0xff;
+                }
+                console.log(param);
+                this.$http.post("srcEdidWr.cgi",param,()=>{
+                    this.$emit('sub_event',{act:'close_edid_advanced'});
+                });
                 // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
                 // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
             }

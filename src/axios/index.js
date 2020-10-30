@@ -24,6 +24,7 @@ function apiAxios(method, url, params, response) {
       //todo delete
     let urlTrans={
         "syncScrInfoRd.cgi":"/screen_info.json",
+        // "syncScrInfoRd.cgi":"/screen_info41.json",
         "syncWinInfoRd.cgi":"/window_items.json",
         "syncOutputInfoRd.cgi":"/out_put_list.json",
         "syncInputInfoRd.cgi":"/signal_list.json",

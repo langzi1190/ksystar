@@ -4,7 +4,7 @@ import globalEvent from './store/event.js';
 
 import Axios from './axios';
 
-import { Select, Tabs, Dialog, Collapse, Button, Icon, Checkbox, Input, InputNumber, TabPane, CollapseItem, Option ,Tree} from 'element-ui';
+import { Select, Tabs, Dialog, Collapse, Button, Icon, Checkbox, Input, InputNumber, TabPane, CollapseItem, Option ,Tree,Loading} from 'element-ui';
 // import ElementUI from 'element-ui';
 // import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/style/reset.css'
@@ -27,6 +27,8 @@ Vue.use(Select);
 Vue.use(Dialog);
 Vue.use(Option);
 
+Vue.use(Loading.directive);
+Vue.prototype.$loading = Loading.service;
 
 
 new Vue({

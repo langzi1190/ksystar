@@ -166,6 +166,13 @@
                 }
 
                 // console.log(cfgObj);
+                if(this.syncType==2){
+                    cfgObj=0;
+                    for(let i=0;i<this.selectedTabIndex;i++){
+                        cfgObj+=this.displayList[i].portArr.length;
+                    }
+                    cfgObj+=this.selectedWinIndex;
+                }
                 let param={
                     cfgType:this.syncType,
                     colorType:this.syncRgb==1?7:this.colorType,
@@ -189,7 +196,7 @@
     .screen_bright_dialog .el-dialog{width:800px;}
     .winItemWrapper{clear:both;
         background-color:#dcdcdc;
-        align-content: baseline;min-height:400px; min-width:722px; border: 1px solid #dcdcdc;box-sizing: border-box;overflow:auto;}
+        align-content: baseline;min-height:400px; min-width:722px; border: 1px solid #dcdcdc;box-sizing: content-box;overflow:auto;}
     .winItem{text-align:center;float:left;
         background-color:#fcf166;
         border-right:1px solid #dcdcdc;

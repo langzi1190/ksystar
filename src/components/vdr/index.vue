@@ -103,7 +103,8 @@
                     this.windowItems.splice(this.globalEvent.selectedWindowIndex,1);
                     data.winId=this.globalEvent.selectedWindowIndex;
                     this.$http.post("closeWin.cgi",data,(ret)=>{
-
+                        //重新载入
+                        this.loadScreenWindowItems();
                     });
                 }
 
@@ -654,24 +655,23 @@
                 // console.log(curWindow);
                 let data={
                     type:2,//移动
-                    scrGroupId:this.globalEvent.curScreenIndex,
-                    winId:curWindow.winId,
-                    srcCardId:curWindow.srcCardId,
-                    srcGroupId:curWindow.srcGroupId,
-                    srcId:curWindow.srcId,
-                    layerId:curWindow.layerId,
-                    cropLeft:curWindow.cropSizeArr[0],
-                    cropTop:curWindow.cropSizeArr[1],
-                    cropW:curWindow.cropSizeArr[2],
-                    cropH:curWindow.cropSizeArr[3],
-                    winLeft:curWindow.winSizeArr[0],
-                    winTop:curWindow.winSizeArr[1],
-                    winW:curWindow.winSizeArr[2],
-                    winH:curWindow.winSizeArr[3],
+                    scrGroupId:this.globalEvent.curScreenIndex-0,
+                    winId:curWindow.winId-0,
+                    srcCardId:curWindow.srcCardId-0,
+                    srcGroupId:curWindow.srcGroupId-0,
+                    srcId:curWindow.srcId-0,
+                    layerId:curWindow.layerId-0,
+                    cropLeft:curWindow.cropSizeArr[0]-0,
+                    cropTop:curWindow.cropSizeArr[1]-0,
+                    cropW:curWindow.cropSizeArr[2]-0,
+                    cropH:curWindow.cropSizeArr[3]-0,
+                    winLeft:curWindow.winSizeArr[0]-0,
+                    winTop:curWindow.winSizeArr[1]-0,
+                    winW:curWindow.winSizeArr[2]-0,
+                    winH:curWindow.winSizeArr[3]-0,
                 };
 
                 if(this.isOutResource({})){
-                    console.log("sync_window_size");
                     alert(this.globalEvent.alert.outResource);
                     this.loadScreenWindowItems();
                     return ;

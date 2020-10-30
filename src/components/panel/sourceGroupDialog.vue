@@ -223,42 +223,43 @@
 </script>
 
 <style>
-    .scene_carousel_dialog .top_part{padding-left:45px;}
-    .scene_carousel_dialog .dialog_body{justify-content: center;padding-bottom:20px;}
-    .scene_carousel_dialog .label_group{margin-left:10px;}
-    .scene_carousel_dialog .right_body{width:210px;border:1px solid #dcdcdc;}
-    .scene_carousel_dialog .middle_body{padding:0 20px;}
-    .scene_carousel_dialog .middle_body button{margin-top:140px;}
-    .scene_carousel_dialog .left_body,
-    .scene_carousel_dialog .right_body{
-        max-height:300px;
-        padding:0;
-        overflow:auto;
-    }
-    .scene_carousel_dialog .button_group_bottom{position:static;text-align:center;}
-    .modifyBox{
-        display:flex;
-        position:relative;
-        width: 205px;
-        float: left;
-        margin-left: 45px;
-        border:1px solid #dcdcdc;
-        justify-content: center;
-    }
-    .modifyBox > div{display:inline-block;cursor:pointer;margin:0 3px;}
-    .modifyBox input{width:30px;}
-    .modifyBox .modifyAdd,.modifyBox .modifySub{
-        position: absolute;
-        left: 0;
-        width: 25px;
-        background-color: #dcdcdc;
-        user-select: none;
-        margin: 0;}
-    .modifyBox .modifySub{right:0;left:unset;}
+    /*.scene_carousel_dialog .top_part{padding-left:45px;}*/
+    /*.scene_carousel_dialog .dialog_body{justify-content: center;padding-bottom:20px;}*/
+    /*.scene_carousel_dialog .label_group{margin-left:10px;}*/
+    /*.scene_carousel_dialog .right_body{width:210px;border:1px solid #dcdcdc;}*/
+    /*.scene_carousel_dialog .middle_body{padding:0 20px;}*/
+    /*.scene_carousel_dialog .middle_body button{margin-top:140px;}*/
+    /*.scene_carousel_dialog .left_body,*/
+    /*.scene_carousel_dialog .right_body{*/
+        /*max-height:300px;*/
+        /*padding:0;*/
+        /*overflow:auto;*/
+    /*}*/
+    /*.scene_carousel_dialog .button_group_bottom{position:static;text-align:center;}*/
+    /*.modifyBox{*/
+        /*display:flex;*/
+        /*position:relative;*/
+        /*width: 205px;*/
+        /*float: left;*/
+        /*margin-left: 45px;*/
+        /*border:1px solid #dcdcdc;*/
+        /*justify-content: center;*/
+    /*}*/
+    /*.modifyBox > div{display:inline-block;cursor:pointer;margin:0 3px;}*/
+    /*.modifyBox input{width:30px;}*/
+    /*.modifyBox .modifyAdd,.modifyBox .modifySub{*/
+        /*position: absolute;*/
+        /*left: 0;*/
+        /*width: 25px;*/
+        /*background-color: #dcdcdc;*/
+        /*user-select: none;*/
+        /*margin: 0;}*/
+    /*.modifyBox .modifySub{right:0;left:unset;}*/
 
-    .bottom_op{height:45px;width:100%;}
-    .bottom_op button{float:right;margin-right:45px;}
-    .scene_item{text-align:left;margin:0 15px;padding-left:5px;height:30px;line-height:30px;cursor:pointer}
-    .selected_secene_item{background-color:#409eff;cursor:pointer;color:#fff;}
-    .edit_right_scene{border-color:#409eff;color:#409eff;}
+    /*.bottom_op{height:45px;width:100%;}*/
+    /*.bottom_op button{float:right;margin-right:45px;}*/
+    /*.scene_item{text-align:left;margin:0 15px;padding-left:5px;height:30px;line-height:30px;cursor:pointer;}*/
+    /*.selected_secene_item{color:#409eff;cursor:pointer;}*/
+    /*.edit_right_scene{border-color:#409eff;color:#409eff;}*/
+
 </style>

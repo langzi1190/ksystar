@@ -74,8 +74,14 @@
         },
         methods:{
             selectCard(index){
+                index--;
+                if(index==-1){
+                    this.sourceIdList=['None'];
+                    this.sourceId=0;
+                    return ;
+                }
                 let inputCard=this.globalEvent.inputCardList;
-                this.sourceIdList=['None'];
+                this.sourceIdList=[];
                 this.sourceId=0;
                 for(let i in inputCard[index].srcArr){
                     this.sourceIdList.push(++i);
@@ -87,12 +93,19 @@
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else{
-                    console.log("多机同步",this.controlSync,this.cardId,this.sourceId);
                     if(this.cardIdList.length==0 && this.sourceIdList.length==0){
                         alert("无数据");
                         return ;
                     }
-                    this.$http.post("multiSyncWr.cgi",{funcSta:this.controlSync,srcCardId:this.cardId,srcId:this.sourceId},(ret)=>{
+                    let param={
+                        funcSta:this.controlSync,
+                        srcCardId:this.cardId,
+                        srcId:this.sourceId
+                    };
+                    if(param.srcCardid>0){
+                        param.srcId=parseInt(param.srcId)+1;
+                    }
+                    this.$http.post("multiSyncWr.cgi",param,(ret)=>{
                         this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=this.controlSync;
                         this.$emit('sub_event',{act:'close_kfs'});
                     });

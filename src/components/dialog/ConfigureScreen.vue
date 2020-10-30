@@ -218,8 +218,9 @@ export default {
               scrGroupArr:copyDisplayList
           };
 
-          console.log(screenInfo);
+
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
+              console.log(screenInfo);
               // this.globalEvent.screenInfo=screenInfo;
               this.globalEvent.$emit("reload_data");
               this.$emit("isDialogVisible", false); // 退出关闭弹窗

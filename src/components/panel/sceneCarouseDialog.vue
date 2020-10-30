@@ -251,6 +251,8 @@
     .bottom_op{height:45px;width:100%;}
     .bottom_op button{float:right;margin-right:45px;}
     .scene_item{text-align:left;margin:0 15px;padding-left:5px;height:30px;line-height:30px;cursor:pointer}
-    .selected_secene_item{background-color:#409eff;cursor:pointer;color:#fff;}
+    .selected_secene_item{color:#409eff;cursor:pointer;}
     .edit_right_scene{border-color:#409eff;color:#409eff;}
+    .scene_carousel_dialog .scene_item{width: auto;margin: 0;padding-left: 20px;display:flex;word-break: keep-all; }
+
 </style>

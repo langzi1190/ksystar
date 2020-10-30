@@ -20,7 +20,7 @@
                 </div>
                 <div class="item">
                     <span></span>
-                    <el-button @click="op('showAdvanced')" size="mini">设置EDID</el-button>
+                    <el-button @click="op('showAdvanced')" size="mini">高级</el-button>
                 </div>
                 <div class="item">
                     <el-button size="mini" @click="op('sure')">确定</el-button>
@@ -73,27 +73,27 @@
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else if(act=='showAdvanced'){
-                    this.$emit('sub_event',{act:'show_edid_advanced'})
+                    this.$emit('sub_event',{act:'show_edid_advanced',info:{devId:this.devNo,w:this.width,h:this.height,f:this.frame}})
                 }
-                else if(act=='rename'){
-                    let s=prompt("新输入新名称",this.globalEvent.selectedCard.label_extra);
-                    if(s!==null && s!==undefined){
-                        this.globalEvent.selectedCard.label_extra=s;
-                        this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
-                    }
-                }
-                else if(act=='hotBackup'){
-                    this.$emit('sub_event',{act:"hot_backup"});
-                }
-                else if(act=='workMode'){
-                    this.$emit('sub_event',{act:'work_mode'});
-                }
-                else if(act=='setEq'){
-                    this.$emit('sub_event',{act:'eq'});
-                }
-                else if(act=='vga'){
-                    this.$emit('sub_event',{act:'vga'});
-                }
+                // else if(act=='rename'){
+                //     let s=prompt("新输入新名称",this.globalEvent.selectedCard.label_extra);
+                //     if(s!==null && s!==undefined){
+                //         this.globalEvent.selectedCard.label_extra=s;
+                //         this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
+                //     }
+                // }
+                // else if(act=='hotBackup'){
+                //     this.$emit('sub_event',{act:"hot_backup"});
+                // }
+                // else if(act=='workMode'){
+                //     this.$emit('sub_event',{act:'work_mode'});
+                // }
+                // else if(act=='setEq'){
+                //     this.$emit('sub_event',{act:'eq'});
+                // }
+                // else if(act=='vga'){
+                //     this.$emit('sub_event',{act:'vga'});
+                // }
             }
         }
     }

@@ -185,7 +185,7 @@
             },
             syncSourceList(){
                 let param={
-                    funcSta:this.isPlay,
+                    funcSta:parseInt(this.isPlay),
                     srcGroupNum:this.sourceList.length,
                     srcGroupArr:[]
                     // srcGroupArr:[
@@ -206,21 +206,23 @@
                     // ]
                 };
 
+                // console.log(this.sourceList);
                 for(let i in this.sourceList){
                     let srcGroup={
-                        srcGroupId:i,//todo 保存的时候 id 也重排么？
+                        srcGroupId:parseInt(i),//todo 保存的时候 id 也重排么？
                         srcNum:this.sourceList[i].srcArr.length,
                         srcArr:[]
                     };
                     for(let k in this.sourceList[i].srcArr){
                         let src={
-                            dataArr:this.sourceList[i].srcArr[k]
+                            dataArr:this.sourceList[i].srcArr[k].dataArr.map((v,k)=>parseInt(v))
                         };
                         srcGroup.srcArr.push(src);
                     }
                     param.srcGroupArr.push(srcGroup);
                 }
 
+                console.log(param);
                 this.$http.post("srcGroupWr.cgi",param,(ret)=>{
                     this.updateTree();
                 });
@@ -245,6 +247,7 @@
                         this.sourceList.push(newSource)
 
                     }
+                    this.syncSourceList();
                     this.syncLocalName();
                     this.showSceneDialog='';
                 }

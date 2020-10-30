@@ -24,7 +24,7 @@
               <card-item title="用户模式" @click.native="showDialog='userModel'"></card-item>
               <card-item title="保存模式" @click.native="showDialog='saveUserModel'"></card-item>
               <card-item title="出厂设置" @click.native="preinstall('3')"></card-item>
-              <card-item title="同步"></card-item>
+              <card-item title="同步" @click.native="preinstall('sync')"></card-item>
               <card-item title="打开回显" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
               <card-item title="关闭回显" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
               <card-item title="回显配置" @click.native="showDialog='monIp'"></card-item>
@@ -70,7 +70,7 @@
               <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
               <card-item title="导入配置"></card-item>
               <card-item title="导出配置"></card-item>
-              <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
+              <card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>
             </card>
             <card title="语言选择">
               <card-item title="语言设置"></card-item>
@@ -224,11 +224,16 @@ import resetDialog from "@/components/panel/resetDialog";
 import userDialog from "@/components/panel/userDialog";
 import showEdidDialog from "@/components/panel/showEdidDialog";
 
+let loading ;
+// let loading_count=0;
 
 export default {
   name: "Home",
     created(){
       this.loadVersion();
+      this.globalEvent.$on('sync',()=>{
+          this.preinstall('sync');
+      });
     },
   data() {
     return {
@@ -245,6 +250,7 @@ export default {
         devType:'',
         updateFlip:true,
         edidData:[],
+        edidParam:{},//高级edid设置使用
         // scale:1,
     };
   },
@@ -289,6 +295,19 @@ export default {
           this.$http.post("extCtrlOprWr.cgi",{funcOpr:0},(ret)=>{
               alert("已发送关屏命令")
           });
+      }
+      else if(setFn=='sync'){
+
+          loading=this.$loading({
+              lock: true,
+              text: '同步中',
+              spinner: 'el-icon-loading',
+              background: 'rgba(255, 255, 255, 0.5)'
+          });
+          setTimeout(()=>{loading.close();},2000);
+          this.$refs.signal.getCommonInfo();
+          this.$refs.signal.getSysInputInfo();
+          this.$refs.vdr.loadData();
       }
     },
     // 设置:2-屏幕配置
@@ -356,6 +375,7 @@ export default {
           }
           else if('show_edid_advanced'==param.act){
               this.showEdidAdvancedDialog='edidAdvanced';
+              this.edidParam=param.info;
           }
           else if('close_edid_advanced'==param.act){
               this.showEdidAdvancedDialog='';
@@ -378,7 +398,7 @@ export default {
           }
           else if('rdEdid'==param.act){
               let num=this.globalEvent.sourceCardNumber();
-              this.$http.post("srcEdidRd.cgi",{srcCardid:num[0],srcId:num[1]},(ret)=>{
+              this.$http.post("srcEdidRd.cgi",{srcCardId:num[0],srcId:num[1]},(ret)=>{
                   this.edidData=ret.data.EdidDataArr;
                   this.showDialog='showEdid';
               });

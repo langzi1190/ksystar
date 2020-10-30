@@ -31,7 +31,7 @@
             let a=this.$parent.edidData;
             let arr=[];
             a.forEach((v,k)=>{
-                arr.push('0x'+Number(v).toString(16).toUpperCase());
+                arr.push('0x'+Number(v).toString(16).padStart(2,0).toUpperCase());
             })
             this.s=arr.join(',');
         },
@@ -45,6 +45,6 @@
 
 <style>
     .show_edid_dialog textarea{
-            width:450px;height:180px;padding:5px;outline:none;
+            width:441px;height:180px;padding:5px;outline:none;
     }
 </style>

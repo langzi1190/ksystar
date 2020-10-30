@@ -144,18 +144,22 @@ export default {
             }
 
             if(act=='ctop' && this.cropOutBound()){
+                alert("窗口超限");
                 this.resetValue('ctop',this.srcHeight-this.ctop);
                 return ;
             }
             if(act=='cheight' && this.cropOutBound()){
+                alert("窗口超限");
                 this.resetValue('cheight',this.srcHeight-this.ctop);
                 return ;
             }
             if(act=='cleft' && this.cropOutBound()){
+                alert("窗口超限");
                 this.resetValue('cleft',this.srcWidth-this.width);
                 return ;
             }
             if(act=='cwidth' && this.cropOutBound()){
+                alert("窗口超限");
                 this.resetValue('cwidth',this.srcWidth-this.cleft);
                 return ;
             }
@@ -258,7 +262,6 @@ export default {
                 this.$emit('sub_event',{act:'vga'});
             }
             else if(act=='rdEdid'){
-                console.log("回读。。。。 ");
                 this.$emit('sub_event',{act:'rdEdid'});
             }
         }

@@ -202,7 +202,7 @@
             },
             syncSceneList(){
                 let param={
-                    funcSta:this.isPlay,
+                    funcSta:parseInt(this.isPlay),
                     mode:parseInt(this.mode),
                     startSceneId:this.selectedScene.secenId==undefined?0:this.selectedScene.secenId,//todo??怎么传参
                     sceneNum:this.sceneList.length,
@@ -228,13 +228,14 @@
                     let presetArr=this.sceneList[i].presetArr;
                     for(let k in presetArr){
                         let preset={
-                            dataArr:presetArr[k].dataArr
+                            dataArr:presetArr[k].dataArr.map((v,k)=>parseInt(v))
                         }
                         scene.presetArr.push(preset);
                     }
                     param.sceneArr.push(scene);
                 }
 
+                console.log(param);
                 this.$http.post("scenePollingWr.cgi",param,(ret)=>{
                     this.updateTree();
                 });

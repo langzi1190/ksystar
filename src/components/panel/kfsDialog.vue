@@ -52,6 +52,7 @@
                 syncEnable:this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta,
                 signalList:[],
                 signalListFlat:[],
+                selectedSignal:[],//选中的信号
                 selectedKey:[],
                 paramMap:{
                     children: 'srcArr',
@@ -86,6 +87,11 @@
                     this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
                     if(src.syncEn==1){
                         this.selectedKey.push(this.signalList[i].srcArr[k].id);
+
+                        this.selectedSignal.push({
+                            label:this.globalEvent.signalCardName(i,k),
+                            value:this.globalEvent.signalCardInfo(i,k),
+                        });
                     }
                 }
             }
@@ -136,41 +142,38 @@
             handleCheckClick(data, checked, indeterminate){
                 // console.log(data, checked, indeterminate);
 
-                // if(data.label_extra===undefined){
-                //
-                // }
-                // else{
-                //     //信号源
-                //     if(checked){
-                //         this.signalListFlat.push({
-                //             label:data.label_extra,
-                //             value:data.label_info
-                //         });
-                //     }
-                //     else{
-                //         this.delSourceId([data])
-                //     }
-                // }
+                if(data.label_extra===undefined){
+
+                }
+                else{
+                    //信号源
+                    if(checked){
+                        this.selectedSignal.push({
+                            label:data.label_extra,
+                            value:data.label_info
+                        });
+                    }
+                    else{
+                        this.delSourceId([data])
+                    }
+                }
 
             },
             delSourceId(srcArr){
 
                 let sk=[];
 
-                for(let k in this.signalListFlat){
+                for(let k in this.selectedSignal){
                     for(let i in srcArr){
-                        if(this.signalListFlat[k].label==srcArr[i].label_extra){
+                        if(this.selectedSignal[k].label==srcArr[i].label_extra){
                             sk.push(k);
-                            if(this.syncSignal==srcArr[i].label_info){
-                                this.syncSignal='';
-                            }
                             break;
                         }
                     }
                 }
 
                 for(let i in sk){
-                    this.signalListFlat.splice(sk[i]-i,1);
+                    this.selectedSignal.splice(sk[i]-i,1);
                 }
             },
             op(act){
@@ -186,7 +189,7 @@
 
                     let param={
                         inCardNum:this.signalList.length,
-                        funcSta:this.syncEnable,//同步到 commonInfo
+                        funcSta:parseInt(this.syncEnable),//同步到 commonInfo
                         inCardArr:[]
                     };
 
@@ -194,22 +197,22 @@
                     let s=this.syncSignal.split("_");
                     let syncCardId=s[0]-0;
                     let syncSrcId=s[1]-0;
+
+
                     for(let i in this.signalList){
                         let inCard={
                             inCardChnArr:[]
                         };
                         for(let k in this.signalList[i].srcArr){
-                            let src=this.signalList[i].srcArr[k].label_extra;
+                            let src=this.signalList[i].srcArr[k].label_info;
                             let inCardChn={
                                 syncEn:0,
                                 syncCardId:syncCardId,
                                 syncSrcId:syncSrcId
                             };
-                            // if(this.signalListFlat.includes(src)){
-                            //     inCardChn.syncEn=1;
-                            // }
-                            for(let t in this.signalListFlat){
-                                if(this.signalListFlat[t].label==src){
+
+                            for(let t in this.selectedSignal){
+                                if(this.selectedSignal[t].value==src){
                                     inCardChn.syncEn=1;
                                     break;
                                 }
@@ -217,10 +220,12 @@
 
                             inCard.inCardChnArr.push(inCardChn);
                         }
-
+                        inCard.srcNum=inCard.inCardChnArr.length;
                         param.inCardArr.push(inCard);
                     }
 
+
+                    console.log(param);
                     this.$http.post("KfsWr.cgi",param,(ret)=>{
                         this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=param.funcSta;
                         this.$emit('sub_event',{act:'close_kfs'})
