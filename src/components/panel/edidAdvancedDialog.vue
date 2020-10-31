@@ -381,8 +381,9 @@
                     srcId:num[1],
                     EdidDataArr:this.EDID
                 };
+                console.log(this.$parent.showDialog);
                 if(this.$parent.showDialog=='edid'){
-                    param.srcCardid=0xff;
+                    param.srcCardId=0xff;
                 }
                 console.log(param);
                 this.$http.post("srcEdidWr.cgi",param,()=>{
