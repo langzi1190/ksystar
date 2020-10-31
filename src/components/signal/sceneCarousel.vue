@@ -40,20 +40,24 @@
         created(){
             //用户模式 和 场景模式怎么关联起来的
             this.$http.get("scenePollingRd.cgi",{},(ret)=>{
-                let sceneInfo=ret.data;
-                for(let i in sceneInfo.sceneArr){
-                    sceneInfo.sceneArr[i].label=this.globalEvent.carouseName(sceneInfo.sceneArr[i]);
-                    let preset=sceneInfo.sceneArr[i].presetArr;
-                    for(let k in preset){
-                        preset[k].label=this.userSceneName(preset[k].dataArr)+this.userSceneTime(preset[k].dataArr);
+
+                if(ret.data.sceneArr!==undefined)
+                {
+                    let sceneInfo=ret.data;
+                    for(let i in sceneInfo.sceneArr){
+                        sceneInfo.sceneArr[i].label=this.globalEvent.carouseName(sceneInfo.sceneArr[i]);
+                        let preset=sceneInfo.sceneArr[i].presetArr;
+                        for(let k in preset){
+                            preset[k].label=this.userSceneName(preset[k].dataArr)+this.userSceneTime(preset[k].dataArr);
+                        }
                     }
+                    this.globalEvent.sceneCarousel=sceneInfo;
+                    this.sceneList=this.globalEvent.sceneCarousel.sceneArr;
+                    this.mode=sceneInfo.mode;
+
+                    this.syncLocalName();
                 }
-                this.globalEvent.sceneCarousel=sceneInfo;
-                this.sceneList=this.globalEvent.sceneCarousel.sceneArr;
-                this.mode=sceneInfo.mode;
 
-
-                this.syncLocalName();
             });
         },
         data(){
@@ -251,6 +255,8 @@
                         this.selectedScene.presetArr=param.list;
                     }
                     else{
+                        console.log(param);
+                        console.log(this.sceneList);
                         //新增
                         let scene={
                             sceneId:this.sceneList.length,
