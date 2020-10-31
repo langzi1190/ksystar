@@ -299,15 +299,15 @@
                     timing.VSyncTime   = 5;                                                       // 列同步脉冲
                     timing.VBackPorch  = 15;                                                   // 列同步后沿
 
-                    h_blank = (1800000 / (nDefinedHeight + 30)) - nDefinedWidth;        // h_blank = 时钟*10/(高度+v_blank) - 宽度
+                    h_blank = parseInt(1800000 / (nDefinedHeight + 30)) - nDefinedWidth;        // h_blank = 时钟*10/(高度+v_blank) - 宽度
                     if(h_blank % 4 > 0)                                                                            // 是否是4的倍数
                     {
-                        h_blank = (h_blank / 4) * 4 + 4;                                        // 向上取4的整数倍
+                        h_blank = parseInt(h_blank / 4) * 4 + 4;                                        // 向上取4的整数倍
                     }
                     timing.HFrontPorch =parseInt( h_blank / 3 );                                                  // 行显示前沿 = h_blank/3
                     if(timing.HFrontPorch % 4 > 0)                                                       // 是否是4的倍数
                     {
-                        timing.HFrontPorch = (timing.HFrontPorch / 4) * 4 + 4; // 向上取4的整数倍
+                        timing.HFrontPorch = parseInt(timing.HFrontPorch / 4) * 4 + 4; // 向上取4的整数倍
                     }
                     timing.HSyncTime = timing.HFrontPorch;                                       // 行同步脉冲 = 行显示前沿
                     timing.HBackPorch = h_blank - timing.HFrontPorch * 2;               // 行显示后沿 = h_blank - 行显示前沿*2
@@ -319,15 +319,15 @@
                     timing.VSyncTime   = 10;
                     timing.VBackPorch  = 10;
 
-                    h_blank = (2029200 / (nDefinedHeight + 30)) - nDefinedWidth;
+                    h_blank = parseInt(2029200 / (nDefinedHeight + 30)) - nDefinedWidth;
                     if(h_blank % 4 > 0)
                     {
-                        h_blank = h_blank / 4 * 4 + 4;
+                        h_blank = parseInt(h_blank / 4) * 4 + 4;
                     }
                     timing.HFrontPorch = parseInt(h_blank / 3);
                     if(timing.HFrontPorch % 4 > 0)
                     {
-                        timing.HFrontPorch = (timing.HFrontPorch / 4) * 4 + 4;
+                        timing.HFrontPorch = parseInt(timing.HFrontPorch / 4) * 4 + 4;
                     }
                     timing.HSyncTime = timing.HFrontPorch;
                     timing.HBackPorch = h_blank - timing.HFrontPorch * 2;
@@ -339,15 +339,15 @@
                     timing.VSyncTime   =  6;
                     timing.VBackPorch  = 14;
 
-                    h_blank = 1080000 / (nDefinedHeight + 30) - nDefinedWidth;
+                    h_blank = parseInt(1080000 / (nDefinedHeight + 30)) - nDefinedWidth;
                     if(h_blank % 4 > 0)
                     {
-                        h_blank = (h_blank / 4) * 4 + 4;
+                        h_blank = parseInt(h_blank / 4) * 4 + 4;
                     }
                     timing.HFrontPorch = parseInt(h_blank / 3);
                     if(timing.HFrontPorch % 4 > 0)
                     {
-                        timing.HFrontPorch = (timing.HFrontPorch / 4) * 4 + 4;
+                        timing.HFrontPorch = parseInt(timing.HFrontPorch / 4) * 4 + 4;
                     }
                     timing.HSyncTime   = timing.HFrontPorch;
                     timing.HBackPorch  = h_blank - timing.HFrontPorch * 2;
@@ -359,16 +359,16 @@
                     timing.VSyncTime   =  6;//6
                     timing.VBackPorch  = 14;//14
 
-                    h_blank = 2475000 / (nDefinedHeight + 30) - nDefinedWidth;
+                    h_blank = parseInt(2475000 / (nDefinedHeight + 30)) - nDefinedWidth;
 
                     if(h_blank % 4 > 0)
                     {
-                        h_blank = (h_blank / 4) * 4 + 4;
+                        h_blank = parseInt(h_blank / 4) * 4 + 4;
                     }
                     timing.HFrontPorch = parseInt(h_blank / 3);
                     if(timing.HFrontPorch % 4 > 0)
                     {
-                        timing.HFrontPorch = (timing.HFrontPorch / 4) * 4 + 4;
+                        timing.HFrontPorch = parseInt(timing.HFrontPorch / 4) * 4 + 4;
                     }
                     timing.HSyncTime   = timing.HFrontPorch;
                     timing.HBackPorch  = h_blank - timing.HFrontPorch * 2;
@@ -381,7 +381,7 @@
                     timing.VFrontPorch = 3;
                     timing.VSyncTime   =  5;
                     timing.VBackPorch  = 8;
-                    h_blank = parseInt(2250 * 1200 / (nDefinedHeight + 30) - nDefinedWidth);
+                    h_blank = parseInt(2250 * 1200 / (nDefinedHeight + 30)) - nDefinedWidth;
 
                     if(h_blank % 4 > 0)
                     {
@@ -391,7 +391,7 @@
 
                     if(timing.HFrontPorch % 4 > 0)
                     {
-                        timing.HFrontPorch = (timing.HFrontPorch / 4) * 4 + 4;
+                        timing.HFrontPorch = parseInt(timing.HFrontPorch / 4) * 4 + 4;
                     }
                     timing.HSyncTime   = timing.HFrontPorch;
                     timing.HBackPorch  = h_blank - timing.HFrontPorch * 2;
