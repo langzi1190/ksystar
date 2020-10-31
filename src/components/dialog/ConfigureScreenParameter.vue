@@ -62,7 +62,7 @@
       </div>
     </div>
     <div style="margin-top:5px;margin-bottom:10px;font-size:12px;color:#409EFF;">提示：单击深灰色背景表格可以更改屏幕参数</div>
-      <Rs @sub_event="subEvent" :showSetting="showSetting"></Rs>
+      <Rs @sub_event="subEvent" v-if="showSetting" :showSetting="showSetting"></Rs>
       <Ts @sub_event="subEvent" v-if="showTimeSeq" :showSetting="showTimeSeq"></Ts>
   </div>
 </template>
@@ -238,7 +238,6 @@ export default {
             }
             else if(param.act=='setResolution'){
 
-
                 this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:param.x+'*'+param.y,videoId:0});
                 this.rv=param.x+'*'+param.y;
                 // this.videoId=-1;
@@ -263,6 +262,9 @@ export default {
     },
     watch:{
         resolutionValue(v,ov){
+
+            console.log(v,this.videoId);
+
 
             if(v=='-1'){
                 return ;
