@@ -102,7 +102,7 @@
                         srcCardId:this.cardId,
                         srcId:this.sourceId
                     };
-                    if(param.srcCardid>0){
+                    if(param.srcCardId>0){
                         param.srcId=parseInt(param.srcId)+1;
                     }
                     this.$http.post("multiSyncWr.cgi",param,(ret)=>{
