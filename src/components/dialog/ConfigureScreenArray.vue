@@ -67,10 +67,13 @@
 
                 if(this.displayIndex>-1 && this.comScreen.curTabName == this.comScreen.displayList[this.seq].tabName){
                     // console.log(this.displayIndex,this.seq);
+
                     this.$set(this.portList[this.displayIndex].mapArr,0,v);
-                    if(!this.comScreen.isRepeatUsed()){
+
+                    if(this.comScreen.isRepeatUsed()){
                         alert("该端口已被使用");
                     }
+
                 }
 
             },

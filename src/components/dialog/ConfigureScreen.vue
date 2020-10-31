@@ -123,7 +123,7 @@ export default {
           return true;
       },
       isRepeatUsed(){
-          let flag=true;
+          let flag=true;//被占用
           let port=[];
           for(let i in this.displayList){
               for(let k in this.displayList[i].portArr){
@@ -132,8 +132,8 @@ export default {
           }
 
           console.log(port);
-          if(port.length!=[...new Set(port)].length){
-              flag=false;
+          if(port.length==[...new Set(port)].length){
+              flag=false;//未占用
           }
           return flag;
       },
@@ -146,10 +146,14 @@ export default {
               this.$refs.cs_array[param.seq].setArraySize(param.act,param.v)
           }
           else if(param.act=='resolutionValue'){
+
               if(param.videoId==-1){
                   console.log('videoId:',param.videoId);
                   return ;
               }
+
+              console.log(param);
+
               let m=param.v.split('*');
               this.displayList[param.seq].FormatW=m[0];
               this.displayList[param.seq].FormatH=m[1];
@@ -195,7 +199,7 @@ export default {
 
       },
       syncScreen(){
-          if(!this.isRepeatUsed()){
+          if(this.isRepeatUsed()){
               alert("存在重复使用端口");
               return ;
           }
