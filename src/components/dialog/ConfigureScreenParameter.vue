@@ -248,7 +248,6 @@ export default {
                     this.resolutionValue='-1';//显示自定义
                 },600);
 
-                console.log("自定义")
             }
             else if(param.act=='showTimeSeq'){
                 console.log(param);

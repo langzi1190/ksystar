@@ -204,39 +204,6 @@ let gobalEvent =new Vue({
         isValidResolution(resolArr){
             //从分辨率判断，输入信号是否存在
             return resolArr[1]>200 && resolArr[0]>300
-        },
-        uploadFile(con={}){
-            let param=Object.assign({input:'',uploadBtn:''},con);
-            if(param.input==''){
-                return ;
-            }
-            if(param.uploadBtn==''){
-                return ;
-            }
-
-            param.uploadBtn.addEventListener("click",()=>{
-                let file=param.input.files[0];
-                let totalSize=file.size;
-                let fragment=1024*1024;
-                let fragmentCount= Math.ceil(totalSize / fragment);
-
-                let upload=function(i){
-                    if(i>=fragmentCount-1){
-                        return ;
-                    }
-                    let start = i * fragment,
-                        end = Math.min(totalSize, start + fragment);
-                    let form = new FormData();
-                    form.append("data", file.slice(start,end));  //slice方法用于切出文件的一部分
-
-                    this.$http.post("",form,()=>{
-                        upload(i+1);
-                    });
-                };
-
-                upload(0);
-
-            })
         }
     }
 });

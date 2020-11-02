@@ -225,7 +225,6 @@
                     }
 
 
-                    console.log(param);
                     this.$http.post("KfsWr.cgi",param,(ret)=>{
                         this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=param.funcSta;
                         this.$emit('sub_event',{act:'close_kfs'})

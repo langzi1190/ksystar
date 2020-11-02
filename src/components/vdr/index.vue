@@ -312,26 +312,48 @@
             },
             loadScreenWindowItems(){
                 this.windowItems=[];
-                this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
-                    // console.log(ret.data);
-                    //
-                    for(let i in ret.data.winArr){
-                        let win=ret.data.winArr[i];
-                        win.lock=0;//锁定
-                        win.zoom=0;//扩张，还原
-                        win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
-                        win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
-                        // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
-                        if(!this.globalEvent.isValidResolution(win.resolution)){
-                            win.resolution=['信号丢失']
+                setTimeout(()=>{
+                    this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                        // console.log(ret.data);
+                        //
+                        for(let i in ret.data.winArr){
+                            let win=ret.data.winArr[i];
+                            win.lock=0;//锁定
+                            win.zoom=0;//扩张，还原
+                            win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                            win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                            // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
+                            if(!this.globalEvent.isValidResolution(win.resolution)){
+                                win.resolution=['信号丢失']
+                            }
+                            win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
+                            win.k='k'+parseInt(Math.random()*1000);
                         }
-                        win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
-                        win.k='k'+parseInt(Math.random()*1000);
-                    }
-                    this.globalEvent.windowItemsInfo=ret.data;
-                    this.windowItems=this.globalEvent.windowItemsInfo.winArr;
-                    this.syncLocalName();
-                });
+                        this.globalEvent.windowItemsInfo=ret.data;
+                        this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+                        this.syncLocalName();
+                    });
+                },500);
+                // this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                //     // console.log(ret.data);
+                //     //
+                //     for(let i in ret.data.winArr){
+                //         let win=ret.data.winArr[i];
+                //         win.lock=0;//锁定
+                //         win.zoom=0;//扩张，还原
+                //         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                //         win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                //         // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
+                //         if(!this.globalEvent.isValidResolution(win.resolution)){
+                //             win.resolution=['信号丢失']
+                //         }
+                //         win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
+                //         win.k='k'+parseInt(Math.random()*1000);
+                //     }
+                //     this.globalEvent.windowItemsInfo=ret.data;
+                //     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+                //     this.syncLocalName();
+                // });
 
             },
 
@@ -448,7 +470,6 @@
                     }
                 }
 
-                console.log(outCardUsedRes);
                 let outResource=false;
                 for(let k in outCardUsedRes){
                     if(outCardUsedRes[k]>8){
@@ -549,12 +570,25 @@
                 let col=index%this.col;//位于第几列
                 style.left=col==0?'30px':(this.lineV[2*col-1])*this.ratio+30+'px';
 
+                let r1=1,r2=1;
                 if(this.ratioWidth<400){
-                    let r=this.ratioWidth/400;
-                    style.fontSize=50*r+'px';
-                    style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
-                    style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
+                    r1=this.ratioWidth/400;
+                    // style.fontSize=50*r+'px';
+                    // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
+                    // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
                 }
+                if(this.ratioHeight<200){
+                    r2=this.ratioHeight/200;
+                    // console.log(this.ratioHeight,r);
+                    // style.fontSize=50*r+'px';
+                    // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
+                    // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
+                }
+
+                let r=Math.min(r1,r2);
+                style.fontSize=50*r+'px';
+                style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
+                style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
 
                 // if(this.ratio<0.25){
                 //     let scale=this.ratio/0.25;

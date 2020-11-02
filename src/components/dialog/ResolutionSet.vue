@@ -2,7 +2,7 @@
     <div>
         <el-dialog
                 title="自定义输出分辨率"
-                :visible.sync="isVisible"
+                :visible="isVisible"
                 width="400px"
                 @close="cancelSubmit"
                 :append-to-body="true"
@@ -51,6 +51,7 @@
                 isVisible: this.showSetting
             };
         },
+        inject: ["comScreen"],
         watch:{
             showSetting(v,ov){
                 this.isVisible=v;

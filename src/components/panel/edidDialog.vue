@@ -55,7 +55,7 @@
 
             let isChoose=Object.keys(this.globalEvent.selectedCard).length;
             return {
-                devNo:1,
+                devNo:0,
                 width:3840,
                 height:2160,
                 frame:60,
@@ -70,7 +70,7 @@
                     this.$emit('sub_event',{act:'close_kfs'});
                 }
                 else if(act=='sure'){
-                    this.$emit('sub_event',{act:'close_kfs'});
+                    this.$emit('sub_event',{act:'sure_edid',devId:this.devNo,w:this.width,h:this.height,f:this.frame});
                 }
                 else if(act=='showAdvanced'){
                     this.$emit('sub_event',{act:'show_edid_advanced',info:{devId:this.devNo,w:this.width,h:this.height,f:this.frame}})

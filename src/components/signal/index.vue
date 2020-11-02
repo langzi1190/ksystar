@@ -122,9 +122,16 @@ export default {
             this.contestListHeight=(curH-366)+'px';
         },
         getSysInputInfo(){
-            this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
-                this.syscInputInfo(ret.data);
-            });
+            //该接口连续调用 返回数据会出错 --- vdr index loadScreenWindowItems
+            setTimeout(()=>{
+                this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+                    this.syscInputInfo(ret.data);
+                });
+            },200)
+            // this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+            //     this.syscInputInfo(ret.data);
+            // });
+
         },
         getCommonInfo(){
             //获取顶部工具区域通用参数
@@ -169,7 +176,8 @@ export default {
                         class:{
                             'card_label':true,
                             'card_label_valid':this.globalEvent.isValidResolution(data.resolArr),
-                            'card_back_up':data.bakFuncSta==1
+                            'card_back_up':data.bakFuncSta==1,
+                            'card_kfs':data.kfsAble==1
                         }
                     },data.label),
                     data.label_extra
@@ -225,10 +233,14 @@ export default {
         syscInputInfo(signal_list){
             let inCardArr=signal_list.inCardArr;
             let id=1;
+            let kfsFunc=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
+            let fSyncArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
+
             for(let i in inCardArr){
                 inCardArr[i].id=id++;//tree id
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
+                    inCardArr[i].srcArr[k].kfsAble=kfsFunc==0?0:fSyncArr[i].scrPropArr[k].syncEn;
                     inCardArr[i].srcArr[k].id=id++;
                     if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
                         inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
@@ -352,7 +364,7 @@ export default {
     }
     .el-tree-node__content{user-select:none;}
     .el-tree-node>.el-tree-node__children{overflow:unset;}
-    .card_label{margin-right:3px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
+    .card_label{margin-right:10px;color:#f44f44;    width: 55px;text-align: left;display: inline-block;position:relative;}
     .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
@@ -362,7 +374,8 @@ export default {
     .list_item:nth-child(even){border:none;}
     .el-collapse-item__content{max-height:500px;overflow:auto;}
   .selected_card .card_label{color:#00cc99;}
-  .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:0;background-color:#505050;}
+  .card_kfs{border:1px solid #333;}
+  .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#505050;}
   .list_item_cur{background-color:#00cc99;color:#fff;}
 }
 </style>

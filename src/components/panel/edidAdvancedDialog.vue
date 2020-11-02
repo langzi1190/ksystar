@@ -219,22 +219,35 @@
                     VFrontPorch:12,
                     VSyncTime:8,
                     VBackPorch:12
-                }//this.copyObject(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]),
+                }
             };
         },
         mounted(){
-            if(this.$parent.showDialog=='edid'){
-                this.devId=this.$parent.edidParam.devId;
-                this.curScreen.FormatW=this.$parent.edidParam.w;
-                this.curScreen.FormatH=this.$parent.edidParam.h;
-                this.curScreen.FrameRate=this.$parent.edidParam.f;
-                console.log(this.curScreen);
+            this.devId=this.$parent.edidParam.devId;
+            this.curScreen.FormatW=this.$parent.edidParam.w;
+            this.curScreen.FormatH=this.$parent.edidParam.h;
+            this.curScreen.FrameRate=this.$parent.edidParam.f;
+            if(this.$parent.showDialog=='edidSingle'){
+                //反算时钟
+                this.calClock();
             }
-            this.calFrameRate();
+            else{
+                this.calFrameRate();
+            }
+
         },
         methods:{
             changeFrame(){
                 this.calFrameRate();
+            },
+            calClock(){
+                for(let k in this.curScreen){
+                    this.curScreen[k]=parseInt(this.curScreen[k]);
+                }
+                let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
+                let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
+                // this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal
+                this.curScreen.ClkFreq=this.curScreen.FrameRate*hTotal*vTotal/1000;
             },
             calFrameRate(){
                 for(let k in this.curScreen){
@@ -356,16 +369,6 @@
 
             },
 
-            // getEdid(){
-            //     let num=this.globalEvent.selectedCard.label_info.split('_');
-            //     let param={
-            //         srcCardId:num[0]-0,
-            //         srcId:num[1]-0
-            //     };
-            //     this.$http.get("srcEdidRd.cgi",param,(ret)=>{
-            //
-            //     });
-            // },
             cancelSubmit(){
                 this.$emit('sub_event',{act:'close_edid_advanced'});
             },
@@ -381,16 +384,13 @@
                     srcId:num[1],
                     EdidDataArr:this.EDID
                 };
-                console.log(this.$parent.showDialog);
                 if(this.$parent.showDialog=='edid'){
                     param.srcCardId=0xff;
                 }
-                console.log(param);
-                this.$http.post("srcEdidWr.cgi",param,()=>{
-                    this.$emit('sub_event',{act:'close_edid_advanced'});
-                });
-                // Object.assign(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex],this.curScreen);
-                // console.log(this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
+                this.$emit('sub_event',{act:'sure_edid_advanced',info:param});
+                // this.$http.post("srcEdidWr.cgi",param,()=>{
+                //     this.$emit('sub_event',{act:'close_edid_advanced'});
+                // });
             }
         }
     }

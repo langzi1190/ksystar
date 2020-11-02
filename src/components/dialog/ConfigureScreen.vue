@@ -67,7 +67,7 @@ export default {
   created() {
 
       this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
-          console.log(this.globalEvent.screenInfo);
+
           this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
           this.syncOutputInfoRd(ret.data);
           this.syncScrInfoRd();
@@ -152,7 +152,7 @@ export default {
                   return ;
               }
 
-              console.log(param);
+              // console.log(param);
 
               let m=param.v.split('*');
               this.displayList[param.seq].FormatW=m[0];
