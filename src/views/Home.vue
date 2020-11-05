@@ -70,7 +70,8 @@
               <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
               <card-item title="导入配置"></card-item>
               <card-item title="导出配置"></card-item>
-              <card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>
+              <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
+              <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
             </card>
             <card title="语言选择">
               <card-item title="语言设置"></card-item>
@@ -79,11 +80,11 @@
               <card-item @click.native="showDialog='serial'" title="串口设置"></card-item>
               <card-item title="网络设置" @click.native="showDialog='ipConfig'"></card-item>
               <card-item title="计算器"></card-item>
-              <card-item title="演示模式"></card-item>
+              <card-item title="演示模式" @click.native="showDialog='simulate'"></card-item>
               <card-item @click.native="showDialog='deviceStatus'" title="测试"></card-item>
               <card-item @click.native="showDialog='version'" title="版本信息"></card-item>
               <card-item @click.native="showDialog='temp'" title="温度信息"></card-item>
-              <card-item title="ARM升级" @click="showUploadDialog='arm'"></card-item>
+              <card-item title="ARM升级" @click.native="upgrade('arm')"></card-item>
               <card-item style="width: 56px;" title="FPGA升级" @click.native="showUploadDialog='fpga'"></card-item>
             </card>
           </div>
@@ -109,7 +110,7 @@
       </div>
       <div class="content-compile" v-show="true">
         <div class="content-title">画面编辑</div>
-        <div class="content-attr" :style="{maxHeight:maxHeight+'px','overflow-y':'auto'}">
+        <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
           <attr @sub_event="subEvent"></attr>
         </div>
       </div>
@@ -135,7 +136,7 @@
       <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
       <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
       <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
-      <edidDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
+      <edidDialog @sub_event="subEvent" ref="edid" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
       <edidAdvancedDialog @sub_event="subEvent" :showDialog="showEdidAdvancedDialog" v-if="showEdidAdvancedDialog=='edidAdvanced'"></edidAdvancedDialog>
       <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
       <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
@@ -150,6 +151,7 @@
       <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
       <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
       <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
+      <simulateDialog @sub_event="subEvent" v-if="showDialog!=''" :showDialog="showDialog"></simulateDialog>
   </div>
 </template>
 
@@ -225,6 +227,7 @@ import resetDialog from "@/components/panel/resetDialog";
 import userDialog from "@/components/panel/userDialog";
 import showEdidDialog from "@/components/panel/showEdidDialog";
 import uploadDialog from "@/components/panel/uploadDialog";
+import simulateDialog from "@/components/panel/simulateDialog";
 
 let loading ;
 // let loading_count=0;
@@ -306,7 +309,8 @@ export default {
         edidParam:{},//高级edid设置使用
         maxHeight:500,
         EDID:[],
-        curScreen:{}
+        curScreen:{},
+        advanceScreen:{},
         // scale:1,
     };
   },
@@ -354,6 +358,7 @@ export default {
       }
       else if(setFn=='sync'){
 
+          this.globalEvent.gMode=0;
           loading=this.$loading({
               lock: true,
               text: '同步中',
@@ -384,7 +389,6 @@ export default {
           this.globalEvent.$emit("add_window_item",{act:'btn'});//vdr/index.vue
       },
       loadScreen(seq){
-          console.log(seq,this.globalEvent.screenInfo.scrGroupArr.length);
           if(seq>=this.globalEvent.screenInfo.scrGroupArr.length){
               alert("屏幕墙不存在");
               return ;
@@ -396,6 +400,28 @@ export default {
               this.devType=ret.data.devType;
               this.globalEvent.versionInfo=ret.data;
           });
+      },
+      upgrade(act){
+          if('arm'==act){
+              let pass=prompt("输入密码(默认000000)","");
+              if(pass===null){
+                  return ;
+              }
+              if( pass!='000000'){
+                  alert("密码错误");
+                  return ;
+              }
+
+              let param={
+                  chip:0,
+                  board:[],
+                  opr:1
+              }
+              this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
+                  console.log(ret.data);
+                  alert("已升级")
+              });
+          }
       },
       reloadMainPane(){
           //刷新界面
@@ -437,6 +463,16 @@ export default {
           if('close_kfs'==param.act){
               this.showDialog='';
           }
+          else if("sure_kfs"==param.act){
+              this.showDialog='';
+              if(this.globalEvent.gMode==0){
+                  this.$refs.signal.syscInputInfo({inCardArr:this.globalEvent.inputCardList});
+              }
+              else{
+                  this.$refs.signal.syscInputInfoSm();
+              }
+
+          }
           else if('select_user_model'==param.act){
               this.showDialog='';
               this.$refs.signal.loadUserModel(param.v);
@@ -454,9 +490,13 @@ export default {
               this.edidParam=param.info;
           }
           else if('sure_edid'==param.act){
-              let info=this.info===undefined?{}:this.info;
+              // let info=this.info===undefined?{}:this.info;
 
-              this.curScreen={
+              if(Object.keys(this.advanceScreen).length>0){
+                  this.curScreen=this.advanceScreen;
+              }
+              else{
+                  this.curScreen={
                       ClkFreq:0,
                       FormatW:param.w,
                       FormatH:param.h,
@@ -467,38 +507,39 @@ export default {
                       VFrontPorch:12,
                       VSyncTime:8,
                       VBackPorch:12
-              };
-              this.calClock();
-
-              if(Object.keys(info).length==0){
-                    //非高级设置
-                  let num=this.globalEvent.sourceCardNumber();
-                  this.calEdid();
-                  info={
-                      srcCardId:num[0],
-                      srcId:num[1],
-                      EdidDataArr:this.EDID
-                  }
-
-                  console.log('simple edid');
-                  if(this.showDialog=='edid'){
-                      info.srcCardId=0xff;
-                  }
+                  };
+                  this.calClock();
               }
 
-              info.devId=param.devId;
+              this.calEdid();
+              let num=this.globalEvent.sourceCardNumber();
+              let info={
+                  devId:parseInt(param.devId),
+                  srcCardId:num[0],
+                  srcId:num[1],
+                  EdidDataArr:this.EDID
+              };
+              if(this.showDialog=='edid'){
+                  param.srcCardId=0xff;
+              }
+
               console.log(info);
               this.$http.post("srcEdidWr.cgi",info,()=>{
-                  this.info=undefined;
+                  // this.info={};
+                  this.advanceScreen={};
                   this.showDialog='';
               });
           }
           else if('sure_edid_advanced'==param.act){
-              this.info=param.info;
+
+              this.advanceScreen=param.advanceScreen;
+              this.$refs.edid.setFrameRate(this.advanceScreen.FrameRate);
               this.showEdidAdvancedDialog='';
           }
           else if('close_edid_advanced'==param.act){
               this.showEdidAdvancedDialog='';
+              this.advanceScreen={};
+              this.$refs.edid.setFrameRate(60);
           }
           else if('hot_backup'==param.act){
               this.showDialog='hotBackup'
@@ -668,6 +709,7 @@ export default {
       userDialog,
       showEdidDialog,
       uploadDialog,
+      simulateDialog,
   },
 };
 </script>

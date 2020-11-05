@@ -178,10 +178,6 @@
             },
             op(act){
                 if(act){
-                    // if(this.controlSync==0){
-                    //     alert("同步使能未开启");
-                    //     return ;
-                    // }
                     if(this.syncSignal==''){
                         alert("未选择同步基准源");
                         return ;
@@ -226,8 +222,17 @@
 
 
                     this.$http.post("KfsWr.cgi",param,(ret)=>{
-                        this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=param.funcSta;
-                        this.$emit('sub_event',{act:'close_kfs'})
+                        let fSyncInfo=this.globalEvent.commonInfo.fSyncInfo;
+                        fSyncInfo.fSyncFuncSta=param.funcSta;
+                        for(let i in param.inCardArr){
+                            for(let k in param.inCardArr[i].inCardChnArr){
+                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].inCardChnArr[k].syncEn;
+                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].inCardChnArr[k].syncCardId;
+                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].inCardChnArr[k].syncSrcId;
+                            }
+                        }
+
+                        this.$emit('sub_event',{act:'sure_kfs'})
                     });
 
 

@@ -5,7 +5,8 @@
         left:pleft+'%',
         width:pwidth+'%',
         height:pheight+'%',
-        zIndex:zIndex
+        zIndex:zIndex,
+        overflow:(width<=minWidth || height<42)?'hidden':'visible'
     }">
         <div class="draw-area__dots vdr-child" :class="{show_dot:seq==globalEvent.selectedWindowIndex}">
             <div class="draw-area__dot draw-area__dot--t" data-type="top" @mousedown.stop="handleMouseDown"></div>
@@ -42,7 +43,7 @@
                 <p>画面大小: [{{ o_width }},{{ o_height }}]</p>
                 <p>类型:[{{globalEvent.inputCardList[item.srcCardId].srcArr[item.srcId].label}}]</p>
                 <p :class="{alertColor:this.item.resolution.length==1}">分辨率：[{{this.item.resolution.join(',')}}]</p>
-                <p>{{item.partOrAll==0?'全景显示':'局部显示'}} <span v-show="item.partOrAll==1">[ {{item.cropSizeArr.join(',')}} ]</span></p>
+                <p>{{item.partOrAll==0?'全景显示':'局部显示'}} <span v-show="item.partOrAll==1">[{{cropSizeArr.join(',')}}]</span></p>
                 <div  data-type="move" @mousedown.stop="handleMouseDown" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
             </div>
         </div>
@@ -80,6 +81,9 @@
                 width:parseInt(pwidth*this.$parent.ratioWidth/100),
                 height:parseInt(pheight*this.$parent.ratioHeight/100),
 
+                minWidth:parseInt(50/this.$parent.totalWidth*this.$parent.ratioWidth),
+                minHeight:parseInt(50/this.$parent.totalHeight*this.$parent.ratioHeight),
+
                 zIndex:this.item.layerId,
                 o_left:this.item.winSizeArr[0],
                 o_top:this.item.winSizeArr[1],//物理坐标
@@ -87,6 +91,7 @@
                 o_height:this.item.winSizeArr[3],
 
 
+                cropSizeArr:[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]],
                 stickSize:[],//保存吸附辅助线前数据
             };
         },
@@ -128,6 +133,7 @@
                     alert(this.globalEvent.alert.outResource);
                     return;
                 }
+
                 this.sendEvent({pos:0,v:this.o_left,seq:this.seq});
                 this.sendEvent({pos:1,v:this.o_top,seq:this.seq});
                 this.sendEvent({pos:2,v:this.o_width,seq:this.seq});
@@ -158,7 +164,22 @@
                     this.item.winSizeArr[3]=param.v;
                     this.pheight=param.v*100/this.$parent.totalHeight;
                 }
-
+                else if(param.act=='ctop'){
+                    this.item.cropSizeArr[1]=param.v;
+                    this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
+                }
+                else if(param.act=='cleft'){
+                    this.item.cropSizeArr[0]=param.v;
+                    this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
+                }
+                else if(param.act=='cwidth'){
+                    this.item.cropSizeArr[2]=param.v;
+                    this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
+                }
+                else if(param.act=='ct=height'){
+                    this.item.cropSizeArr[3]=param.v;
+                    this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
+                }
 
                 // setTimeout(()=>{
                 //     //this.ptop 会 重新计算 this.o_top
@@ -172,6 +193,10 @@
                 this.height=Math.min(Math.ceil(this.pheight*this.$parent.ratioHeight/100),this.$parent.ratioHeight);
                 this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
                 this.width=Math.min(Math.ceil(this.pwidth*this.$parent.ratioWidth/100),this.$parent.ratioWidth);
+
+
+                this.minWidth=parseInt(50/this.$parent.totalWidth*this.$parent.ratioWidth);
+                this.minHeight=parseInt(50/this.$parent.totalHeight*this.$parent.ratioHeight);
             },
             windowEdit(val) {
                 if(this.globalEvent.panelLock){
@@ -339,9 +364,16 @@
                     switch(type){
                         case "top":
                             r = parseInt(that.top)+delta_y;
-                            if(Math.max(r,0)>0){
+                            let h=that.height-delta_y;
+
+                            if(Math.max(r,0)>0 && h>=that.minHeight){
                                 that.top=r;
-                                that.height=that.height-delta_y;
+                                that.height=h;
+
+                                // if(that.height<that.minHeight){
+                                //     that.top==that.top-(that.minHeight-that.height);
+                                //     that.height=that.minHeight;
+                                // }
                             }
                             break;
                         case "bottom":
@@ -353,9 +385,10 @@
                             break;
                         case "left":
                             r=parseInt(that.left)+delta_x;
-                            if(Math.min(r,0)>=0){
+                            let w=that.width-delta_x
+                            if(Math.min(r,0)>=0 && w>=that.minWidth){
                                 that.left=r;
-                                that.width=that.width-delta_x;
+                                that.width=w;
                             }
 
                             break;
@@ -376,9 +409,12 @@
                             r2=parseInt(that.left)+delta_x;
                             r3=Math.floor(that.width-delta_x);
 
+
                             if(
                                 Math.min(r,0)>=0
                                 && (r1+r)<=that.$parent.ratioHeight
+                                && r1>=that.minHeight
+                                && r3>=that.minWidth
                                 && Math.min(r2,0)>=0
                                 && (r2+r3)<=that.$parent.ratioWidth
                             ){
@@ -410,6 +446,8 @@
                             r2=that.width+delta_x;
                             if(
                                 Math.min(r,0)>=0
+                                && r1>=that.minHeight
+                                && r2>=that.minWidth
                                 && (r2+that.left)<=that.$parent.ratioWidth
                                 && (r+r1)<=that.$parent.ratioHeight
                             ){
@@ -427,6 +465,8 @@
                             r2=that.width-delta_x;
                             if(
                                 Math.min(r1,0)>=0
+                                && r>=that.minHeight
+                                && r2>=that.minWidth
                                 && (r+that.top)<=that.$parent.ratioHeight
                                 && (r2+r1)<=that.$parent.ratioWidth
                             ){
@@ -452,8 +492,8 @@
                             break;
                     }
 
-                    that.height=Math.max(that.height,35);
-                    that.width=Math.max(that.width,35);
+                    that.height=Math.max(that.height,that.minHeight);
+                    that.width=Math.max(that.width,that.minWidth);
 
                     // console.log(that.left,that.top,that.width,that.height);
 

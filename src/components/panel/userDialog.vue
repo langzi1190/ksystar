@@ -10,25 +10,30 @@
             <div class="user_body">
                 <fieldset>
                     <legend>用户列表</legend>
-                    <div class="user_left">
+                    <div class="user_left" style="overflow:auto;">
                         <!--<div class="top_menu">-->
                             <!--<div>用户名称</div>-->
                             <!--<div>类型</div>-->
                             <!--<div>屏幕墙号</div>-->
                         <!--</div>-->
                         <table>
+                            <thead>
                             <tr>
                                 <th>用户名称</th>
                                 <th>类型</th>
                                 <th>屏幕墙号</th>
                             </tr>
-                            <tr :class="{selected:selectedIndex==index}"
-                                @click="selectUser(index)"
-                                v-for="(item,index) in userList">
-                                <td>{{item.name}}</td>
-                                <td>{{userTypeList[item.type]}}</td>
-                                <td>{{item.type==0?'所有':item.screenArr.map((v,k)=>"#"+(v+1)).join(',')}}</td>
-                            </tr>
+                            </thead>
+                         <tbody>
+                         <tr :class="{selected:selectedIndex==index}"
+                             @click="selectUser(index)"
+                             v-for="(item,index) in userList">
+                             <td>{{item.name}}</td>
+                             <td>{{userTypeList[item.type]}}</td>
+                             <td>{{item.type==0?'所有':item.screenArr.map((v,k)=>"#"+(v+1)).join(',')}}</td>
+                         </tr>
+                         </tbody>
+
                         </table>
                     </div>
                 </fieldset>

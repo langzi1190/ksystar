@@ -13,14 +13,15 @@
                 <i class="caret" @click="op('stop')" :class="{disabled:isPlay==0}">▉</i>
             </div>
 
-            <div class="op_list">
+            <div class="op_list" :style="{maxHeight:contestListHeight}">
                 <el-tree
                         :data="sourceList"
                         :props="paramMap"
                         :default-expand-all='true'
                         v-if="updateFlip"
                         :render-content="renderContent"
-                        @node-click="handleNodeClick"></el-tree>
+                        @node-click="handleNodeClick">
+                </el-tree>
             </div>
         </div>
 
@@ -47,9 +48,15 @@
                 //初始载入 同步一次本地名称
                 this.syncLocalName();
             })
+
+            this.calContentListHeight();
+            window.addEventListener("resize",(e)=>{
+                this.calContentListHeight();
+            })
         },
         data(){
             return {
+                contestListHeight:'',
                 sourceList:[],
                 updateFlip:true,//强制更新结构体
                 paramMap:{
@@ -63,6 +70,12 @@
             };
         },
         methods:{
+            calContentListHeight(){
+                let curH=document.body.clientHeight;
+
+                this.contestListHeight=(curH-366)+'px';
+
+            },
             renderContent(h,{node,data,store}){
                 if(node.level==1){
                     return h('span',{
@@ -72,10 +85,16 @@
                     },data.label);
                 }
                 else{
-                    return h("span",data.label + data.tLabel);
+                    // return h("span",data.label + data.tLabel);
+                    return h('span',{
+                        class:{
+                            'current-choose':data.$treeNodeId==this.selectedCard.$treeNodeId
+                        }
+                    },data.label + data.tLabel)
                 }
             },
             handleNodeClick(data,node,tree){
+                console.log(data);
                 if(node.level==1){
                     this.selectedSource=data;
                     this.selectedCard={};
@@ -287,7 +306,7 @@
         margin-right: 5px;
         border: 1px solid #dcdcdc;
         margin-top: 5px;
-        min-height:300px;
+        /*min-height:300px;*/
     }
     .selected_scene{color:#409eff;}
 

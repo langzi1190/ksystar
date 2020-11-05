@@ -53,7 +53,7 @@
     let originW=window.innerWidth;
     import windowItem from "@/components/vdr/windowItem";
     export default {
-        data: function() {
+        data() {
             return {
                 // windowList:[],//视频窗口
                 activeWindow:-1,
@@ -125,16 +125,15 @@
                 let k =this.globalEvent.selectedWindowIndex;
                 if(param.act=='top' || param.act=='bottom'){
                     //置顶,置底,设置为当前最大值，
+                    console.log(JSON.parse(JSON.stringify(this.windowItems)));
                     let maxIndexPos=param.act=='top'?this.getMaxIndexPos():this.getMinIndexPos();
 
                     this.windowItems[maxIndexPos[0]].layerId=this.windowItems[k].layerId;
                     this.windowItems[k].layerId=maxIndexPos[1];
                     //子组件更新参数
-                    // console.log(param);
-                    // console.log(maxIndexPos[0],this.globalEvent.selectedWindowIndex);
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
                     this.$refs.windowObj[k].setProp(param);
-
+                    console.log(JSON.parse(JSON.stringify(this.windowItems)));
                     this.$http.post("winLayerWr.cgi",{
                         type:param.act=='top'?1:0,
                         groupId:this.globalEvent.curScreenIndex,
@@ -173,6 +172,7 @@
                         //全局 不下发参数
                         return ;
                     }
+                    this.$refs.windowObj[w].setWindowSize(param);
                 }
                 else if(param.act=='label'){
                     // this.$refs.windowObj[w].label=param.v;
@@ -229,16 +229,21 @@
         methods: {
             loadData(){
                 //screen_info.json
-                this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
+                if(this.globalEvent.gMode==0){
+                    this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
+                        for(let i in ret.data.scrGroupArr){
+                            ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
+                        }
 
-                    for(let i in ret.data.scrGroupArr){
-                        ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
-                    }
+                        this.globalEvent.screenInfo=ret.data;
 
-                    this.globalEvent.screenInfo=ret.data;
-
+                        this.loadScreen(0)
+                    })
+                }
+                else{
                     this.loadScreen(0)
-                })
+                }
+
             },
             loadScreen(seq){
 
@@ -312,28 +317,31 @@
             },
             loadScreenWindowItems(){
                 this.windowItems=[];
-                setTimeout(()=>{
-                    this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
-                        // console.log(ret.data);
-                        //
-                        for(let i in ret.data.winArr){
-                            let win=ret.data.winArr[i];
-                            win.lock=0;//锁定
-                            win.zoom=0;//扩张，还原
-                            win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
-                            win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
-                            // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
-                            if(!this.globalEvent.isValidResolution(win.resolution)){
-                                win.resolution=['信号丢失']
+                if(this.globalEvent.gMode==0){
+                    setTimeout(()=>{
+                        this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+                            // console.log(ret.data);
+                            //
+                            for(let i in ret.data.winArr){
+                                let win=ret.data.winArr[i];
+                                win.lock=0;//锁定
+                                win.zoom=0;//扩张，还原
+                                win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                                win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                                // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
+                                if(!this.globalEvent.isValidResolution(win.resolution)){
+                                    win.resolution=['信号丢失']
+                                }
+                                win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
+                                win.k='k'+parseInt(Math.random()*1000);
                             }
-                            win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
-                            win.k='k'+parseInt(Math.random()*1000);
-                        }
-                        this.globalEvent.windowItemsInfo=ret.data;
-                        this.windowItems=this.globalEvent.windowItemsInfo.winArr;
-                        this.syncLocalName();
-                    });
-                },500);
+                            this.globalEvent.windowItemsInfo=ret.data;
+                            this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+                            this.syncLocalName();
+                        });
+                    },500);
+                }
+
                 // this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
                 //     // console.log(ret.data);
                 //     //
@@ -395,7 +403,6 @@
 
 
                 if(this.isOutResource(data)){
-                    console.log('add_window');
                     alert(this.globalEvent.alert.outResource);
                     this.loadScreenWindowItems();
                     return ;

@@ -65,6 +65,9 @@
             };
         },
         methods:{
+            setFrameRate(v){
+                this.frame=v;
+            },
             op(act){
                 if(act=='cancel'){
                     this.$emit('sub_event',{act:'close_kfs'});

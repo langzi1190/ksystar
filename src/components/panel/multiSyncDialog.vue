@@ -50,25 +50,31 @@
         data(){
             return {
                 syncList:['关','开'],
-                controlSync:0,
+                controlSync:this.globalEvent.commonInfo.mSyncFuncSta,
 
                 cardIdList:['None'],
                 sourceIdList:[],
-                cardId:0,
-                sourceId:0,
+                cardId:this.globalEvent.commonInfo.mSyncSrcCardId,
+                sourceId:this.globalEvent.commonInfo.mSyncSrcId-1,
             };
         },
         mounted(){
 
-            this.controlSync=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
             for(let i in this.globalEvent.inputCardList){
                 this.cardIdList.push(++i);
             }
-            if(this.cardIdList.length>0)
-                    this.selectCard(0);
+            if(this.cardIdList.length>0){
+                let inputCard=this.globalEvent.inputCardList;
+                this.sourceIdList=[];
+                for(let i in inputCard[this.cardId-1].srcArr){
+                    this.sourceIdList.push(++i);
+                }
+            }
+
         },
         watch:{
             cardId(v,ov){
+                console.log("cardid ...");
                 this.selectCard(v);
             }
         },
@@ -88,6 +94,7 @@
                 }
 
             },
+
             op(act){
                 if(!act){
                     this.$emit('sub_event',{act:'close_kfs'});
@@ -105,8 +112,11 @@
                     if(param.srcCardId>0){
                         param.srcId=parseInt(param.srcId)+1;
                     }
+                    console.log(param);
                     this.$http.post("multiSyncWr.cgi",param,(ret)=>{
-                        this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta=this.controlSync;
+                        this.globalEvent.commonInfo.mSyncFuncSta=this.controlSync;
+                        this.globalEvent.commonInfo.mSyncSrcCardId=param.cardId;
+                        this.globalEvent.commonInfo.mSyncSrcId=param.srcId;
                         this.$emit('sub_event',{act:'close_kfs'});
                     });
                 }

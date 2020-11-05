@@ -2,8 +2,13 @@ import Vue from 'vue'
 
 let gobalEvent =new Vue({
     data:{
+        gMode:0,//0正常，1演示
+        modeInfo:{
+            inCardInfo:{},
+            outCardInfo:{}
+        },
         pType:{
-            'p0':'DEFAULLT',
+            'p0':'DEFAULT',
             'p1':'CVBS',
             'p2':'DVI',
             'p3':'VGA',

@@ -66,12 +66,19 @@ export default {
     },
   created() {
 
-      this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
-
-          this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
-          this.syncOutputInfoRd(ret.data);
+      if(this.globalEvent.gMode==0){
+          this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+              this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据
+              this.syncOutputInfoRd(ret.data);
+              this.syncScrInfoRd();
+          });
+      }
+      else{
+          this.screenInfo=this.globalEvent.screenInfo;
+          this.syncOutputInfoRd(this.globalEvent.modeInfo.outCardInfo);
           this.syncScrInfoRd();
-      });
+      }
+
 
   },
   methods: {
@@ -85,7 +92,6 @@ export default {
           //屏幕墙
           this.displayList=JSON.parse(JSON.stringify(this.screenInfo.scrGroupArr));
           this.curTabName=this.displayList[0].tabName;
-          console.log("configureScreen",this.curTabName);
       },
       newTabname(){
           return 'name'+parseInt(Math.random()*10000);

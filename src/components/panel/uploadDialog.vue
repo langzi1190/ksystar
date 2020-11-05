@@ -7,14 +7,14 @@
             <div class="s_body">
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=0 type="checkbox"/>输入板卡FPGA升级</label>
-                        <input type="file" ref="file0" :disabled="cardType!=0"/>
+                        <label><input v-model="cardTypeArr" value=1 type="checkbox"/>输入板卡FPGA升级</label>
+                        <input type="file" ref="file1" :disabled="cardType!=1"/>
                     </div>
                     <div class="item_body">
 
                         <label
                                 v-for="n in inCardCount"
-                        ><input :value="n" :disabled="cardType!=0" v-model="port0" type="checkbox"/>卡{{n}}
+                        ><input :value="n" :disabled="cardType!=1" v-model="port0" type="checkbox"/>卡{{n}}
                         </label>
                         <!--<label><input type="checkbox"/>卡2</label>-->
                         <!--<label><input type="checkbox"/>卡3</label>-->
@@ -28,13 +28,13 @@
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=1 type="checkbox"/>输出板卡FPGA升级</label>
-                        <input type="file" ref="file1" :disabled="cardType!=1"/>
+                        <label><input v-model="cardTypeArr" value=2 type="checkbox"/>输出板卡FPGA升级</label>
+                        <input type="file" ref="file2" :disabled="cardType!=2"/>
                     </div>
                     <div class="item_body">
                         <label
                                 v-for="n in outCardCount"
-                        ><input :value="n" :disabled="cardType!=1" v-model="port1" type="checkbox"/>卡{{n}}
+                        ><input :value="n" :disabled="cardType!=2" v-model="port1" type="checkbox"/>卡{{n}}
                         </label>
                         <!--<label><input type="checkbox"/>卡1</label>-->
                         <!--<label><input type="checkbox"/>卡2</label>-->
@@ -44,14 +44,14 @@
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=2 type="checkbox"/>监视板卡FPGA升级</label>
-                        <input type="file" ref="file2" :disabled="cardType!=2"/>
+                        <label><input v-model="cardTypeArr" value=3 type="checkbox"/>监视板卡FPGA升级</label>
+                        <input type="file" ref="file3" :disabled="cardType!=3"/>
                     </div>
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=3 type="checkbox"/>同步板卡FPGA升级</label>
-                        <input type="file" ref="file3" :disabled="cardType!=3"/>
+                        <label><input v-model="cardTypeArr" value=4 type="checkbox"/>同步板卡FPGA升级</label>
+                        <input type="file" ref="file4" :disabled="cardType!=4"/>
                     </div>
                 </div>
 
@@ -76,7 +76,7 @@
                 },
                 inCardCount:this.globalEvent.inputCardList.length,
                 outCardCount:0,
-                cardType:-1,//0输入，1输出，2监视，3同步
+                cardType:-1,//0 控制版，1输入，2输出，3监视，4同步
                 cardTypeArr:[],
                 port0:[],
                 port1:[],
@@ -112,65 +112,201 @@
                     this.port0=[];
                     this.port1=[];
                 }
-                else if(v==0){
+                else if(v==1){
                     this.port1=[];
                     this.port0=Array.from({length:this.inCardCount},v=>1).map((v,k)=>v+k);
                 }
-                else if(v==1){
+                else if(v==2){
                     this.port0=[];
                     this.port1=Array.from({length:this.outCardCount},v=>1).map((v,k)=>v+k);
                 }
             }
         },
         methods:{
-            initEvent(){
+            // upload(){
+            //     let that=this;
+            //     let input=this.$refs['file'+this.cardType];
+            //     if(input.files.length==0){
+            //         alert("尚未选择文件");
+            //         return ;
+            //     }
+            //
+            //     let file=input.files[0];
+            //     let totalSize=file.size;
+            //     let fragment=1024*1024;
+            //     let fragmentCount= Math.ceil(totalSize / fragment);
+            //
+            //     let reader=new FileReader();
+            //     reader.readAsArrayBuffer(file);
+            //     reader.onload=function(){
+            //         console.log(reader.result);
+            //         let buffer=reader.result;
+            //         let hexBuffer=Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+            //         console.log(hexBuffer);
+            //     };
+            //
+            //     let uploadFile=function(i){
+            //         if(i>=fragmentCount){
+            //             alert("已更新");
+            //             that.op(false)
+            //             return ;
+            //         }
+            //         let start = i * fragment,
+            //             end = Math.min(totalSize, start + fragment);
+            //         let boardStaArr=[];
+            //         console.log(that.port0);
+            //         if(that.cardType==1 ){
+            //             boardStaArr=Array.from({length:that.inCardCount},v=>1).map((v,k)=>{
+            //                 console.log('k'+k);
+            //                 if(that.port0.includes(k+1))
+            //                     return 1;
+            //                 else
+            //                     return 0;
+            //             });
+            //         }
+            //         else if(that.cardType==2){
+            //             boardStaArr=Array.from({length:that.outCardCount},v=>1).map((v,k)=>{
+            //                 if(that.port1.includes(k+1))
+            //                     return 1;
+            //                 else
+            //                     return 0;
+            //             });
+            //         }
+            //
+            //         console.log(boardStaArr);
+            //         //写入
+            //         let form = new FormData();
+            //         form.append("data", file.slice(start,end));  //slice方法用于切出文件的一部分
+            //         form.append("chip",1);
+            //         form.append("opr",3);
+            //         form.append("board",that.cardType)
+            //         form.append('fileSize',totalSize);
+            //         form.append("boardStaArr",boardStaArr);
+            //         console.log(form.get("data"));
+            //         that.$http.post("",form,()=>{
+            //             uploadFile(i+1);
+            //         });
+            //     };
+            //
+            //     uploadFile(0);
+            // },
+            getBoardArr(){
                 let that=this;
-                let input=document.getElementById('file');
-                let uploadBtn=document.getElementById('upload_btn')
-                input.addEventListener('change',(e)=>{
-                    this.tip=input.files[0].name;
-                })
-                uploadBtn.addEventListener("click",()=>{
-                    let file=input.files[0];
-                    let totalSize=file.size;
-                    let fragment=1024*1024;
-                    let fragmentCount= Math.ceil(totalSize / fragment);
+                let boardStaArr=[];
+                if(that.cardType==1 ){
+                    boardStaArr=Array.from({length:that.inCardCount},v=>1).map((v,k)=>{
+                        if(that.port0.includes(k+1))
+                            return 1;
+                        else
+                            return 0;
+                    });
+                }
+                else if(that.cardType==2){
+                    boardStaArr=Array.from({length:that.outCardCount},v=>1).map((v,k)=>{
+                        if(that.port1.includes(k+1))
+                            return 1;
+                        else
+                            return 0;
+                    });
+                }
 
-                    let upload=function(i){
-                        console.log(i,fragmentCount);
-                        if(i>=fragmentCount-1){
-                            alert("已更新");
-                            that.op(false)
-                            return ;
-                        }
-                        let start = i * fragment,
-                            end = Math.min(totalSize, start + fragment);
-                        let form = new FormData();
-                        form.append("data", file.slice(start,end));  //slice方法用于切出文件的一部分
+                return boardStaArr;
+            },
+            upload(){
+                let that=this;
+                let input=this.$refs['file'+this.cardType];
+                if(input.files.length==0){
+                    alert("尚未选择文件");
+                    return ;
+                }
 
-                        upload(i+1)
-                        // this.$http.post("",form,()=>{
-                        //     upload(i+1);
-                        // });
+                let file=input.files[0];
+                let totalSize=0;
+                let fragment=1024;
+                let fragmentCount=0;
+
+                let curPacketId=0;
+                let reader=new FileReader();
+                let hexBuffer=[];
+                reader.readAsArrayBuffer(file);
+                reader.onload=function(){
+
+                    let buffer=reader.result;
+                    hexBuffer=Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2));
+                    // console.log(hexBuffer);
+                    totalSize=hexBuffer.length;
+                    // console.log(totalSize,file.size);
+                    fragmentCount=Math.ceil(totalSize/1024);
+                    uploadFile(curPacketId);
+
+                };
+
+                let uploadFile=function(){
+                    let i = curPacketId;
+                    if(i>=fragmentCount){
+                        alert("已更新");
+                        that.op(false)
+                        return ;
+                    }
+                    let start = i * fragment,
+                        end = Math.min(totalSize, start + fragment);
+
+                    let d={
+                        chip:1,
+                        opr:3,
+                        board:that.cardType,
+                        packetNum:totalSize,
+                        packetId:i,
+                        dataArr:hexBuffer.splice(start,end-start).map((v,k)=>Number('0x'+v))
                     };
 
-                    upload(0);
+                    this.$http.post("firmwareUpdate.cgi",d,(ret)=>{
+                        if(ret.data.result==0){
+                            //未正确接收
+                            console.log("下发数据未正确接收");
+                        }
+                        else{
+                            curPacketId++;
+                        }
+                        uploadFile();
+                    });
+                };
 
-                })
+            },
+            erase(){
+                //先擦除
+                let input=this.$refs['file'+this.cardType];
+                let file=input.files[0];
+                let totalSize=file.size;
+                let param={
+                    chip:1,
+                    board:this.cardType,
+                    opr:2,
+                    fileSize:totalSize,
+                    boardStaArr:this.getBoardArr()
+                };
+                this.$http.post("firmwareUpdate",param,(ret)=>{
+                    if(ret.data.result==0){
+                        alert("擦除数据失败");
+                    }
+                    else{
+                        this.upload();
+                    }
+                });
             },
             op(act){
                 if(act){
                     if(this.cardType==-1){
                         alert("未选中任何板卡");
-                    }else if(this.cardType==0 && this.port0.length==0){
+                    }else if(this.cardType==1 && this.port0.length==0){
                         alert("未选中输入卡");
                     }
-                    else if(this.cardType==1 && this.port1.length==0){
+                    else if(this.cardType==2 && this.port1.length==0){
                         alert("未选中输出卡");
                     }
                     else{
-                        console.log(this.cardType);
-                        console.log(this.port0);
+                        this.erase();
+
                     }
                 }
                 else{

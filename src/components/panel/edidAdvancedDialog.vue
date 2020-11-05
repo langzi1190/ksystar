@@ -227,13 +227,14 @@
             this.curScreen.FormatW=this.$parent.edidParam.w;
             this.curScreen.FormatH=this.$parent.edidParam.h;
             this.curScreen.FrameRate=this.$parent.edidParam.f;
-            if(this.$parent.showDialog=='edidSingle'){
-                //反算时钟
-                this.calClock();
-            }
-            else{
-                this.calFrameRate();
-            }
+            this.calClock();//第一次进入都需要反算时钟
+            // if(this.$parent.showDialog=='edidSingle'){
+            //     //反算时钟
+            //
+            // }
+            // else{
+            //     this.calFrameRate();
+            // }
 
         },
         methods:{
@@ -370,24 +371,22 @@
             },
 
             cancelSubmit(){
-                this.$emit('sub_event',{act:'close_edid_advanced'});
+                this.$emit('sub_event',{act:'close_edid_advanced',info:{},advanceScreen:{}});
             },
             submit(){
                 //提交
-                this.calEdid();
-                // console.log(this.EDID)
-                // let num=this.globalEvent.selectedCard.label_info.split('_');
-                let num=this.globalEvent.sourceCardNumber();
-                let param={
-                    devId:parseInt(this.devId),
-                    srcCardId:num[0],
-                    srcId:num[1],
-                    EdidDataArr:this.EDID
-                };
-                if(this.$parent.showDialog=='edid'){
-                    param.srcCardId=0xff;
-                }
-                this.$emit('sub_event',{act:'sure_edid_advanced',info:param});
+                // this.calEdid();
+                // let num=this.globalEvent.sourceCardNumber();
+                // let param={
+                //     devId:parseInt(this.devId),
+                //     srcCardId:num[0],
+                //     srcId:num[1],
+                //     EdidDataArr:this.EDID
+                // };
+                // if(this.$parent.showDialog=='edid'){
+                //     param.srcCardId=0xff;
+                // }
+                this.$emit('sub_event',{act:'sure_edid_advanced',info:{},advanceScreen:this.curScreen});
                 // this.$http.post("srcEdidWr.cgi",param,()=>{
                 //     this.$emit('sub_event',{act:'close_edid_advanced'});
                 // });

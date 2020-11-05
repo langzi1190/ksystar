@@ -19,7 +19,7 @@
                 </select>
             </div>
 
-            <div class="op_list">
+            <div class="op_list" :style="{maxHeight:contestListHeight}">
                 <el-tree
                         :data="sceneList"
                         :props="paramMap"
@@ -59,9 +59,15 @@
                 }
 
             });
+
+            this.calContentListHeight();
+            window.addEventListener("resize",(e)=>{
+                this.calContentListHeight();
+            })
         },
         data(){
             return {
+                contestListHeight:'',
                 sceneList:[],
                 updateFlip:true,//强制更新结构体
                 paramMap:{
@@ -76,6 +82,12 @@
             };
         },
         methods:{
+            calContentListHeight(){
+                let curH=document.body.clientHeight;
+
+                this.contestListHeight=(curH-366)+'px';
+
+            },
             syncLocalName(){
                 this.globalEvent.syncLocalName('sceneCarouse',this.sceneList)
             },
@@ -88,7 +100,12 @@
                     },data.label)
                 }
                 else{
-                    return h('span',data.label)
+                    // return h('span',data.label)
+                    return h('span',{
+                        class:{
+                            'current-choose':data.$treeNodeId==this.selectedUserMode.$treeNodeId
+                        }
+                    },data.label)
                 }
 
             },
@@ -101,6 +118,7 @@
                 else{
                     this.selectedScene=node.parent.data;
                     this.selectedUserMode=data;
+                    console.log(data);
                 }
                 this.selectedLevel=node.level;
                 // console.log(this.selectedScene.presetArr.includes(data));
@@ -315,8 +333,8 @@
         border: 1px solid #dcdcdc;
         margin-top: 5px;
         min-height:300px;
-        max-height: 450px;
-        overflow: scroll;
+        /*max-height: 450px;*/
+        overflow: auto;
     }
     .selected_scene{color:#409eff;}
 

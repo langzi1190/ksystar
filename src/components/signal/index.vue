@@ -18,7 +18,7 @@
           <img class="header-icon" src="@/assets/images/UserMode.png" />
           <span class="content-list-title">用户模式</span>
         </template>
-        <div class="content-list" :style="{maxHeight:contestListHeight}">
+        <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <template v-for="(item,index) in userSceneList">
             <div class="list_item" :class="{list_item_cur:item.value==1}" @click="selectedSceneIndex=index">
               {{item.label}}
@@ -45,7 +45,7 @@
           <img class="header-icon" src="@/assets/images/signal.png" />
           <span class="content-list-title">信号源分组</span>
         </template>
-        <div class="content-list"  :style="{maxHeight:contestListHeight}">
+        <div class="content-list">
             <sourceGroup v-if="activeName==3"></sourceGroup>
         </div>
       </el-collapse-item>
@@ -59,6 +59,9 @@
 export default {
     created(){
         this.getCommonInfo();
+        this.globalEvent.$on("simulate",()=>{
+            this.syscInputInfoSm();
+        })
     },
     data() {
         return {
@@ -85,7 +88,7 @@ export default {
         window.addEventListener("resize",(e)=>{
             this.calContentListHeight();
         })
-       this.getSysInputInfo();
+        this.getSysInputInfo();
         this.globalEvent.$on("work_mode_change",()=>{
             //信号源工作模式发生改变 修改前端名称 workModeDialog
             let inCardArr=this.inputCardList;
@@ -257,8 +260,39 @@ export default {
                 }
             }
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
-            // this.globalEvent.$emit('load_input_card');//通知窗口信号源加载完成
 
+        },
+        syscInputInfoSm(){
+            //演示模式
+            let inCardArr=this.globalEvent.modeInfo.inCardInfo.inCardArr;
+            let id=1;
+            // let kfsFunc=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
+            // let fSyncArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
+
+            for(let i in inCardArr){
+                inCardArr[i].id=id++;//tree id
+                inCardArr[i].label="C"+(parseInt(i)+1);
+                for(let k in inCardArr[i].srcArr){
+                    inCardArr[i].srcArr[k].kfsAble=0;//kfsFunc==0?0:fSyncArr[i].scrPropArr[k].syncEn;
+                    inCardArr[i].srcArr[k].id=id++;
+                    if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+                    else if(inCardArr[i].srcArr[k].ITESrcType==17 || inCardArr[i].srcArr[k].ITESrcType==18){
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType+''+inCardArr[i].srcArr[k].ITESrcType];
+                    }
+                    else{
+                        inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
+                    }
+
+                    inCardArr[i].srcArr[k].label_extra=this.globalEvent.signalCardName(i,k);
+                    inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);
+                }
+            }
+            // this.inputCardList=inCardArr;
+            // console.log(this.inputCardList);
+            this.globalEvent.inputCardList=this.inputCardList=inCardArr;
+            this.globalEvent.$emit('reload_data');//通知窗口信号源加载完成
         },
         handleNodeClick(data,node,tree){
             if(node.level==2){
@@ -362,9 +396,10 @@ export default {
       height: 40px;
       line-height: 40px;
     }
+  .content-list .current-choose{color:#409eff;}
     .el-tree-node__content{user-select:none;}
     .el-tree-node>.el-tree-node__children{overflow:unset;}
-    .card_label{margin-right:10px;color:#f44f44;    width: 55px;text-align: left;display: inline-block;position:relative;}
+    .card_label{margin-right:10px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
     .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
@@ -372,7 +407,7 @@ export default {
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
     .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;height:30px;line-height:30px;}
     .list_item:nth-child(even){border:none;}
-    .el-collapse-item__content{max-height:500px;overflow:auto;}
+    /*.el-collapse-item__content{max-height:500px;overflow:auto;}*/
   .selected_card .card_label{color:#00cc99;}
   .card_kfs{border:1px solid #333;}
   .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#505050;}
