@@ -3,31 +3,31 @@
     <!-- 头部菜单显示 -->
     <header>
       <el-tabs type="border-card" value="1">
-        <el-tab-pane label="设备">
+        <el-tab-pane :label="LANG.home_dev">
           <div class="card-s">
-            <card title="设备">
-              <card-item title="设备选择"></card-item>
-              <card-item title="连接设备"></card-item>
+            <card :title="LANG.HOME_DEV">
+              <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
+              <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
               <card-item title="断开设备"></card-item>
-              <card-item title="同步"></card-item>
-              <card-item title="退出"></card-item>
+              <card-item :title="LANG.HOME_SYNC"></card-item>
+              <card-item :title="LANG.EXIT"></card-item>
             </card>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="主功能区">
+        <el-tab-pane :label="LANG.HOME_MAIN_FUNC">
           <div class="card-s">
             <card title="设置">
-              <card-item title="创建画面" @click.native="addScreen" iconName="plus"></card-item>
-              <card-item title="屏幕配置" iconName="display" @click.native="setting('2')"></card-item>
+              <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="plus"></card-item>
+              <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"></card-item>
             </card>
-            <card title="预设">
-              <card-item title="用户模式" @click.native="showDialog='userModel'"></card-item>
-              <card-item title="保存模式" @click.native="showDialog='saveUserModel'"></card-item>
-              <card-item title="出厂设置" @click.native="preinstall('3')"></card-item>
-              <card-item title="同步" @click.native="preinstall('sync')"></card-item>
-              <card-item title="打开回显" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
-              <card-item title="关闭回显" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
-              <card-item title="回显配置" @click.native="showDialog='monIp'"></card-item>
+            <card :title="LANG.PRESET">
+              <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'"></card-item>
+              <card-item :title="LANG.HOME_SAVE_USER_MODE" @click.native="showDialog='saveUserModel'"></card-item>
+              <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"></card-item>
+              <card-item :title="LANG.SYNC" @click.native="preinstall('sync')"></card-item>
+              <card-item :title="LANG.ECHO_NO" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
+              <card-item :title="LANG.ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
+              <card-item :title="LANG.ECHO_CONFIG" @click.native="showDialog='monIp'"></card-item>
             </card>
             <card title="屏幕切换">
               <card-item title="屏幕墙 1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
@@ -288,7 +288,10 @@ export default {
       this.maxHeight=window.innerHeight-200;
       window.addEventListener("resize",()=>{
           this.maxHeight=window.innerHeight-200;
-      })
+      });
+      this.globalEvent.$on('language',()=>{
+          this.LANG=this.LANGUAGE[this.globalEvent.language];
+      });
     },
   data() {
     return {
@@ -311,6 +314,7 @@ export default {
         EDID:[],
         curScreen:{},
         advanceScreen:{},
+        LANG:this.LANGUAGE[this.globalEvent.language],
         // scale:1,
     };
   },
@@ -324,6 +328,9 @@ export default {
   methods: {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
+
+          // this.globalEvent.language='zh';
+          // this.globalEvent.$emit('language');
 
       console.log(setFn);
       if (setFn === "5") {

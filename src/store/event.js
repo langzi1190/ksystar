@@ -7,6 +7,7 @@ let gobalEvent =new Vue({
             inCardInfo:{},
             outCardInfo:{}
         },
+        language:'zh',
         pType:{
             'p0':'DEFAULT',
             'p1':'CVBS',

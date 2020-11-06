@@ -30,9 +30,21 @@ Vue.use(Option);
 Vue.use(Loading.directive);
 Vue.prototype.$loading = Loading.service;
 
+Vue.prototype.LANGUAGE={
+    zh:require("./store/zh.json"),
+    en:require("./store/en.json"),
+};
 
 new Vue({
   // router,
   // store,
+  //   data:{
+  //     LANG:LANGUAGE[Vue.prototype.globalEvent.language],
+  //   },
+    // provide(){
+    //   return {
+    //     LANG:this.LANG
+    //   };
+    // },
   render: h => h(App)
 }).$mount('#app')
