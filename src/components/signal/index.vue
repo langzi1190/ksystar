@@ -5,7 +5,7 @@
       <el-collapse-item name="0">
         <template slot="title">
           <img class="header-icon" src="@/assets/images/SignalManagement.png" />
-          <span class="content-list-title">信号管理</span>
+          <span class="content-list-title">{{LANG.SIGNAL_SOURCE}}</span>
         </template>
 
         <div class="content-list" :style="{maxHeight:contestListHeight}">
@@ -16,7 +16,7 @@
       <el-collapse-item name="1">
         <template slot="title">
           <img class="header-icon" src="@/assets/images/UserMode.png" />
-          <span class="content-list-title">用户模式</span>
+          <span class="content-list-title">{{LANG.SIGNAL_USER_MODE}}</span>
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <template v-for="(item,index) in userSceneList">
@@ -24,8 +24,8 @@
               {{item.label}}
             </div>
             <div class="list_item" v-show="selectedSceneIndex==index">
-              <el-button size="mini" @click="editScene">改名</el-button>
-              <el-button size="mini" :disabled="item.value==0" @click="loadScene">载入</el-button>
+              <el-button size="mini" @click="editScene">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>
+              <el-button size="mini" :disabled="item.value==0" @click="loadScene">{{LANG.SIGNAL_LOAD}}</el-button>
             </div>
           </template>
 
@@ -34,7 +34,7 @@
       <el-collapse-item name="2">
         <template slot="title">
           <img class="header-icon" src="@/assets/images/Round.png" />
-          <span class="content-list-title">场景轮巡</span>
+          <span class="content-list-title">{{LANG.SIGNAL_LAYOUT_LOOP}}</span>
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <sceneCarousel v-if="activeName==2"></sceneCarousel>
@@ -43,7 +43,7 @@
       <el-collapse-item name="3">
         <template slot="title">
           <img class="header-icon" src="@/assets/images/signal.png" />
-          <span class="content-list-title">信号源分组</span>
+          <span class="content-list-title">{{LANG.SIGNAL_SOURCEGROUP}}</span>
         </template>
         <div class="content-list">
             <sourceGroup v-if="activeName==3"></sourceGroup>
@@ -64,6 +64,7 @@ export default {
         })
     },
     data() {
+        let LANG=this.LANGUAGE[this.globalEvent.language];
         return {
             inputCardList:[],
             userSceneList:[],//用户模式 列表
@@ -74,20 +75,24 @@ export default {
             // srcGroupList:[],
 
             activeName: "0", // 侧边栏选项
-            activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
+            activeList: [LANG.SIGNAL_SOURCE,LANG.SIGNAL_USER_MODE,LANG.SIGNALLAYOUT_LOOP,LANG.SIGNAL_SOURCEGROUP], // 侧边栏选项列表
 
             paramMap:{
                 children: 'srcArr',
             },
-            contestListHeight:'auto'
-
+            contestListHeight:'auto',
+            LANG:LANG
         };
     },
     mounted(){
         this.calContentListHeight();
         window.addEventListener("resize",(e)=>{
             this.calContentListHeight();
-        })
+        });
+        this.globalEvent.$on('language',()=>{
+            this.LANG=this.LANGUAGE[this.globalEvent.language];
+            this.activeList=[this.LANG.SIGNAL_SOURCE,this.LANG.SIGNAL_USER_MODE,this.LANG.SIGNALLAYOUT_LOOP,this.LANG.SIGNAL_SOURCEGROUP];
+        });
         this.getSysInputInfo();
         this.globalEvent.$on("work_mode_change",()=>{
             //信号源工作模式发生改变 修改前端名称 workModeDialog
@@ -349,7 +354,8 @@ export default {
                 //     this.$parent.$refs.vdr.loadData();
                 // })
 
-                this.$emit('sub_event',{act:'sync'});//--home.vue
+                // this.$emit('sub_event',{act:'sync'});//--home.vue
+                this.globalEvent.$emit('sync');
                 console.log("signal/index.vue 载入用户模式，重载接口");
                 // console.log(ret.data);
 

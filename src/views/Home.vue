@@ -1,158 +1,164 @@
 <template>
-  <div class="home">
-    <!-- 头部菜单显示 -->
-    <header>
-      <el-tabs type="border-card" value="1">
-        <el-tab-pane :label="LANG.home_dev">
-          <div class="card-s">
-            <card :title="LANG.HOME_DEV">
-              <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
-              <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
-              <card-item title="断开设备"></card-item>
-              <card-item :title="LANG.HOME_SYNC"></card-item>
-              <card-item :title="LANG.EXIT"></card-item>
-            </card>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :label="LANG.HOME_MAIN_FUNC">
-          <div class="card-s">
-            <card title="设置">
-              <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="plus"></card-item>
-              <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"></card-item>
-            </card>
-            <card :title="LANG.PRESET">
-              <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'"></card-item>
-              <card-item :title="LANG.HOME_SAVE_USER_MODE" @click.native="showDialog='saveUserModel'"></card-item>
-              <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"></card-item>
-              <card-item :title="LANG.SYNC" @click.native="preinstall('sync')"></card-item>
-              <card-item :title="LANG.ECHO_NO" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
-              <card-item :title="LANG.ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
-              <card-item :title="LANG.ECHO_CONFIG" @click.native="showDialog='monIp'"></card-item>
-            </card>
-            <card title="屏幕切换">
-              <card-item title="屏幕墙 1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
-              <card-item title="屏幕墙 2" seq='1' @click.native="loadScreen(1)" iconName="display"></card-item>
-              <div class="card-item">
-                <card-child title="屏幕墙3" seq='2' @click.native="loadScreen(2)"  iconName="display"></card-child>
-                <card-child title="屏幕墙4" seq='3' @click.native="loadScreen(3)"  iconName="display"></card-child>
-                <card-child title="屏幕墙5" seq='4' @click.native="loadScreen(4)"  iconName="display"></card-child>
-              </div>
-              <div class="card-item">
-                <card-child title="屏幕墙6" seq='5' @click.native="loadScreen(5)"  iconName="display"></card-child>
-                <card-child title="屏幕墙7" seq='6' @click.native="loadScreen(6)"  iconName="display"></card-child>
-                <card-child title="屏幕墙8" seq='7' @click.native="loadScreen(7)"  iconName="display"></card-child>
-              </div>
-            </card>
-            <card title="对外控制">
-              <div class="card-item">
-                <card-child title="开屏"  @click.native="preinstall('10')" iconName="display"></card-child>
-                <card-child title="关屏"  @click.native="preinstall('11')" iconName="display"></card-child>
-                <card-child title="通道设置" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
-              </div>
-            </card>
-            <card title="锁定">
-              <card-item
-                title="位置锁定"
-                :isChecked="globalEvent.panelLock"
-                @click.native="globalEvent.panelLock=!globalEvent.panelLock"
-              ></card-item>
-            </card>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="工具">
-          <div class="card-s">
-            <card title="高级菜单">
-              <card-item title="用户" @click.native="showDialog='user'"></card-item>
-              <card-item @click.native="showDialog='screenBright'" title="亮度"></card-item>
-              <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
-              <card-item @click.native="showDialog='multi'" title="多机同步"></card-item>
-              <card-item title="输出关闭"  @click.native="preinstall('8')"></card-item>
-              <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
-              <card-item title="导入配置"></card-item>
-              <card-item title="导出配置"></card-item>
-              <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
-              <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
-            </card>
-            <card title="语言选择">
-              <card-item title="语言设置"></card-item>
-            </card>
-            <card title="专家系统">
-              <card-item @click.native="showDialog='serial'" title="串口设置"></card-item>
-              <card-item title="网络设置" @click.native="showDialog='ipConfig'"></card-item>
-              <card-item title="计算器"></card-item>
-              <card-item title="演示模式" @click.native="showDialog='simulate'"></card-item>
-              <card-item @click.native="showDialog='deviceStatus'" title="测试"></card-item>
-              <card-item @click.native="showDialog='version'" title="版本信息"></card-item>
-              <card-item @click.native="showDialog='temp'" title="温度信息"></card-item>
-              <card-item title="ARM升级" @click.native="upgrade('arm')"></card-item>
-              <card-item style="width: 56px;" title="FPGA升级" @click.native="showUploadDialog='fpga'"></card-item>
-            </card>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-    </header>
-    <center>
-      <!-- 侧边栏选项 -->
-      <signal ref="signal"></signal>
-      <!-- 屏幕编辑与显示 -->
-      <div class="content">
-        <div class="content-title">模拟操作</div>
-        <div class="content-draw">
-          <!-- 窗口编辑面板 -->
-          <div class="draw-panel">
-            <div class="draw-content" :class="{'draw-center':(drawCenter&&!isEcho)}">
-              <vdr ref="vdr"  v-if="updateFlip"  @alignCenter="alignCenter"></vdr>
-            </div>
-          </div>
-          <!-- 回显 -->
-          <!--<div class="display-list" v-show="isEcho"></div>-->
+    <div style="height:100%;width:100%;">
+        <div class="home" v-if="isLogin==1">
+            <!-- 头部菜单显示 -->
+            <header>
+                <el-tabs type="border-card" value="1">
+                    <el-tab-pane :label="LANG.HOME_DEV">
+                        <div class="card-s">
+                            <card :title="LANG.HOME_DEV">
+                                <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
+                                <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
+                                <card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>
+                                <card-item :title="LANG.HOME_SYNC"></card-item>
+                                <card-item :title="LANG.HOME_EXIT"></card-item>
+                            </card>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane :label="LANG.HOME_MAIN_FUNC">
+                        <div class="card-s">
+                            <card :title="LANG.SETTING">
+                                <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="plus"></card-item>
+                                <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"></card-item>
+                            </card>
+                            <card :title="LANG.HOME_PRESET">
+                                <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'"></card-item>
+                                <card-item :title="LANG.HOME_SAVE_USER_MODE" @click.native="showDialog='saveUserModel'"></card-item>
+                                <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"></card-item>
+                                <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('sync')"></card-item>
+                                <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
+                                <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
+                                <card-item :title="LANG.HOME_ECHO_CONFIG" @click.native="showDialog='monIp'"></card-item>
+                            </card>
+                            <card :title="LANG.HOME_SWITCH_WALL">
+                                <card-item :title="LANG.HOME_WALL_1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
+                                <card-item :title="LANG.HOME_WALL_2" seq='1' @click.native="loadScreen(1)" iconName="display"></card-item>
+                                <div class="card-item">
+                                    <card-child :title="LANG.HOME_WALL_3" seq='2' @click.native="loadScreen(2)"  iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_WALL_4" seq='3' @click.native="loadScreen(3)"  iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_WALL_5" seq='4' @click.native="loadScreen(4)"  iconName="display"></card-child>
+                                </div>
+                                <div class="card-item">
+                                    <card-child :title="LANG.HOME_WALL_6" seq='5' @click.native="loadScreen(5)"  iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_WALL_7" seq='6' @click.native="loadScreen(6)"  iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_WALL_8" seq='7' @click.native="loadScreen(7)"  iconName="display"></card-child>
+                                </div>
+                            </card>
+                            <card :title="LANG.HOME_EXTENAL_CONTROL">
+                                <div class="card-item">
+                                    <card-child :title="LANG.HOME_OPEN_SCREEN"  @click.native="preinstall('10')" iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_CLOSE_SCREEN"  @click.native="preinstall('11')" iconName="display"></card-child>
+                                    <card-child :title="LANG.HOME_CHANNEL_CONFIG" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
+                                </div>
+                            </card>
+                            <card :title="LANG.HOME_LOCK">
+                                <card-item
+                                        :title="LANG.HOME_POSITION_LOCK"
+                                        :isChecked="globalEvent.panelLock"
+                                        @click.native="globalEvent.panelLock=!globalEvent.panelLock"
+                                ></card-item>
+                            </card>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane :label="LANG.HOME_TOOLS">
+                        <div class="card-s">
+                            <card :title="LANG.HOME_ADVANCE_MENU">
+                                <card-item :title="LANG.USER" @click.native="showDialog='user'"></card-item>
+                                <card-item @click.native="showDialog='screenBright'" :title="LANG.HOME_BRIGHT"></card-item>
+                                <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
+                                <card-item @click.native="showDialog='multi'" :title="LANG.HOME_MULTI_SYNC"></card-item>
+                                <card-item title="输出关闭"  @click.native="preinstall('8')"></card-item>
+                                <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
+                                <card-item :title="LANG.HOME_CONFIG_IMPORT" @click.native="opConfig('import')"></card-item>
+                                <card-item :title="LANG.HOME_CONFIG_EXPORT" @click.native="opConfig('export')"></card-item>
+                                <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
+                                <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
+                            </card>
+                            <card :title="LANG.HOME_LANGUAGE">
+                                <card-item title="语言设置"></card-item>
+                            </card>
+                            <card :title="LANG.HOME_EXPERT">
+                                <card-item @click.native="showDialog='serial'" :title="LANG.HOME_COM_CONFIG"></card-item>
+                                <card-item :title="LANG.HOME_NET_CONFIG" @click.native="showDialog='ipConfig'"></card-item>
+                                <card-item :title="LANG.HOME_COMPUTER"></card-item>
+                                <card-item :title="LANG.HOME_DEMO_MODE" @click.native="showDialog='simulate'"></card-item>
+                                <card-item @click.native="showDialog='deviceStatus'" :title="LANG.HOME_TEST"></card-item>
+                                <card-item @click.native="showDialog='version'" :title="LANG.HOME_VERSION"></card-item>
+                                <card-item @click.native="showDialog='temp'" :title="LANG.HOME_TEMPERATURE"></card-item>
+                                <card-item :title="LANG.HOME_ARM_UPGRADE" @click.native="upgrade('arm')"></card-item>
+                                <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="showUploadDialog='fpga'"></card-item>
+                            </card>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+            </header>
+            <center>
+                <!-- 侧边栏选项 -->
+                <signal ref="signal"></signal>
+                <!-- 屏幕编辑与显示 -->
+                <div class="content">
+                    <div class="content-title">模拟操作</div>
+                    <div class="content-draw">
+                        <!-- 窗口编辑面板 -->
+                        <div class="draw-panel">
+                            <div class="draw-content" :class="{'draw-center':(drawCenter&&!isEcho)}">
+                                <vdr ref="vdr"  v-if="updateFlip"  @alignCenter="alignCenter"></vdr>
+                            </div>
+                        </div>
+                        <!-- 回显 -->
+                        <!--<div class="display-list" v-show="isEcho"></div>-->
+                    </div>
+                </div>
+                <div class="content-compile" v-show="true">
+                    <div class="content-title">画面编辑</div>
+                    <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
+                        <attr @sub_event="subEvent"></attr>
+                    </div>
+                </div>
+            </center>
+            <!-- 底部设备信息 -->
+            <footer>
+                <div class="status-bar">
+                    <!--<div>通讯状态:</div>-->
+                    <!--<div>-->
+                    <!--<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />-->
+                    <!--<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />-->
+                    <!--</div>-->
+                    <div>设备型号:</div>
+                    <div>{{devType}}</div>
+                </div>
+            </footer>
+            <!-- 弹窗集合组件 -->
+            <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
+            <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
+            <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
+            <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
+            <serialDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='serial'"></serialDialog>
+            <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
+            <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
+            <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
+            <edidDialog @sub_event="subEvent" ref="edid" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
+            <edidAdvancedDialog @sub_event="subEvent" :showDialog="showEdidAdvancedDialog" v-if="showEdidAdvancedDialog=='edidAdvanced'"></edidAdvancedDialog>
+            <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
+            <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
+            <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
+            <versionDialog @sub_event="subEvent" v-if="showDialog=='version'" :showDialog="showDialog"></versionDialog>
+            <deviceStatusDialog @sub_event="subEvent" v-if="showDialog=='deviceStatus'" :showDialog="showDialog"></deviceStatusDialog>
+            <hotBackupDialog @sub_event="subEvent" v-if="showDialog=='hotBackup'" :showDialog="showDialog"></hotBackupDialog>
+            <workModeDialog @sub_event="subEvent" v-if="showDialog=='workMode'" :showDialog="showDialog"></workModeDialog>
+            <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
+            <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
+            <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
+            <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
+            <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
+            <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
+            <simulateDialog @sub_event="subEvent" v-if="showDialog!=''" :showDialog="showDialog"></simulateDialog>
         </div>
-      </div>
-      <div class="content-compile" v-show="true">
-        <div class="content-title">画面编辑</div>
-        <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
-          <attr @sub_event="subEvent"></attr>
+        <div v-else>
+            <loginDialog @sub_event="subEvent"></loginDialog>
         </div>
-      </div>
-    </center>
-    <!-- 底部设备信息 -->
-    <footer>
-      <div class="status-bar">
-        <!--<div>通讯状态:</div>-->
-        <!--<div>-->
-          <!--<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />-->
-          <!--<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />-->
-        <!--</div>-->
-        <div>设备型号:</div>
-        <div>{{devType}}</div>
-      </div>
-    </footer>
-    <!-- 弹窗集合组件 -->
-      <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
-      <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
-      <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
-      <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
-      <serialDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='serial'"></serialDialog>
-      <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
-      <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
-      <multiSyncDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='multi'"></multiSyncDialog>
-      <edidDialog @sub_event="subEvent" ref="edid" :showDialog="showDialog" v-if="showDialog=='edid' || showDialog=='edidSingle'"></edidDialog>
-      <edidAdvancedDialog @sub_event="subEvent" :showDialog="showEdidAdvancedDialog" v-if="showEdidAdvancedDialog=='edidAdvanced'"></edidAdvancedDialog>
-      <screenCtrDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='screenCtr'"></screenCtrDialog>
-      <screenBrightDialog @sub_event="subEvent" v-if="showDialog=='screenBright'" :showDialog="showDialog"></screenBrightDialog>
-      <tempDialog @sub_event="subEvent" v-if="showDialog=='temp'" :showDialog="showDialog"></tempDialog>
-      <versionDialog @sub_event="subEvent" v-if="showDialog=='version'" :showDialog="showDialog"></versionDialog>
-      <deviceStatusDialog @sub_event="subEvent" v-if="showDialog=='deviceStatus'" :showDialog="showDialog"></deviceStatusDialog>
-      <hotBackupDialog @sub_event="subEvent" v-if="showDialog=='hotBackup'" :showDialog="showDialog"></hotBackupDialog>
-      <workModeDialog @sub_event="subEvent" v-if="showDialog=='workMode'" :showDialog="showDialog"></workModeDialog>
-      <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
-      <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
-      <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
-      <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
-      <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
-      <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
-      <simulateDialog @sub_event="subEvent" v-if="showDialog!=''" :showDialog="showDialog"></simulateDialog>
-  </div>
+    </div>
+
 </template>
 
 <script>
@@ -228,6 +234,7 @@ import userDialog from "@/components/panel/userDialog";
 import showEdidDialog from "@/components/panel/showEdidDialog";
 import uploadDialog from "@/components/panel/uploadDialog";
 import simulateDialog from "@/components/panel/simulateDialog";
+import loginDialog from "@/components/panel/loginDialog";
 
 let loading ;
 // let loading_count=0;
@@ -283,6 +290,7 @@ export default {
     created(){
       this.loadVersion();
       this.globalEvent.$on('sync',()=>{
+          console.log("home.vue sync");
           this.preinstall('sync');
       });
       this.maxHeight=window.innerHeight-200;
@@ -292,16 +300,18 @@ export default {
       this.globalEvent.$on('language',()=>{
           this.LANG=this.LANGUAGE[this.globalEvent.language];
       });
+
+      // setTimeout(()=>{this.isLogin=1;},5000);
     },
   data() {
     return {
+        isLogin:1,
         activeName: "0", // 侧边栏选项
         activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
         isEcho: false, // 是否回传
         dialogVisible: false, // 弹出对话框
         dialogTitle: "",
         drawCenter: true,
-        // positionLock: false, //位置锁定
         showDialog:'',
         showUploadDialog:'',
         showEdidAdvancedDialog:'',
@@ -365,6 +375,7 @@ export default {
       }
       else if(setFn=='sync'){
 
+          console.log("home ....  sync");
           this.globalEvent.gMode=0;
           loading=this.$loading({
               lock: true,
@@ -408,6 +419,15 @@ export default {
               this.globalEvent.versionInfo=ret.data;
           });
       },
+      opConfig(act){
+          if(act=='export'){
+              // let aEle = document.createElement("a");// 创建a标签
+              // let blob = new Blob(['hhhhhhhh']);
+              // aEle.download = "配置文件.bin";// 设置下载文件的文件名
+              // aEle.href = window.URL.createObjectURL(blob);
+              // aEle.click();// 设置点击事件 aEle.remove()
+          }
+      },
       upgrade(act){
           if('arm'==act){
               let pass=prompt("输入密码(默认000000)","");
@@ -421,11 +441,10 @@ export default {
 
               let param={
                   chip:0,
-                  board:[],
+                  board:0,
                   opr:1
               }
               this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
-                  console.log(ret.data);
                   alert("已升级")
               });
           }
@@ -467,7 +486,10 @@ export default {
       },
       subEvent(param){
           console.log(param);
-          if('close_kfs'==param.act){
+          if('login'==param.act){
+              this.isLogin=1;
+          }
+          else if('close_kfs'==param.act){
               this.showDialog='';
           }
           else if("sure_kfs"==param.act){
@@ -527,7 +549,7 @@ export default {
                   EdidDataArr:this.EDID
               };
               if(this.showDialog=='edid'){
-                  param.srcCardId=0xff;
+                  info.srcCardId=0xff;
               }
 
               console.log(info);
@@ -568,7 +590,20 @@ export default {
               let num=this.globalEvent.sourceCardNumber();
               this.$http.post("srcEdidRd.cgi",{srcCardId:num[0],srcId:num[1]},(ret)=>{
                   this.edidData=ret.data.EdidDataArr;
-                  this.showDialog='showEdid';
+                  this.showDialog='';
+
+
+                  let a=this.edidData;
+                  let arr=[];
+                  a.forEach((v,k)=>{
+                      arr.push('0x'+Number(v).toString(16).padStart(2,0).toUpperCase());
+                  })
+                  let s=arr.join(',');
+                  let aEle = document.createElement("a");// 创建a标签
+                  let blob = new Blob([s]);
+                  aEle.download = "EDID";// 设置下载文件的文件名
+                  aEle.href = window.URL.createObjectURL(blob);
+                  aEle.click();// 设置点击事件 aEle.remove()
               });
           }
           else if('close_upload'==param.act){
@@ -717,6 +752,7 @@ export default {
       showEdidDialog,
       uploadDialog,
       simulateDialog,
+      loginDialog
   },
 };
 </script>

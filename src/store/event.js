@@ -96,6 +96,9 @@ let gobalEvent =new Vue({
         userSceneName(seq){
             let k='user_scene_'+seq;
             let s="用户模式 "+(parseInt(seq)+1);
+            if(this.language=='en'){
+                s="User mode "+(parseInt(seq)+1);
+            }
             if(this.userSceneLocalName[k]!==undefined){
                 s=this.userSceneLocalName[k];
             }
@@ -103,6 +106,9 @@ let gobalEvent =new Vue({
         },
         carouseName(scene){
             let s="场景轮巡 "+scene.sceneId;
+            if(this.language=='en'){
+                s="Layout loop "+scene.sceneId;
+            }
             if(this.carouseLocalName[scene.sceneId]!==undefined){
                 s=this.carouseLocalName[scene.sceneId];
             }
@@ -121,6 +127,9 @@ let gobalEvent =new Vue({
         srcGroupName(group){
             //信号源分组名称
             let s="信号源分组 "+(parseInt(group.srcGroupId)+1)
+            if(this.language=='en'){
+                s="Source group "+(parseInt(group.srcGroupId)+1);
+            }
             if(this.srcGroupLocalName[group.srcGroupId]!==undefined){
                 s=this.srcGroupLocalName[group.srcGroupId];
             }

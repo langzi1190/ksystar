@@ -134,6 +134,12 @@
                     return;
                 }
 
+                if(this.o_width<55){
+                    this.o_width=50;
+                }
+                if(this.o_height<55){
+                    this.o_height=50;
+                }
                 this.sendEvent({pos:0,v:this.o_left,seq:this.seq});
                 this.sendEvent({pos:1,v:this.o_top,seq:this.seq});
                 this.sendEvent({pos:2,v:this.o_width,seq:this.seq});
@@ -151,18 +157,22 @@
                 if(param.act=='top'){
                     this.item.winSizeArr[1]=param.v;
                     this.ptop=param.v*100/this.$parent.totalHeight;
+                    this.percent2Ratio();//如果 不调用，在arr/side 设置后 拖动会还原设置前数据
                 }
                 else if(param.act=='left'){
                     this.item.winSizeArr[0]=param.v;
                     this.pleft=param.v*100/this.$parent.totalWidth;
+                    this.percent2Ratio();
                 }
                 else if(param.act=='width'){
                     this.item.winSizeArr[2]=param.v;
                     this.pwidth=param.v*100/this.$parent.totalWidth;
+                    this.percent2Ratio();
                 }
                 else if(param.act=='height'){
                     this.item.winSizeArr[3]=param.v;
                     this.pheight=param.v*100/this.$parent.totalHeight;
+                    this.percent2Ratio();
                 }
                 else if(param.act=='ctop'){
                     this.item.cropSizeArr[1]=param.v;
@@ -176,7 +186,7 @@
                     this.item.cropSizeArr[2]=param.v;
                     this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
                 }
-                else if(param.act=='ct=height'){
+                else if(param.act=='cheight'){
                     this.item.cropSizeArr[3]=param.v;
                     this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
                 }

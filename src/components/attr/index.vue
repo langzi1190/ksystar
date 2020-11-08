@@ -1,63 +1,63 @@
 <template>
   <div class="attr">
     <div class="close-all">
-      <el-button type="primary" :disabled="globalEvent.panelLock"  @click="closeWindowItem('all')" size="mini" style="width:100%">关闭所有画面</el-button>
+      <el-button type="primary" :disabled="globalEvent.panelLock"  @click="closeWindowItem('all')" size="mini" style="width:100%">{{LANG.ATTR_CLOSEALL}}</el-button>
     </div>
     <div v-show="globalEvent.selectedWindowIndex>-1">
       <div class="control-btn">
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','top','')">置顶</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','bottom','')">置底</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" :type="lockStr" @click="sendEvent('update_window','lock','')">锁定</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','top','')">{{LANG.ATTR_TOP}}</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','bottom','')">{{LANG.ATTR_BOTTOM}}</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" :type="lockStr" @click="sendEvent('update_window','lock','')">{{LANG.HOME_LOCK}}</el-button>
         <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','partOrAll')">
-          <span v-show="isPanorama">全景</span>
-          <span v-show="!isPanorama">局部</span>
+          <span v-show="isPanorama">{{LANG.ATTR_WINDOW_FULL}}</span>
+          <span v-show="!isPanorama">{{LANG.ATTR_WINDOW_PART}}</span>
         </el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')">全屏</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')">扩张</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')">还原</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')">关闭</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')">{{LANG.ATTR_FULLSCREEN}}</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')">{{LANG.ATTR_EXTEND}}</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')">{{LANG.ATTR_RESTORE}}</el-button>
+        <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')">{{LANG.ATTR_CLOSE}}</el-button>
       </div>
       <div class="title">
         <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
-          <template slot="prepend">画面名称:</template>
+          <template slot="prepend">{{LANG.ATTR_WINDOW_NAME}}:</template>
         </el-input>
       </div>
       <div>
         <el-collapse v-model="activeName" accordion>
-          <el-collapse-item title="画面参数" name="1">
+          <el-collapse-item :title="LANG.ATTR_WINDOW_ATTR" name="1">
             <div class="position-size">
-              <span>水平位置:</span>
+              <span>{{LANG.ATTR_H_POS}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>垂直位置:</span>
+              <span>{{LANG.ATTR_V_POS}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>水平大小:</span>
-              <el-input-number :disabled="globalEvent.panelLock" @change="change('width')" v-model="width" :min="400" size="mini"></el-input-number>
+              <span>{{LANG.ATTR_WIDTH}}:</span>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('width')" v-model="width" :min="50" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>垂直大小:</span>
-              <el-input-number :disabled="globalEvent.panelLock" @change="change('height')" v-model="height" :min="300" size="mini"></el-input-number>
+              <span>{{LANG.ATTR_HEIGHT}}:</span>
+              <el-input-number :disabled="globalEvent.panelLock" @change="change('height')" v-model="height" :min="50" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
-          <el-collapse-item title="局部显示" name="2">
-            <div style="margin-bottom:10px;">源分辨率：{{srcWidth}}*{{srcHeight}}</div>
+          <el-collapse-item :title="LANG.ATTR_PART_VIEW" name="2">
+            <div style="margin-bottom:10px;">{{LANG.ATTR_SINGAL_RESOLUTION}}：{{srcWidth}}*{{srcHeight}}</div>
             <div class="position-size">
-              <span>水平位置:</span>
+              <span>{{LANG.ATTR_H_POS}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>垂直位置:</span>
+              <span>{{LANG.ATTR_V_POS}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>水平大小:</span>
+              <span>{{LANG.ATTR_WIDTH}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>垂直大小:</span>
+              <span>{{LANG.ATTR_HEIGHT}}:</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
@@ -65,19 +65,19 @@
       </div>
     </div>
     <div class="collapse_inner">
-      <div class="content-title">信号设置</div>
+      <div class="content-title">{{LANG.ATTR_SIGNAL_SETTING}}</div>
       <div class="src_card_name">{{this.globalEvent.selectedCard.label_extra}}</div>
       <div v-show="Object.keys(this.globalEvent.selectedCard).length>0">
-        <el-button @click="op('rename')" size="mini">更改名称</el-button>
-        <el-button @click="op('hotBackup')" size="mini">热备份</el-button>
-        <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">VGA校正</el-button>
-        <el-button @click="op('workMode')" size="mini"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">工作模式</el-button>
-        <el-button @click="op('edidSingle')"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)" size="mini">设置EDID</el-button>
-        <el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">EQ值设置</el-button>
-        <el-button @click="op('rdEdid')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">回读EDID</el-button>
+        <el-button @click="op('rename')" size="mini">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>
+        <el-button @click="op('hotBackup')" size="mini">{{LANG.ATTR_HOTBACKUP}}</el-button>
+        <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">{{LANG.ATTR_VGA_CORRECTION}}</el-button>
+        <el-button @click="op('workMode')" size="mini"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_WORK_MODE}}</el-button>
+        <el-button @click="op('edidSingle')"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)" size="mini">{{LANG.ATTR_EDID_SETTING}}</el-button>
+        <el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_EQ_SETTING}}</el-button>
+        <el-button @click="op('rdEdid')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_EDID_READ}}</el-button>
       </div>
       <div style="text-align:center;color:#d0d0d0;" v-show="Object.keys(this.globalEvent.selectedCard).length==0">
-          未选中信号
+          {{LANG.ATTR_SIGNAL_UNSELECT}}
       </div>
     </div>
   </div>
@@ -110,6 +110,7 @@ export default {
 
             srcWidth:0,//信号源分辨率
             srcHeight:0,
+            LANG:this.LANGUAGE[this.globalEvent.language]
         };
     },
     created(){
@@ -120,6 +121,10 @@ export default {
                 this.setCurWindow(this.globalEvent.selectedWindowIndex);
             }
 
+        });
+
+        this.globalEvent.$on('language',()=>{
+            this.LANG=this.LANGUAGE[this.globalEvent.language];
         });
     },
     methods:{
@@ -144,26 +149,26 @@ export default {
             }
 
             if(act=='ctop' && this.cropOutBound()){
-                alert("窗口超限");
+                alert(this.LANG.ALERT_MAX_WINDS);
                 this.resetValue('ctop',this.srcHeight-this.ctop);
                 return ;
             }
             if(act=='cheight' && this.cropOutBound()){
-                alert("窗口超限");
+                alert(this.LANG.ALERT_MAX_WINDS);
                 this.resetValue('cheight',this.srcHeight-this.ctop);
                 return ;
             }
             if(act=='cleft' && this.cropOutBound()){
-                alert("窗口超限");
+                alert(this.LANG.ALERT_MAX_WINDS);
                 this.resetValue('cleft',this.srcWidth-this.width);
                 return ;
             }
             if(act=='cwidth' && this.cropOutBound()){
-                alert("窗口超限");
+                // alert("窗口超限");
+                alert(this.LANG.ALERT_MAX_WINDS);
                 this.resetValue('cwidth',this.srcWidth-this.cleft);
                 return ;
             }
-
 
             this.sendEvent('update_window_pos_by_side',act,this[act])
         },
@@ -242,7 +247,7 @@ export default {
                 this.$emit('sub_event',{act:'show_edid_single'})
             }
             else if(act=='rename'){
-                let s=prompt("新输入新名称",this.globalEvent.selectedCard.label_extra);
+                let s=prompt(this.LANG.TIP_INPUT_NEW_NAME,this.globalEvent.selectedCard.label_extra);
                 if(s!==null && s!==undefined){
                     this.globalEvent.selectedCard.label_extra=s;
                     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);

@@ -222,7 +222,7 @@
 
                 let file=input.files[0];
                 let totalSize=0;
-                let fragment=1024;
+                let fragment=512;
                 let fragmentCount=0;
 
                 let curPacketId=0;
@@ -236,34 +236,59 @@
                     // console.log(hexBuffer);
                     totalSize=hexBuffer.length;
                     // console.log(totalSize,file.size);
-                    fragmentCount=Math.ceil(totalSize/1024);
+                    fragmentCount=Math.ceil(totalSize/fragment);
                     uploadFile(curPacketId);
 
                 };
 
+                // let t_Count=1;
+
                 let uploadFile=function(){
                     let i = curPacketId;
                     if(i>=fragmentCount){
-                        alert("已更新");
+                        // alert("已更新");
+                        that.loading.close();
                         that.op(false)
                         return ;
                     }
                     let start = i * fragment,
                         end = Math.min(totalSize, start + fragment);
 
+
                     let d={
                         chip:1,
                         opr:3,
-                        board:that.cardType,
-                        packetNum:totalSize,
+                        board:that.cardType-0,
+                        packetNum:fragmentCount,
                         packetId:i,
-                        dataArr:hexBuffer.splice(start,end-start).map((v,k)=>Number('0x'+v))
+                        dataArr:hexBuffer.slice(start,end).map((v,k)=>Number('0x'+v))
                     };
 
-                    this.$http.post("firmwareUpdate.cgi",d,(ret)=>{
+
+                    that.loading.setText("升级中 ..."+ Math.floor(i/fragmentCount)*100+'%');
+
+
+                    // let t_String=[];
+                    // let t_len=d.dataArr.length;
+                    //
+                    // for(let t=0 ;t < t_len; t=t+2){
+                    //     if(t>0 && t%16==0){
+                    //         console.log({
+                    //             [t_Count]:t_String.join(" ")
+                    //         });
+                    //         t_Count++;
+                    //         t_String=[];
+                    //     }
+                    //
+                    //     t_String.push(('00'+(d.dataArr[t]).toString(16)).slice(-2)+''+('00'+(d.dataArr[t+1]).toString(16)).slice(-2));
+                    //
+                    // }
+
+                    that.$http.post("firmwareUpdate.cgi",d,(ret)=>{
                         if(ret.data.result==0){
                             //未正确接收
-                            console.log("下发数据未正确接收");
+                            alert("下发数据未正确接收");
+                            console.log("下发数据未正确接收:",d.packetId,d.packetNum);
                         }
                         else{
                             curPacketId++;
@@ -280,13 +305,14 @@
                 let totalSize=file.size;
                 let param={
                     chip:1,
-                    board:this.cardType,
+                    board:this.cardType-0,
                     opr:2,
                     fileSize:totalSize,
                     boardStaArr:this.getBoardArr()
                 };
-                this.$http.post("firmwareUpdate",param,(ret)=>{
+                this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
                     if(ret.data.result==0){
+                        this.loading.close();
                         alert("擦除数据失败");
                     }
                     else{
@@ -305,6 +331,13 @@
                         alert("未选中输出卡");
                     }
                     else{
+
+                        this.loading=this.$loading({
+                            lock: true,
+                            text: '升级中',
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(255, 255, 255, 0.5)'
+                        });
                         this.erase();
 
                     }
