@@ -1,11 +1,11 @@
 <template>
     <div class="screen_ctr_dialog">
-        <el-dialog title="大屏幕控制" :visible="showDialog=='screenCtr'" @close="op('cancel')">
+        <el-dialog :title="LANG.TUNNEL_TITLE" :visible="showDialog=='screenCtr'" @close="op('cancel')">
             <div class="dialog_body">
                 <div class="left_body">
                     <div class="item">
-                        <span>屏幕类型:</span>
-                        <el-select v-model="screenType" size="mini" placeholder="无">
+                        <span v-html="LANG.TUNNEL_SCREEN_TYPE"></span>
+                        <el-select v-model="screenType" size="mini">
                             <el-option
                                     v-for="item in options"
                                     :key="item.value"
@@ -16,16 +16,16 @@
                     </div>
 
                     <fieldset>
-                        <legend>屏幕序号</legend>
-                        <label><input value=0 v-model="scrMode" type="radio"/>先行后列顺序</label>
-                        <label><input value=1 v-model="scrMode"  type="radio"/>先列后行顺序</label>
-                        <label><input value=2 v-model="scrMode"  type="radio"/>先行后列矩阵</label>
-                        <label><input value=3 v-model="scrMode"  type="radio"/>先列后行矩阵</label>
+                        <legend>{{LANG.TUNNEL_SCREEN_SEQ}}</legend>
+                        <label><input value=0 v-model="scrMode" type="radio"/>{{LANG.TUNNEL_SEQ_1}}</label>
+                        <label><input value=1 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_2}}</label>
+                        <label><input value=2 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_3}}</label>
+                        <label><input value=3 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_4}}</label>
                     </fieldset>
                 </div>
                 <div class="right_body">
                     <div class="item">
-                        <span>COM 波特率:</span>
+                        <span v-html="LANG.TUNNEL_BAUD"></span>
                         <el-select v-model="baud" size="mini" placeholder="无">
                             <el-option
                                     v-for="(item,index) in baudList"
@@ -36,10 +36,10 @@
                         </el-select>
 
                         <fieldset>
-                            <legend>大屏幕功能设置</legend>
-                            <div class="tip">通讯延迟（毫秒）</div>
+                            <legend>{{LANG.TUNNEL_SCREEN_SETTNG}}</legend>
+                            <div class="tip">{{LANG.TUNNEL_DELAY}}</div>
                             <el-input-number v-model="commuDly"  size="mini"></el-input-number>
-                            <label><input v-model="shutAble" :false-value=0 :true-value=1 type="checkbox"/>允许开关屏</label>
+                            <label><input v-model="shutAble" :false-value=0 :true-value=1 type="checkbox"/>{{LANG.TUNNEL_ALLOW}}</label>
                         </fieldset>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <legend>自定义命令</legend>
                 <div class="dialog_body">
                     <div class="left_body">
-                        <div class="b_tip">开机命令：</div>
+                        <div class="b_tip" v-html="LANG.TUNNEL_OPEN"></div>
                         <!--<el-input-->
                                 <!--:disabled="shutAble==0"-->
                                 <!--type="textarea"-->
@@ -62,7 +62,7 @@
 
                     </div>
                     <div class="right_body">
-                        <div class="b_tip">关机命令：</div>
+                        <div class="b_tip" v-html="LANG.TUNNEL_SHUT"></div>
                         <!--<el-input-->
                                 <!--:disabled="shutAble==0"-->
                                 <!--type="textarea"-->
@@ -76,9 +76,9 @@
                 </div>
             </fieldset>
 
-            <div class="b_tip" style="line-height:25px;">每一行对应一条命令<br/>十六进制格式：A1 B2 33 55</div>
+            <div class="b_tip" style="line-height:25px;">{{LANG.TUNNEL_TIP}}<br/>{{LANG.TUNNEL_FORMAT}}</div>
             <div class="b_tip" style="text-align:center;">
-                <el-button size="mini" @click="op('sure')">确定</el-button> <el-button size="mini" @click="op('cancel')">取消</el-button>
+                <el-button size="mini" @click="op('sure')">{{LANG.BTN_SURE}}</el-button> <el-button size="mini" @click="op('cancel')">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -89,16 +89,17 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
                 baudList:[1200,2400,4800,9600,19200,38400,57600,115200],
                 baud:7,
                 options:[{
                     'value':0,
-                    'label':'无'
+                    'label':LANG.TUNNEL_NONE
                     },
                     {
                         'value':1,
-                        'label':'自定义'
+                        'label':LANG.TUNNEL_CUSTOM
                     }
                 ],
                 screenType:0,
@@ -110,6 +111,7 @@
                 startCode:'',
                 startAreaW:10,
                 shutAreaW:10,
+                LANG:LANG
             };
         },
         watch:{

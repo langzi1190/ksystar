@@ -44,7 +44,23 @@
         },
         methods:{
             doLogin(){
-                this.$emit("sub_event",{act:'login'});
+                this.$http.post("login.cgi",{username:this.user.username,password:this.user.password},(ret)=>{
+                    // if(ret.data.result==1){
+                    //     this.globalEvent.userInfo.password=this.user.password;
+                    //     this.globalEvent.userInfo.username=this.user.username;
+                    //     this.globalEvent.userInfo.type=1;
+                    //     this.$emit("sub_event",{act:'login'});
+                    // }
+                    // else{
+                    //     alert("登录失败");
+                    // }
+
+                    this.globalEvent.userInfo.password=this.user.password;
+                    this.globalEvent.userInfo.username=this.user.username;
+                    this.globalEvent.userInfo.type=0;
+                    this.$emit("sub_event",{act:'login'});
+                });
+
                 // alert(JSON.stringify(this.user))//可以直接把this.user对象传给后端进行校验用户名和密码
             }
         }

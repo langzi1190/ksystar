@@ -20,7 +20,7 @@
 
             <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:{{item.inputCardLabel}} {{item.lock==1?'[已锁定]':''}}</span>
+                    <span>Win-{{seq+1}}:{{item.inputCardLabel}} {{item.lock==1?'['+LANG.ATTR_LOCKED+']':''}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
@@ -38,12 +38,12 @@
                 </div>
             </div>
             <div class="content">
-                <p>画面名称:{{this.item.label}}</p>
-                <p>画面位置: [{{ o_left }},{{ o_top }}]</p>
-                <p>画面大小: [{{ o_width }},{{ o_height }}]</p>
-                <p>类型:[{{globalEvent.inputCardList[item.srcCardId].srcArr[item.srcId].label}}]</p>
-                <p :class="{alertColor:this.item.resolution.length==1}">分辨率：[{{this.item.resolution.join(',')}}]</p>
-                <p>{{item.partOrAll==0?'全景显示':'局部显示'}} <span v-show="item.partOrAll==1">[{{cropSizeArr.join(',')}}]</span></p>
+                <p>{{LANG.ATTR_WINDOW_NAME}}:{{this.item.label}}</p>
+                <p>{{LANG.ATTR_WINDOW_POS}}: [{{ o_left }},{{ o_top }}]</p>
+                <p>{{LANG.ATTR_WINDOW_SIZE}}: [{{ o_width }},{{ o_height }}]</p>
+                <p>{{LANG.ATTR_SIGNAL_TYPE}}:[{{globalEvent.inputCardList[item.srcCardId].srcArr[item.srcId].label}}]</p>
+                <p :class="{alertColor:this.item.resolution.length==1}">{{LANG.SCREEN_RESOLUTION}}：[{{this.item.resolution.join(',')}}]</p>
+                <p>{{item.partOrAll==0?LANG.ATTR_WINDOW_FULL:LANG.ATTR_WINDOW_PART}} <span v-show="item.partOrAll==1">[{{cropSizeArr.join(',')}}]</span></p>
                 <div  data-type="move" @mousedown.stop="handleMouseDown" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
             </div>
         </div>
@@ -93,6 +93,7 @@
 
                 cropSizeArr:[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]],
                 stickSize:[],//保存吸附辅助线前数据
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         watch:{
@@ -532,6 +533,11 @@
                 document.addEventListener("mousemove",mv);
                 document.addEventListener("mouseup",mu);
             },
+        },
+        mounted(){
+            this.globalEvent.$on('language',()=>{
+                this.LANG=this.LANGUAGE[this.globalEvent.language];
+            })
         }
     }
 </script>

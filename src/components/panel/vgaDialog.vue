@@ -1,6 +1,6 @@
 <template>
     <div class="vga_dialog">
-        <el-dialog title="VGA校正"
+        <el-dialog :title="LANG.VGA_TITLE"
                    :visible="showDialog=='vga'"
                    @close="op('cancel')"
                    width="600px"
@@ -31,9 +31,9 @@
                 </div>
             </div>
             <div style="display:flex;justify-content: space-around;margin-top:20px;">
-                <el-button size="mini" @click="op('reset')">重置</el-button>
-                <el-button size="mini" @click="op('apply')">应用</el-button>
-                <el-button size="mini" @click="op('sure')">确定</el-button>
+                <el-button size="mini" @click="op('reset')">{{LANG.VGA_BTN_RESET}}</el-button>
+                <el-button size="mini" @click="op('apply')">{{LANG.VGA_BTN_APPLY}}</el-button>
+                <el-button size="mini" @click="op('sure')">{{LANG.BTN_SURE}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -55,6 +55,7 @@
                 t:0,
                 b:0,
                 ratio:10,
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         computed:{

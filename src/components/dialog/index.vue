@@ -2,7 +2,7 @@
   <div id="popup">
     <!-- 屏幕配置 -->
     <ConfigureScreen
-      v-if="(title === 'ConfigureScreen')&&(dialogVisible)"
+      v-if="(title === 'ConfigureScreen')&&(dialogVisible) && globalEvent.userInfo.type!=2"
       :dialogVisible="dialogVisible"
       @isDialogVisible="isDialogVisible"
     ></ConfigureScreen>

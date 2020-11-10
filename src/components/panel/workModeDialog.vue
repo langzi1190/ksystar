@@ -1,24 +1,24 @@
 <template>
     <div class="work_mode_dialog">
         <el-dialog
-                title="工作模式"
+                :title="LANG.WORKMODE_TITLE"
                 :visible="showDialog=='workMode'"
-                width="250px"
+                width="270px"
                 @close="submit(false)"
                 center
         >
 
             <div class="item">
                 <label>
-                    <input type="radio" value=17 v-model="workMode" />固定DP
+                    <input type="radio" value=17 v-model="workMode" />{{LANG.WORKMODE_DP}}
                 </label>
                 <label>
-                    <input type="radio" value=18 v-model="workMode" />固定HDMI
+                    <input type="radio" value=18 v-model="workMode" />{{LANG.WORKMODE_HDMI}}
                 </label>
             </div>
             <div class="item" style="margin-top:20px;">
-                <el-button size="mini" @click="submit(true)">确定</el-button>
-                <el-button size="mini" @click="submit(false)">取消</el-button>
+                <el-button size="mini" @click="submit(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="submit(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -30,6 +30,7 @@
         data(){
             return {
                 workMode:this.globalEvent.selectedCard.ITESrcType-0,
+                LANG:this.LANGUAGE[this.globalEvent.language]
             }
         },
         methods:{

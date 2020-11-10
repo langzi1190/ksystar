@@ -1,8 +1,8 @@
 <template>
     <div class="serial_dialog">
-        <el-dialog title="串口设置" :visible="showDialog=='serial'" @close="op(false)">
+        <el-dialog :title="LANG.SERIAL_TITLE" :visible="showDialog=='serial'" @close="op(false)">
             <div class="item">
-                <span>串口1波特率：</span>
+                <span>{{LANG.SERIAL_COM1}}</span>
                 <el-select v-model="com1" placeholder="" size="mini">
                     <el-option
                             v-for="(item,index) in baudList"
@@ -13,7 +13,7 @@
                 </el-select>
             </div>
             <div class="item">
-                <span>串口2波特率：</span>
+                <span>{{LANG.SERIAL_COM2}}</span>
                 <el-select v-model="com2" placeholder="" size="mini">
                     <el-option
                             v-for="(item,index) in baudList"
@@ -24,18 +24,18 @@
                 </el-select>
             </div>
             <div class="item">
-                <span>串口2控制模式:</span>
+                <span>{{LANG.SERIAL_COM2_MODE}}</span>
                 <div class="label_group">
-                    <label><input v-model="control_mode" value=0 type="radio"/>控制模式</label>
-                    <label><input v-model="control_mode" value=1 type="radio"/>环出模式</label>
+                    <label><input v-model="control_mode" value=0 type="radio"/>{{LANG.SERIAL_COM2_MODE0}}</label>
+                    <label><input v-model="control_mode" value=1 type="radio"/>{{LANG.SERIAL_COM2_MODE1}}</label>
                 </div>
             </div>
             <div class="item" style="color:#f44f44;width: 200px;margin: 0 auto 20px;line-height: 20px;">
-                注意：更改串口信息后，软件串口连接将断开，请重新连接
+                {{LANG.SERIAL_TIP}}
             </div>
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -49,7 +49,8 @@
                 com1:this.globalEvent.commonInfo.COM1BaudId,
                 com2:this.globalEvent.commonInfo.COM2BaudId,
                 control_mode:this.globalEvent.commonInfo.COM2CtrlModeId,
-                baudList:[1200,2400,4800,9600,19200,38400,57600,115200]
+                baudList:[1200,2400,4800,9600,19200,38400,57600,115200],
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         methods:{

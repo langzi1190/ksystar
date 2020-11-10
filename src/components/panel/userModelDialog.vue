@@ -1,18 +1,18 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog title="调用模式设置" :visible="showDialog=='userModel'" @close="op(false)">
+        <el-dialog :title="LANG.MODE_TITLE" :visible="showDialog=='userModel'" @close="op(false)">
             <div class="item">
-                <span>模式Id：</span>
+                <span v-html="LANG.MODE_ID"></span>
                 <el-input-number :min="1" :max="200" v-model="userModel" size="mini"></el-input-number>
             </div>
             <div class="item">
-                <span>模式名称：</span>
+                <span v-html="LANG.MODE_NAME"></span>
                 <el-input v-model="userModelName" disabled="" size="mini"></el-input>
             </div>
 
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>

@@ -7,6 +7,11 @@ let gobalEvent =new Vue({
             inCardInfo:{},
             outCardInfo:{}
         },
+        userInfo:{
+            username:'',
+            password:'',
+            type:0
+        },
         language:'zh',
         pType:{
             'p0':'DEFAULT',

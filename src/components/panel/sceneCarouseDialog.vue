@@ -1,8 +1,8 @@
 <template>
     <div class="scene_carousel_dialog">
-        <el-dialog title="轮巡方案设置" :visible="true" @close="op(false)">
+        <el-dialog :title="LANG.CAROUSE_TITLE" :visible="true" @close="op(false)">
             <div class="top_part">
-                <div>轮巡方案名称 : </div>
+                <div v-html="LANG.CAROUSE_NAME"></div>
                 <div class="label_group">
                     <el-input v-model="sceneName" size="mini"/>
                 </div>
@@ -15,7 +15,7 @@
                          v-for="(item,index) in userSceneList">{{item.label}}</div>
                 </div>
                 <div class="middle_body">
-                    <el-button size="mini" @click="addUserScene">添加布局  >> </el-button>
+                    <el-button size="mini" @click="addUserScene">{{LANG.CAROUSE_ADD_LAYOUT}}  >> </el-button>
                 </div>
                 <div class="right_body">
                     <div class="scene_item"
@@ -47,12 +47,12 @@
                     <div class="modifySub" @click.stop="modifyTime('sub')">-</div>
                 </div>
 
-                <el-button size="mini" @click="opRightScene('del')">删除布局</el-button>
-                <el-button size="mini" @click="opRightScene('edit')">编辑布局时长</el-button>
+                <el-button size="mini" @click="opRightScene('del')">{{LANG.CAROUSE_DEL_LAYOUT}}</el-button>
+                <el-button size="mini" @click="opRightScene('edit')">{{LANG.CAROUSE_EDIT_LAYOUT}}</el-button>
             </div>
             <div class="button_group_bottom">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -76,6 +76,7 @@
                 selectedUserSceneList:[],
 
                 selectedOpUserScene:-1,//待删除/编辑的用户模式
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         mounted(){

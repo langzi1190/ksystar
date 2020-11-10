@@ -1,11 +1,11 @@
 <template>
     <div class="kfs_dialog">
-        <el-dialog title="KFS设置" :visible="showDialog=='kfs'" @close="op(false)">
+        <el-dialog :title="LANG.KFS_TITLE" :visible="showDialog=='kfs'" @close="op(false)">
             <div class="top_part">
-                <div>信号源帧同步使能 : </div>
+                <div v-html="LANG.KFS_SOURCE_SYNC"></div>
                 <div class="label_group">
-                    <label><input v-model="syncEnable" value=1 type="radio"/>开启</label>
-                    <label><input v-model="syncEnable" value=0 type="radio"/>关闭</label>
+                    <label><input v-model="syncEnable" value=1 type="radio"/>{{LANG.KFS_ON}}</label>
+                    <label><input v-model="syncEnable" value=0 type="radio"/>{{LANG.KFS_OFF}}</label>
                 </div>
             </div>
             <div class="dialog_body">
@@ -23,8 +23,8 @@
                     </el-tree>
                 </div>
                 <div class="right_body">
-                    <div>同步基准源：</div>
-                    <el-select v-model="syncSignal" placeholder="同步基准源" size="mini">
+                    <div v-html="LANG.KFS_SYNC"></div>
+                    <el-select v-model="syncSignal" size="mini">
                         <el-option
                                 v-for="(item,index) in signalListFlat"
                                 :key="index"
@@ -34,8 +34,8 @@
                     </el-select>
 
                     <div class="button_group_bottom">
-                        <el-button size="mini" @click="op(true)">确定</el-button>
-                        <el-button size="mini" @click="op(false)">取消</el-button>
+                        <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                        <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
                     </div>
 
                 </div>
@@ -59,6 +59,7 @@
                 },
                 showTree:false,
                 syncSignal:'',//被选中的信号 label_extra
+                LANG:this.LANGUAGE[this.globalEvent.language]
             }
         },
         mounted(){

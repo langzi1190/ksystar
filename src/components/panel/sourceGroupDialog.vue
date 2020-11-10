@@ -1,8 +1,8 @@
 <template>
     <div class="scene_carousel_dialog">
-        <el-dialog title="信号源分组设置" :visible="true" @close="op(false)">
+        <el-dialog :title="LANG.SOURCE_GROUP_TITLE" :visible="true" @close="op(false)">
             <div class="top_part">
-                <div>源组名称 : </div>
+                <div>{{LANG.SOURCE_GROUP_NAME}} </div>
                 <div class="label_group">
                     <el-input v-model="srcGroupName" size="mini"/>
                 </div>
@@ -15,7 +15,7 @@
                          v-for="(item,index) in srcCardList">{{item.label}}</div>
                 </div>
                 <div class="middle_body">
-                    <el-button size="mini" @click="addSrcCard">添加布局  >> </el-button>
+                    <el-button size="mini" @click="addSrcCard">{{LANG.SOURCE_GROUP_ADD_SIGNAL}}  >> </el-button>
                 </div>
                 <div class="right_body">
                     <div class="scene_item"
@@ -47,12 +47,12 @@
                     <div class="modifySub" @click.stop="modifyTime('sub')">-</div>
                 </div>
 
-                <el-button size="mini" @click="opRightScene('del')">删除信号源</el-button>
-                <el-button size="mini" @click="opRightScene('edit')">编辑信号源时长</el-button>
+                <el-button size="mini" @click="opRightScene('del')">{{LANG.SOURCE_GROUP_DEL_SIGNAL}}</el-button>
+                <el-button size="mini" @click="opRightScene('edit')">{{LANG.SOURCE_GROUP_EDIT_SIGNAL}}</el-button>
             </div>
             <div class="button_group_bottom">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -76,6 +76,7 @@
                 selectedSrcCardList:[],
 
                 selectedOpSrcCard:-1,//待删除/编辑的用户模式
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         mounted(){

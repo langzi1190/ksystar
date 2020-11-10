@@ -2,7 +2,7 @@
     <div class="reset_dialog">
         <el-dialog
                 title="恢复出厂设置"
-                :visible="showDialog=='reset'"
+                :visible="showDialog=='reset' && globalEvent.userInfo.type!=2"
                 width="400px"
                 @close="op(false)"
                 center>

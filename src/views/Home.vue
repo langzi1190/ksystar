@@ -11,7 +11,7 @@
                                 <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
                                 <card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>
                                 <card-item :title="LANG.HOME_SYNC"></card-item>
-                                <card-item :title="LANG.HOME_EXIT"></card-item>
+                                <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0"></card-item>
                             </card>
                         </div>
                     </el-tab-pane>
@@ -19,12 +19,12 @@
                         <div class="card-s">
                             <card :title="LANG.SETTING">
                                 <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="plus"></card-item>
-                                <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"></card-item>
+                                <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"  :class="{'card-item-disabled':allowScreen==0}"></card-item>
                             </card>
                             <card :title="LANG.HOME_PRESET">
                                 <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'"></card-item>
-                                <card-item :title="LANG.HOME_SAVE_USER_MODE" @click.native="showDialog='saveUserModel'"></card-item>
-                                <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"></card-item>
+                                <card-item :title="LANG.HOME_SAVE_USER_MODE" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'"></card-item>
+                                <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"  :class="{'card-item-disabled':allowFactory==0}"></card-item>
                                 <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('sync')"></card-item>
                                 <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
                                 <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
@@ -45,7 +45,7 @@
                                 </div>
                             </card>
                             <card :title="LANG.HOME_EXTENAL_CONTROL">
-                                <div class="card-item">
+                                <div class="card-item card-external">
                                     <card-child :title="LANG.HOME_OPEN_SCREEN"  @click.native="preinstall('10')" iconName="display"></card-child>
                                     <card-child :title="LANG.HOME_CLOSE_SCREEN"  @click.native="preinstall('11')" iconName="display"></card-child>
                                     <card-child :title="LANG.HOME_CHANNEL_CONFIG" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
@@ -63,19 +63,27 @@
                     <el-tab-pane :label="LANG.HOME_TOOLS">
                         <div class="card-s">
                             <card :title="LANG.HOME_ADVANCE_MENU">
-                                <card-item :title="LANG.USER" @click.native="showDialog='user'"></card-item>
+                                <card-item :title="LANG.HOME_USER"  :class="{'card-item-disabled':allowUser==0}" @click.native="showDialog='user'"></card-item>
                                 <card-item @click.native="showDialog='screenBright'" :title="LANG.HOME_BRIGHT"></card-item>
                                 <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
                                 <card-item @click.native="showDialog='multi'" :title="LANG.HOME_MULTI_SYNC"></card-item>
-                                <card-item title="输出关闭"  @click.native="preinstall('8')"></card-item>
-                                <card-item title="输出开启"  @click.native="preinstall('9')"></card-item>
+                                <card-item :title="LANG.HOME_OUTPUT_SHUT"  @click.native="preinstall('8')"></card-item>
+                                <card-item :title="LANG.HOME_OUTPUT_ON"  @click.native="preinstall('9')"></card-item>
                                 <card-item :title="LANG.HOME_CONFIG_IMPORT" @click.native="opConfig('import')"></card-item>
                                 <card-item :title="LANG.HOME_CONFIG_EXPORT" @click.native="opConfig('export')"></card-item>
                                 <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
                                 <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
                             </card>
                             <card :title="LANG.HOME_LANGUAGE">
-                                <card-item title="语言设置"></card-item>
+                                <!--<card-item title="语言设置"></card-item>-->
+                                <el-select v-model="curLang" size="mini" style="width:90px;">
+                                    <el-option
+                                            v-for="(item,index) in langList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    ></el-option>
+                                </el-select>
                             </card>
                             <card :title="LANG.HOME_EXPERT">
                                 <card-item @click.native="showDialog='serial'" :title="LANG.HOME_COM_CONFIG"></card-item>
@@ -86,7 +94,7 @@
                                 <card-item @click.native="showDialog='version'" :title="LANG.HOME_VERSION"></card-item>
                                 <card-item @click.native="showDialog='temp'" :title="LANG.HOME_TEMPERATURE"></card-item>
                                 <card-item :title="LANG.HOME_ARM_UPGRADE" @click.native="upgrade('arm')"></card-item>
-                                <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="showUploadDialog='fpga'"></card-item>
+                                <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="upgrade('fpga')"></card-item>
                             </card>
                         </div>
                     </el-tab-pane>
@@ -97,7 +105,7 @@
                 <signal ref="signal"></signal>
                 <!-- 屏幕编辑与显示 -->
                 <div class="content">
-                    <div class="content-title">模拟操作</div>
+                    <div class="content-title">{{LANG.HOME_SIMULATION}}</div>
                     <div class="content-draw">
                         <!-- 窗口编辑面板 -->
                         <div class="draw-panel">
@@ -110,7 +118,7 @@
                     </div>
                 </div>
                 <div class="content-compile" v-show="true">
-                    <div class="content-title">画面编辑</div>
+                    <div class="content-title">{{LANG.HOME_SIMULATION}}</div>
                     <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
                         <attr @sub_event="subEvent"></attr>
                     </div>
@@ -299,15 +307,40 @@ export default {
       });
       this.globalEvent.$on('language',()=>{
           this.LANG=this.LANGUAGE[this.globalEvent.language];
+          console.log(this.LANG);
       });
 
       // setTimeout(()=>{this.isLogin=1;},5000);
     },
+  watch:{
+      isLogin(v,ov){
+          if(v==1){
+              this.userType=this.globalEvent.userInfo.type;
+              if(this.userType==2){
+                  this.allowUser=0;
+                  this.allowScreen=0;
+                  this.allowSaveMode=0;
+                  this.allowFactory=0;
+              }
+              else if(this.userType==1){
+                  this.allowUser=0;
+                  this.allowFactory=0;
+                  this.allowSaveMode=0;
+              }
+          }
+      },
+      curLang(v,ov){
+          this.globalEvent.language=v;
+          this.globalEvent.$emit("language");
+      }
+  },
   data() {
     return {
-        isLogin:1,
-        activeName: "0", // 侧边栏选项
-        activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
+        isLogin:0,
+        curLang:this.globalEvent.language,
+        langList:[{value:'en',label:'English'},{value:'zh',label:'中文'}],
+        // activeName: "0", // 侧边栏选项
+        // activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
         isEcho: false, // 是否回传
         dialogVisible: false, // 弹出对话框
         dialogTitle: "",
@@ -325,16 +358,15 @@ export default {
         curScreen:{},
         advanceScreen:{},
         LANG:this.LANGUAGE[this.globalEvent.language],
+
+        userType: 0,
+        allowUser:1,
+        allowScreen:1,
+        allowSaveMode:1,
+        allowFactory:1,
         // scale:1,
     };
   },
-    // watch:{
-    //   "globalEvent.selectedWindowIndex":function (v) {
-    //       if(v>-1){
-    //           this.positionLock=this.globalEvent.windowItemsInfo.winArr[v].lock==1;
-    //       }
-    //   }
-    // },
   methods: {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
@@ -375,7 +407,6 @@ export default {
       }
       else if(setFn=='sync'){
 
-          console.log("home ....  sync");
           this.globalEvent.gMode=0;
           loading=this.$loading({
               lock: true,
@@ -429,24 +460,27 @@ export default {
           }
       },
       upgrade(act){
-          if('arm'==act){
-              let pass=prompt("输入密码(默认000000)","");
-              if(pass===null){
-                  return ;
-              }
-              if( pass!='000000'){
-                  alert("密码错误");
-                  return ;
-              }
+          let pass=prompt(this.LANG.TIP_INPUT_PASSWD,"");
+          if(pass===null){
+              return ;
+          }
+          if( pass!=this.globalEvent.userInfo.password){
+              alert(this.LANG.TIP_WRONG_PASSWD);
+              return ;
+          }
 
+          if('arm'==act){
               let param={
                   chip:0,
                   board:0,
                   opr:1
               }
               this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
-                  alert("已升级")
+                  alert(this.LANG.TIP_UPGRADE_SUCCESS)
               });
+          }
+          else if('fpga'==act){
+              this.showUploadDialog='fpga'
           }
       },
       reloadMainPane(){
@@ -782,8 +816,17 @@ export default {
         flex-direction: column;
         justify-content: space-between;
       }
+        .card-item-disabled{
+            opacity:0.6;
+            cursor:not-allowed;
+        }
     }
   }
+    .card-external{
+        .card-child{
+            width:70px;
+        }
+    }
   center {
     flex: 1;
     display: flex;

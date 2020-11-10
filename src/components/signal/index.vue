@@ -75,7 +75,7 @@ export default {
             // srcGroupList:[],
 
             activeName: "0", // 侧边栏选项
-            activeList: [LANG.SIGNAL_SOURCE,LANG.SIGNAL_USER_MODE,LANG.SIGNALLAYOUT_LOOP,LANG.SIGNAL_SOURCEGROUP], // 侧边栏选项列表
+            activeList: [LANG.SIGNAL_SOURCE,LANG.SIGNAL_USER_MODE,LANG.SIGNAL_LAYOUT_LOOP,LANG.SIGNAL_SOURCEGROUP], // 侧边栏选项列表
 
             paramMap:{
                 children: 'srcArr',

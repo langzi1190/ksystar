@@ -1,7 +1,7 @@
 <template>
     <div >
         <el-dialog
-                title="EDID详细参数设置"
+                :title="LANG.EDID_ADVANCE_TITLE"
                 :visible="showDialog=='edidAdvanced'"
                 width="700px"
                 @close="cancelSubmit"
@@ -11,8 +11,8 @@
                 <div class="left_body">
 
                     <div class="row_item">
-                        <div class="item_title">
-                            时钟：
+                        <div class="item_title" v-html="LANG.EDID_CLOCK">
+
                         </div>
                         <div class="item_input">
                             <el-input
@@ -23,8 +23,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            宽度：
+                        <div class="item_title" v-html="LANG.EDID_WIDTH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -37,7 +36,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行显示前沿：
+                            {{LANG.EDID_HFROMPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -49,7 +48,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行同步脉冲：
+                            {{LANG.EDID_HSYNCTIME}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -61,7 +60,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行显示后沿：
+                            {{LANG.EDID_HBACKPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -75,8 +74,7 @@
                 <div class="right_body">
 
                     <div class="row_item">
-                        <div class="item_title">
-                            帧率：
+                        <div class="item_title" v-html="LANG.EDID_FRAME">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -88,8 +86,8 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            高度：
+                        <div class="item_title" v-html="LANG.EDID_HEIGHT">
+
                         </div>
                         <div class="item_input">
                             <el-input
@@ -102,7 +100,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列显示前沿：
+                            {{LANG.EDID_VFROMPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -114,7 +112,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列同步脉冲：
+                            {{LANG.EDID_VSYNCTIME}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -126,7 +124,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列显示后沿：
+                            {{LANG.EDID_VBACKPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -139,8 +137,8 @@
                 </div>
             </div>
             <div style="text-align:center;">
-                <el-button @click="submit">确定</el-button>
-                <el-button @click="cancelSubmit">取消</el-button>
+                <el-button size="mini" @click="submit">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="cancelSubmit">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -204,7 +202,6 @@
     export default {
         props:['showDialog'],
         data(){
-            console.log(this.$parent.showDialog);
             return {
                 EDID:[],
                 devId:0,
@@ -219,7 +216,8 @@
                     VFrontPorch:12,
                     VSyncTime:8,
                     VBackPorch:12
-                }
+                },
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         mounted(){

@@ -1,6 +1,6 @@
 <template>
     <div class="screen_bright_dialog">
-        <el-dialog title="屏幕亮度设置" :visible="showDialog=='screenBright'" @close="op(false)">
+        <el-dialog :title="LANG.TITLE" :visible="showDialog=='screenBright'" @close="op(false)">
             <div class="screenWrapper">
                 <el-tabs type="border-card"
                          v-model="curTabName"
@@ -10,7 +10,7 @@
                     <el-tab-pane v-for="(item,index) in displayList"
                                  :key="item.tabName"
                                  :name="item.tabName"
-                                 :label="'屏幕墙-'+(index+1)"
+                                 :label="LANG.SCREEN_WALL+'-'+(index+1)"
                     >
                         <div class="winItemWrapper" :style="{
                         width:item.Col*144+'px',
@@ -23,10 +23,10 @@
                                  }"
                                  @click="selectWin(wIndex)"
                                  v-for="(w,wIndex) in item.portArr">
-                                <div><span>屏号：</span><span>{{wIndex+1}}</span></div>
-                                <div><span>亮度 R：</span><span>{{w.briArr[0]}}</span></div>
-                                <div><span>亮度 G：</span><span>{{w.briArr[1]}}</span></div>
-                                <div><span>亮度 B：</span><span>{{w.briArr[2]}}</span></div>
+                                <div><span v-html="LANG.BRIGHT_SCREEN_NO"></span><span>{{wIndex+1}}</span></div>
+                                <div><span v-html="LANG.BRIGHT_R"></span><span>{{w.briArr[0]}}</span></div>
+                                <div><span v-html="LANG.BRIGHT_G"></span><span>{{w.briArr[1]}}</span></div>
+                                <div><span v-html="LANG.BRIGHT_B"></span><span>{{w.briArr[2]}}</span></div>
                             </div>
                         </div>
                     </el-tab-pane>
@@ -44,7 +44,7 @@
                 </el-select>
 
                 <label class="choose_rgb">
-                    <input v-model="syncRgb" :false-value=0 :true-value=1 type="checkbox"/>同步RGB
+                    <input v-model="syncRgb" :false-value=0 :true-value=1 type="checkbox"/>{{LANG.BRIGHT_RGB}}
                 </label>
                 <div style="float:right;">
                     <div class="inputNumber">
@@ -64,8 +64,8 @@
                 </div>
             </div>
             <div style="text-align:center;margin-top:15px;">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -75,6 +75,7 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
                 curTabName:'',
                 displayList:[],
@@ -84,15 +85,15 @@
                 syncTypeList:[
                     {
                         value:1,
-                        label:"所有屏幕亮度同步"
+                        label:LANG.BRIGHT_ALL
                     },
                     {
                         value:2,
-                        label:"当前屏亮度同步"
+                        label:LANG.BRIGHT_CUR
                     },
                     {
                         value:3,
-                        label:"当前屏组亮度同步"
+                        label:LANG.BRIGHT_CUR_GROUP
                     }
                 ],
                 syncRgb:1,
@@ -100,7 +101,8 @@
                 g:125,
                 b:125,
                 colorType:1,
-                colorVal:125
+                colorVal:125,
+                LANG:LANG
             };
         },
         created(){

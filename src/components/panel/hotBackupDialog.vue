@@ -1,17 +1,17 @@
 <template>
     <div class="hot_backup_dialog">
         <el-dialog
-                title="输入源热备份设置"
+                :title="LANG.BACKUP_TITLE"
                 :visible="showDialog=='hotBackup'"
                 width="350px"
                 @close="submit(false)"
                 center
         >
             <div class="item">
-                <el-checkbox v-model="enable">热备份使能</el-checkbox>
+                <el-checkbox v-model="enable">{{LANG.BACKUP_ENABLE}}</el-checkbox>
             </div>
             <div class="item">
-                <span>信号源卡ID：</span>
+                <span v-html="LANG.BACKUP_CARD_ID"></span>
                 <el-select :disabled="disabled" v-model="cardNumber" placeholder="" size="mini">
                     <el-option
                             v-for="(item,index) in cardNumberList"
@@ -22,7 +22,7 @@
                 </el-select>
             </div>
             <div class="item">
-                <span>信号源ID：</span>
+                <span v-html="LANG.BACKUP_SOURCE_ID"></span>
                 <el-select :disabled="disabled" v-model="sourceCard" placeholder="" size="mini">
                     <el-option
                             v-for="(item,index) in sourceCardList"
@@ -33,8 +33,8 @@
                 </el-select>
             </div>
             <div class="item">
-                <el-button size="mini" @click="submit(true)">确定</el-button>
-                <el-button size="mini" @click="submit(false)">取消</el-button>
+                <el-button size="mini" @click="submit(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="submit(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -60,7 +60,8 @@
                 cardNumber:0,
                 cardNumberList,
                 sourceCard:0,
-                sourceCardList
+                sourceCardList,
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         computed:{

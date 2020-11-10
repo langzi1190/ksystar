@@ -1,30 +1,30 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog title="回显IP设置" :visible="showDialog=='ipConfig'" @close="op(false)">
+        <el-dialog :title="LANG.IP_TITLE" :visible="showDialog=='ipConfig'" @close="op(false)">
             <div class="item">
-                <span>IP地址：</span>
+                <span>{{LANG.MONIP_ADDRESS}}</span>
                 <div class="input_group">
                     <input v-model="ipArr[0]" />.<input  v-model="ipArr[1]"/>.<input  v-model="ipArr[2]"/>.<input  v-model="ipArr[3]"/>
                 </div>
             </div>
             <div class="item">
-                <span>网关Ip：</span>
+                <span>{{LANG.IP_GATEWAY}}</span>
                 <div class="input_group">
                     <input v-model="gateArr[0]" />.<input  v-model="gateArr[1]"/>.<input  v-model="gateArr[2]"/>.<input  v-model="gateArr[3]"/>
                 </div>
             </div>
             <div class="item">
-                <span>子网掩码：</span>
+                <span>{{LANG.IP_MASK}}</span>
                 <div class="input_group">
                     <input v-model="maskArr[0]" />.<input  v-model="maskArr[1]"/>.<input  v-model="maskArr[2]"/>.<input  v-model="maskArr[3]"/>
                 </div>
             </div>
             <div class="item" style="color:#f44f44;">
-                注意：更改IP后，需重启设备才能生效
+                {{LANG.IP_TIP}}
             </div>
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -38,6 +38,7 @@
                 ipArr:[0,0,0,0],
                 gateArr:[0,0,0,0],
                 maskArr:[255,255,255,0],
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         // created(){

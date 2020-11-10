@@ -1,30 +1,30 @@
 <template>
     <div class="edid_dialog">
-        <el-dialog title="自定义EDID设置" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
+        <el-dialog :title="LANG.EDID_TITLE" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
             <div>
                 <div class="item">
-                    <span>设备号：</span>
+                    <span v-html="LANG.EDID_DEV_NO"></span>
                     <el-input v-model="devNo" size="mini"></el-input>
                 </div>
                 <div class="item">
-                    <span>宽度：</span>
+                    <span v-html="LANG.EDID_WIDTH"></span>
                     <el-input-number  v-model="width" size="mini"></el-input-number>
                 </div>
                 <div class="item">
-                    <span>高度：</span>
+                    <span v-html="LANG.EDID_HEIGHT"></span>
                     <el-input-number  v-model="height" size="mini"></el-input-number>
                 </div>
                 <div class="item">
-                    <span>帧率：</span>
+                    <span v-html="LANG.EDID_FRAME"></span>
                     <el-input size="mini" v-model="frame"></el-input>
                 </div>
                 <div class="item">
                     <span></span>
-                    <el-button @click="op('showAdvanced')" size="mini">高级</el-button>
+                    <el-button @click="op('showAdvanced')" size="mini">{{LANG.EDID_ADVANCED}}</el-button>
                 </div>
                 <div class="item">
-                    <el-button size="mini" @click="op('sure')">确定</el-button>
-                    <el-button size="mini" @click="op('cancel')">取消</el-button>
+                    <el-button size="mini" @click="op('sure')">{{LANG.BTN_SURE}}</el-button>
+                    <el-button size="mini" @click="op('cancel')">{{LANG.BTN_CANCEL}}</el-button>
                 </div>
             </div>
 
@@ -61,7 +61,8 @@
                 frame:60,
                 isChoose:isChoose,
                 curPortType:isChoose==0?-1:this.globalEvent.selectedCard.portType,
-                advanceType:[16,18]
+                advanceType:[16,18],
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         methods:{
@@ -105,7 +106,7 @@
 <style>
     .edid_dialog .el-dialog{width:450px;}
     .edid_dialog .item{text-align:center;margin-bottom:20px;}
-    .edid_dialog .item > span{display:inline-block;width:70px;text-align:right;}
+    .edid_dialog .item > span{display:inline-block;width:78px;text-align:right;margin-right:5px;}
     .edid_dialog .el-input{width:130px;}
     .edid_dialog .el-button--mini{width:130px;}
 </style>

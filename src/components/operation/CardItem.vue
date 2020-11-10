@@ -1,7 +1,9 @@
 <template>
   <div class="card-item"
-       :style="{opacity:(globalEvent.screenInfo.scrGroupArr!==undefined && seq>=globalEvent.screenInfo.scrGroupArr.length)?0.6:1}"
-       :class="{'card-item-bg':isChecked || seq==globalEvent.curScreenIndex}">
+       :class="{
+       'card-item-bg':isChecked || seq==globalEvent.curScreenIndex,
+       'card-item-transparent':(globalEvent.screenInfo.scrGroupArr!==undefined && seq>=globalEvent.screenInfo.scrGroupArr.length)
+       }">
     <div>
       <img :src="iconImg" class="header-icon" />
     </div>
@@ -72,6 +74,7 @@ export default {
     color: #409eff;
   }
 }
+.card-item-transparent{opacity: 0.6;}
 .card-item:hover {
   cursor: pointer;
   background-color: #f5f7fa;

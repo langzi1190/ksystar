@@ -1,63 +1,52 @@
 <template>
     <div class="upload_dialog">
-        <el-dialog :title="titleList[showDialog]"
+        <el-dialog :title="title"
                    width="750px"
                    :visible="showDialog!=''"
                    @close="op(false)">
             <div class="s_body">
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=1 type="checkbox"/>输入板卡FPGA升级</label>
+                        <label><input v-model="cardTypeArr" value=1 type="checkbox"/>{{LANG.FPGA_INPUT}}</label>
                         <input type="file" ref="file1" :disabled="cardType!=1"/>
                     </div>
                     <div class="item_body">
 
                         <label
                                 v-for="n in inCardCount"
-                        ><input :value="n" :disabled="cardType!=1" v-model="port0" type="checkbox"/>卡{{n}}
+                        ><input :value="n" :disabled="cardType!=1" v-model="port0" type="checkbox"/>{{LANG.FPGA_CARD}}{{n}}
                         </label>
-                        <!--<label><input type="checkbox"/>卡2</label>-->
-                        <!--<label><input type="checkbox"/>卡3</label>-->
-                        <!--<label><input type="checkbox"/>卡4</label>-->
-                        <!--<label><input type="checkbox"/>卡1</label>-->
-                        <!--<label><input type="checkbox"/>卡2</label>-->
-                        <!--<label><input type="checkbox"/>卡3</label>-->
-                        <!--<label><input type="checkbox"/>卡4</label>-->
 
                     </div>
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=2 type="checkbox"/>输出板卡FPGA升级</label>
+                        <label><input v-model="cardTypeArr" value=2 type="checkbox"/>{{LANG.FPGA_OUTPUT}}</label>
                         <input type="file" ref="file2" :disabled="cardType!=2"/>
                     </div>
                     <div class="item_body">
                         <label
                                 v-for="n in outCardCount"
-                        ><input :value="n" :disabled="cardType!=2" v-model="port1" type="checkbox"/>卡{{n}}
+                        ><input :value="n" :disabled="cardType!=2" v-model="port1" type="checkbox"/>{{LANG.FPGA_CARD}}{{n}}
                         </label>
-                        <!--<label><input type="checkbox"/>卡1</label>-->
-                        <!--<label><input type="checkbox"/>卡2</label>-->
-                        <!--<label><input type="checkbox"/>卡3</label>-->
-                        <!--<label><input type="checkbox"/>卡4</label>-->
                     </div>
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=3 type="checkbox"/>监视板卡FPGA升级</label>
+                        <label><input v-model="cardTypeArr" value=3 type="checkbox"/>{{LANG.FPGA_MONITOR}}</label>
                         <input type="file" ref="file3" :disabled="cardType!=3"/>
                     </div>
                 </div>
                 <div class="item">
                     <div class="item_tip">
-                        <label><input v-model="cardTypeArr" value=4 type="checkbox"/>同步板卡FPGA升级</label>
+                        <label><input v-model="cardTypeArr" value=4 type="checkbox"/>{{LANG.FPGA_SYNC}}</label>
                         <input type="file" ref="file4" :disabled="cardType!=4"/>
                     </div>
                 </div>
 
                 <div style="text-align:center;">
-                    <el-button size="mini" @click="op(true)">确定</el-button>
-                    <el-button size="mini" @click="op(false)">取消</el-button>
+                    <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                    <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
                 </div>
             </div>
         </el-dialog>
@@ -68,23 +57,25 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
-                titleList:{
-                    '':'',
-                    'fpga':'FPGA升级',
-                    'arm':'ARM升级'
-                },
+                title:LANG.FPGA_TITLE,
+                // titleList:{
+                //     '':'',
+                //     'fpga':'FPGA升级',
+                //     'arm':'ARM升级'
+                // },
                 inCardCount:this.globalEvent.inputCardList.length,
                 outCardCount:0,
                 cardType:-1,//0 控制版，1输入，2输出，3监视，4同步
                 cardTypeArr:[],
                 port0:[],
                 port1:[],
-
+                cardTip:LANG.FPGA_CARD,
+                LANG:LANG
             };
         },
         mounted(){
-
             // setTimeout(()=>{this.initEvent()},300);
 
             this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
@@ -265,7 +256,7 @@
                     };
 
 
-                    that.loading.setText("升级中 ..."+ Math.floor(i/fragmentCount)*100+'%');
+                    that.loading.setText(this.LANG.TIP_UPGRADE_NOW+" ..."+ Math.floor(i/fragmentCount)*100+'%');
 
 
                     // let t_String=[];
@@ -287,7 +278,7 @@
                     that.$http.post("firmwareUpdate.cgi",d,(ret)=>{
                         if(ret.data.result==0){
                             //未正确接收
-                            alert("下发数据未正确接收");
+                            alert(this.LANG.ALERT_API_ERROR);
                             console.log("下发数据未正确接收:",d.packetId,d.packetNum);
                         }
                         else{
@@ -323,18 +314,18 @@
             op(act){
                 if(act){
                     if(this.cardType==-1){
-                        alert("未选中任何板卡");
+                        alert(this.LANG.ALERT_NO_CARD_CHOOSE);
                     }else if(this.cardType==1 && this.port0.length==0){
-                        alert("未选中输入卡");
+                        alert(this.LANG.ALERT_NO_INPUT_CHOOSE);
                     }
                     else if(this.cardType==2 && this.port1.length==0){
-                        alert("未选中输出卡");
+                        alert(this.LANG.ALERT_NO_OUTPUT_CHOOSE);
                     }
                     else{
 
                         this.loading=this.$loading({
                             lock: true,
-                            text: '升级中',
+                            text: this.LANG.TIP_UPGRADE_NOW,
                             spinner: 'el-icon-loading',
                             background: 'rgba(255, 255, 255, 0.5)'
                         });

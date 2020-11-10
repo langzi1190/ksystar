@@ -1,6 +1,6 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog title="保存模式设置" :visible="showDialog=='saveUserModel'" @close="op(false)">
+        <el-dialog title="保存模式设置" :visible="showDialog=='saveUserModel' && globalEvent.userInfo.type!=2" @close="op(false)">
             <div class="item">
                 <span>模式Id：</span>
                 <el-input-number :min="1" :max="200" v-model="userModel" size="mini"></el-input-number>
@@ -11,8 +11,8 @@
             </div>
 
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -22,9 +22,11 @@
     export default {
         props:['showDialog'],
         data(){
+            console.log(this.globalEvent.userInfo.type);
             return {
                 userModel:1,
-                userModelName:this.globalEvent.userSceneName(0)
+                userModelName:this.globalEvent.userSceneName(0),
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         watch:{

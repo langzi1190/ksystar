@@ -1,15 +1,15 @@
 <template>
     <div class="user_dialog">
         <el-dialog
-                title="用户设置"
-                :visible="showDialog=='user'"
+                :title="LANG.USER_TITLE"
+                :visible="showDialog=='user' && globalEvent.userInfo.type==0"
                 width="800px"
                 @close="op('cancel')"
                 center
         >
             <div class="user_body">
                 <fieldset>
-                    <legend>用户列表</legend>
+                    <legend>{{LANG.USER_TABLE_TITLE}}</legend>
                     <div class="user_left" style="overflow:auto;">
                         <!--<div class="top_menu">-->
                             <!--<div>用户名称</div>-->
@@ -19,9 +19,9 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>用户名称</th>
-                                <th>类型</th>
-                                <th>屏幕墙号</th>
+                                <th>{{LANG.USER_TABLE_USERNAME}}</th>
+                                <th>{{LANG.VERSION_TYPE}}</th>
+                                <th>{{LANG.USER_TABLE_SCREEN_NO}}</th>
                             </tr>
                             </thead>
                          <tbody>
@@ -30,7 +30,7 @@
                              v-for="(item,index) in userList">
                              <td>{{item.name}}</td>
                              <td>{{userTypeList[item.type]}}</td>
-                             <td>{{item.type==0?'所有':item.screenArr.map((v,k)=>"#"+(v+1)).join(',')}}</td>
+                             <td>{{item.type==0?LANG.USER_TABLE_SCREE_ALL:item.screenArr.map((v,k)=>"#"+(v+1)).join(',')}}</td>
                          </tr>
                          </tbody>
 
@@ -38,22 +38,22 @@
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend>用户管理</legend>
+                    <legend>{{LANG.USER_EDIT}}</legend>
                     <div  class="user_right">
                         <div class="item">
-                            <span>用户名：</span>
+                            <span v-html="LANG.USER_USERNAME"></span>
                             <el-input v-model="selectedUser.name" size="mini"></el-input>
                         </div>
                         <div class="item">
-                            <span>密码：</span>
+                            <span v-html="LANG.USER_PASSWD"></span>
                             <el-input show-password v-model="selectedUser.pass" size="mini"></el-input>
                         </div>
                         <div class="item">
-                            <span>重复密码：</span>
+                            <span v-html="LANG.USER_PASSWD_REPEAT"></span>
                             <el-input show-password v-model="repeatPass" size="mini"></el-input>
                         </div>
                         <div class="item">
-                            <span>类型：</span>
+                            <span v-html="LANG.USER_TYPE"></span>
                             <el-select v-model="selectedUser.type" size="mini" placeholder="无">
                                 <el-option
                                         v-for="(item,index) in userTypeList"
@@ -65,7 +65,7 @@
                         </div>
                         <div class="item">
                             <span></span>
-                            <el-select v-model="selectedUser.screenArr" placeholder="选择屏幕号" size="mini" multiple :disabled="selectedUser.type==0">
+                            <el-select v-model="selectedUser.screenArr" :placeholder="LANG.USER_SELEC_SCREEN" size="mini" multiple :disabled="selectedUser.type==0">
                                 <el-option
                                         v-for="item in screenList"
                                         :key="item.value"
@@ -75,16 +75,16 @@
                             </el-select>
                         </div>
                         <div class="item" style="text-align:center;">
-                            <el-button size="mini" @click="op('add')">增加</el-button>
-                            <el-button size="mini" @click="op('edit')">编辑</el-button>
-                            <el-button size="mini" @click="op('delete')">删除</el-button>
+                            <el-button size="mini" @click="op('add')">{{LANG.BTN_ADD}}</el-button>
+                            <el-button size="mini" @click="op('edit')">{{LANG.BTN_EDIT}}</el-button>
+                            <el-button size="mini" @click="op('delete')">{{LANG.BTN_DEL}}</el-button>
                         </div>
                     </div>
                 </fieldset>
             </div>
             <div style="text-align:center;margin-top:20px;">
-                <el-button size="mini" style="margin-right:50px;" @click="op('sure')">确定</el-button>
-                <el-button size="mini" @click="op('cancel')">取消</el-button>
+                <el-button size="mini" style="margin-right:50px;" @click="op('sure')">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op('cancel')">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -94,10 +94,11 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
                 // userType:0,
                 selectedIndex:-1,
-                userTypeList:['管理员','普通用户'],
+                userTypeList:[LANG.USER_ROLE_0,LANG.USER_ROLE_1,LANG.USER_ROLE_2],
 
                 userList:[
                     {
@@ -115,14 +116,15 @@
                 },
                 repeatPass:'',
                 selectedScreen:'',
-                screenList:[]
+                screenList:[],
+                LANG:LANG
             };
         },
         mounted(){
             let total=this.globalEvent.screenInfo.scrGroupArr.length;
             for(let i =0 ;i<total;i++){
                 this.screenList.push({
-                    label:'屏幕#'+(i+1),
+                    label:this.LANG.SCREEN+'#'+(i+1),
                     value:i
                 });
             }
@@ -139,12 +141,12 @@
                 console.log(act);
                 if(act=='add'){
                     if(this.selectedUser.pass!=this.repeatPass){
-                        alert("两次密码不一致");
+                        alert(this.LANG.USER_PASSWD_REPEAT_WRONG);
                         return ;
                     }
                     for(let i in this.userList){
                         if(this.userList[i].name==this.selectedUser.name){
-                            alert("用户名已存在");
+                            alert(this.LANG.USER_USERNAME_EXIST);
                             return ;
                         }
                     }
@@ -169,20 +171,52 @@
                 }
                 else if(act=='edit'){
                     if(this.selectedUser.pass!=this.repeatPass){
-                        alert("两次密码不一致");
+                        alert(this.LANG.USER_PASSWD_REPEAT_WRONG);
                         return ;
                     }
-                    this.userList[this.selectedIndex].name=this.selectedUser.name;
-                    this.userList[this.selectedIndex].type=this.selectedUser.type;
-                    this.userList[this.selectedIndex].pass=this.selectedUser.pass;
-                    alert("以保存");
+                    if(this.selectedIndex>-1){
+                        this.userList[this.selectedIndex].name=this.selectedUser.name;
+                        this.userList[this.selectedIndex].type=this.selectedUser.type;
+                        this.userList[this.selectedIndex].pass=this.selectedUser.pass;
+                        alert("已保存");
+                    }
                 }
                 else if(act=='cancel'){
                     this.$emit('sub_event',{'act':'close_kfs'});
                 }
                 else if(act=='sure'){
-                    //todo 保存用户信息
-                    this.$emit('sub_event',{'act':'close_kfs'});
+                    // console.log(this.userList);
+                    let param={
+                        userNum:this.userList.length,
+                        userInfoArr:[]
+                    };
+
+                    for(let i in this.userList){
+                        let user={
+                            name:this.userList[i].name,
+                            password:this.userList[i].pass,
+                            type:this.userList[i].type,
+                            srcGroupFlag:0,
+                        }
+                        if(this.userList[i].screenArr.length==0){
+                            user.srcGroupFlag=0;
+                        }
+                        else{
+                            for(let k in this.userList[i].screenArr){
+                                let no=this.userList[i].screenArr[k]-0;
+                                let f=0x1;
+                                user.srcGroupFlag=user.srcGroupFlag | (f<<(no+1));
+                            }
+                        }
+                        param.userInfoArr.push(user);
+                    }
+
+                    console.log(param);
+                    this.$http.post("userAdminWr.cgi",param,()=>{
+                        this.$emit('sub_event',{'act':'close_kfs'});
+                    });
+
+
                 }
             }
         }
@@ -203,6 +237,6 @@
     .user_body td,.user_body th{height:25px;line-height:25px;cursor:pointer;}
     .user_body .item{margin-bottom:15px;}
     .user_body .item .el-input--mini{width:180px;}
-    .user_body .item  > span{display:inline-block;width:90px;}
+    .user_body .item  > span{display:inline-block;width:90px;    word-break: break-word;vertical-align: middle;}
     .user_body tr:hover,.user_body tr.selected{background-color:#f3f2f0;}
 </style>

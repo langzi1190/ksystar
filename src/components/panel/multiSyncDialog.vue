@@ -1,8 +1,8 @@
 <template>
     <div class="mutli_sync_dialog">
-        <el-dialog title="多机设置" :visible="showDialog=='multi'" @close="op(false)">
-            <div class="item">
-                <span>控制卡同步：</span>
+        <el-dialog :title="LANG.MULTI_TITLE" :visible="showDialog=='multi'" @close="op(false)">
+            <div class="item sp">
+                <span v-html="LANG.MULTI_SYNC_CARD"></span>
                 <el-select v-model="controlSync" size="mini">
                     <el-option
                             v-for="(item,index) in syncList"
@@ -12,8 +12,8 @@
                     ></el-option>
                 </el-select>
             </div>
-            <div class="item">
-                <span>信号源卡ID：</span>
+            <div class="item sp">
+                <span v-html="LANG.MULTI_CARD_ID"></span>
                 <el-select v-model="cardId"  size="mini">
                     <el-option
                             v-for="(item,index) in cardIdList"
@@ -24,8 +24,8 @@
                 </el-select>
             </div>
 
-            <div class="item">
-                <span>信 号 源 ID：</span>
+            <div class="item sp">
+                <span v-html="LANG.MULTI_SOURCE_ID"></span>
                 <el-select v-model="sourceId" placeholder="" size="mini">
                     <el-option
                             v-for="(item,index) in sourceIdList"
@@ -37,8 +37,8 @@
             </div>
 
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -48,14 +48,16 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
-                syncList:['关','开'],
+                syncList:[LANG.MULTI_OFF,LANG.MULTI_ON],
                 controlSync:this.globalEvent.commonInfo.mSyncFuncSta,
 
                 cardIdList:['None'],
                 sourceIdList:[],
                 cardId:this.globalEvent.commonInfo.mSyncSrcCardId,
                 sourceId:this.globalEvent.commonInfo.mSyncSrcId-1,
+                LANG:LANG
             };
         },
         mounted(){
@@ -129,4 +131,5 @@
     .mutli_sync_dialog .el-dialog{width:400px;}
     .mutli_sync_dialog .item{text-align:center;margin-bottom:20px;}
     .mutli_sync_dialog .label_group{display:inline-block;}
+    .mutli_sync_dialog .sp span{display:inline-block;width:95px;text-align:right;margin-right:5px;}
 </style>

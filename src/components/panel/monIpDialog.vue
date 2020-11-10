@@ -1,16 +1,16 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog title="回显IP设置" :visible="showDialog=='monIp'" @close="op(false)">
+        <el-dialog :title="LANG.MONIP_TITLE" :visible="showDialog=='monIp'" @close="op(false)">
             <div class="item">
-                <span>IP地址：</span>
+                <span>{{LANG.MONIP_ADDRESS}}</span>
                 <div class="input_group">
                     <input v-model="ipArr[0]" min="0" max="255" />.<input  v-model="ipArr[1]"  min="0" max="255"/>.<input  v-model="ipArr[2]"  min="0" max="255"/>.<input  v-model="ipArr[3]"  min="0" max="255"/>
                 </div>
             </div>
 
             <div class="item">
-                <el-button size="mini" @click="op(true)">确定</el-button>
-                <el-button size="mini" @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -21,7 +21,8 @@
         props:['showDialog'],
         data(){
             return {
-                ipArr:[0,0,0,0]
+                ipArr:[0,0,0,0],
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         // created(){

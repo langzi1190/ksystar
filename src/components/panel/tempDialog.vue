@@ -1,11 +1,11 @@
 <template>
     <div class="temp_dialog">
-        <el-dialog title="板卡FPGA温度监控" :visible="showDialog=='temp'" @close="op(false)">
+        <el-dialog :title="LANG.TEMP_TITLE" :visible="showDialog=='temp'" @close="op(false)">
             <div class="top_part">
                 <template  v-for="(item,index) in tempInfo.ctrlCard">
                     <div>
                         <label>
-                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>控制卡_{{index+1}}
+                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>{{LANG.TEMP_CONTROL}}_{{index+1}}
                         </label>
                         <div class="temp" :style="{backgroundColor:item.color}">{{item.temp}} ℃</div>
                     </div>
@@ -14,7 +14,7 @@
                 <template  v-for="(item,index) in tempInfo.syncCard">
                     <div>
                         <label>
-                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>同步卡_{{index+1}}
+                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>{{LANG.TEMP_SYNC}}_{{index+1}}
                         </label>
                         <div class="temp" :style="{backgroundColor:item.color}">{{item.temp}} ℃</div>
                     </div>
@@ -22,7 +22,7 @@
                 <template  v-for="(item,index) in tempInfo.monitorCard">
                     <div>
                         <label>
-                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>监控卡_{{index+1}}
+                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>{{LANG.TEMP_MONITOR}}_{{index+1}}
                         </label>
                         <div class="temp" :style="{backgroundColor:item.color}">{{item.temp}} ℃</div>
                     </div>
@@ -30,7 +30,7 @@
                 <template  v-for="(item,index) in tempInfo.outCard">
                     <div>
                         <label>
-                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>输出卡_{{index+1}}
+                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>{{LANG.TEMP_OUTPUT}}_{{index+1}}
                         </label>
                         <div class="temp" :style="{backgroundColor:item.color}">{{item.temp}} ℃</div>
                     </div>
@@ -38,7 +38,7 @@
                 <template  v-for="(item,index) in tempInfo.inCard">
                     <div>
                         <label>
-                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>输入卡_{{index+1}}
+                            <input type="checkbox" :false-value=0 :true-vallue=1 v-model="item.show"/>{{LANG.TEMP_INPUT}}_{{index+1}}
                         </label>
                         <div class="temp" :style="{backgroundColor:item.color}">{{item.temp}} ℃</div>
                     </div>
@@ -67,7 +67,8 @@
             return {
                 tempInfo:{
 
-                }
+                },
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         destroyed(){

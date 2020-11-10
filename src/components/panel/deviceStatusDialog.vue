@@ -1,13 +1,13 @@
 <template>
     <div class="status_dialog">
-        <el-dialog title="设备配置状态" :visible="showDialog=='deviceStatus'" @close="op(false)">
+        <el-dialog :title="LANG.DEV_STATUS_TITLE" :visible="showDialog=='deviceStatus'" @close="op(false)">
             <table style="width:100%">
                 <tr>
-                    <th colspan="5">类型</th>
-                    <th width="120">内存 OK</th>
-                    <th width="120">视频传输 OK</th>
-                    <th width="120">控制 OK</th>
-                    <th width="120">FLASH保护 OK</th>
+                    <th colspan="5">{{LANG.VERSION_TYPE}}</th>
+                    <th width="120">{{LANG.DEV_STATUS_MEM}}</th>
+                    <th width="120">{{LANG.DEV_STATUS_VIDEO}}</th>
+                    <th width="120">{{LANG.DEV_STATUS_CONTROL}}</th>
+                    <th width="120">{{LANG.DEV_STATUS_FLASH}}</th>
                 </tr>
                 <tbody>
                     <template  v-for="(item,index) in cardArrReverse">
@@ -53,15 +53,15 @@
 
 <script>
 
-    const cardType={
-        'type0':'输入卡',
-        'type1':'输出卡',
-        'type2':'监视卡',
-        'type3':'空',
+    let cardType={
+        'type0':"输入卡",
+        'type1':"输出卡",
+        'type2':"监视卡",
+        'type3':"空",
         'type4':'输入增强卡',
         'type5':'输出增强卡',
-        'type6':'控制卡',
-        'type7':'同步卡',
+        'type6':"控制卡",
+        'type7':"同步卡",
     };
 
     // const flashType={
@@ -75,11 +75,22 @@
     export default {
         props:['showDialog'],
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
+            cardType={
+                'type0':LANG.TEMP_INPUT,
+                'type1':LANG.TEMP_OUTPUT,
+                'type2':LANG.TEMP_MONITOR,
+                'type3':LANG.TEMP_NONE,
+                'type4':'输入增强卡',
+                'type5':'输出增强卡',
+                'type6':LANG.TEMP_CONTROL,
+                'type7':LANG.TEMP_SYNC,
+            };
             return {
                 color_list:['pink','gray','orange','#00cc99'],
                 cardStatus:{},
                 cardArrReverse:[],
-                // validCardCount:0,
+                LANG:LANG
             };
         },
         mounted(){
