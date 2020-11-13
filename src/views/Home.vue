@@ -160,7 +160,8 @@
             <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
             <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
             <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
-            <simulateDialog @sub_event="subEvent" v-if="showDialog!=''" :showDialog="showDialog"></simulateDialog>
+            <simulateDialog @sub_event="subEvent" v-if="showDialog=='simulate'" :showDialog="showDialog"></simulateDialog>
+            <importDialog @sub_event="subEvent" v-if="showDialog=='import'" :showDialog="showDialog"></importDialog>
         </div>
         <div v-else>
             <loginDialog @sub_event="subEvent"></loginDialog>
@@ -243,6 +244,7 @@ import showEdidDialog from "@/components/panel/showEdidDialog";
 import uploadDialog from "@/components/panel/uploadDialog";
 import simulateDialog from "@/components/panel/simulateDialog";
 import loginDialog from "@/components/panel/loginDialog";
+import importDialog from "@/components/panel/importDialog";
 
 let loading ;
 // let loading_count=0;
@@ -298,7 +300,6 @@ export default {
     created(){
       this.loadVersion();
       this.globalEvent.$on('sync',()=>{
-          console.log("home.vue sync");
           this.preinstall('sync');
       });
       this.maxHeight=window.innerHeight-200;
@@ -332,6 +333,9 @@ export default {
       curLang(v,ov){
           this.globalEvent.language=v;
           this.globalEvent.$emit("language");
+          this.$http.post("languageWr.cgi",{lang:v=='zh'?0:1},()=>{
+
+          });
       }
   },
   data() {
@@ -410,7 +414,7 @@ export default {
           this.globalEvent.gMode=0;
           loading=this.$loading({
               lock: true,
-              text: '同步中',
+              text: this.LANG.HOME_SYNC,
               spinner: 'el-icon-loading',
               background: 'rgba(255, 255, 255, 0.5)'
           });
@@ -457,6 +461,46 @@ export default {
               // aEle.download = "配置文件.bin";// 设置下载文件的文件名
               // aEle.href = window.URL.createObjectURL(blob);
               // aEle.click();// 设置点击事件 aEle.remove()
+
+              // let that=this;
+              // let fileSize=0;
+              let packetNum=0;
+              let packetId=0;
+              let fileData=[];
+
+              let readFile=function () {
+                  if(packetId>=packetNum){
+                      //组装
+                      let b=new Blob(fileData);
+                      let aEle = document.createElement("a");
+                      aEle.download="配置文件.bin";
+                      aEle.href=window.URL.createObjectURL(b);
+                      aEle.click();
+                      return ;
+                  }
+                  let d={
+                      opr:0xff,
+                      packetId
+                  };
+                  this.$http.post("cfgExport.cgi",d,(ret)=>{
+                      let data=ret.data.dataArr;
+                      // fileData.push(data.flat());
+                      data.forEach((v,i,arr)=>{
+                          fileData.push(v);
+                      })
+                      packetId++;
+                      readFile();
+                  });
+              }
+              this.$http.post("cfgExport.cgi",{opr:0},(ret)=>{
+                  fileSize=ret.data.fileSize;
+                  packetNum=ret.data.packetNum;
+                  readFile();
+              });
+
+          }
+          else{
+              this.showDialog='import';
           }
       },
       upgrade(act){
@@ -786,7 +830,8 @@ export default {
       showEdidDialog,
       uploadDialog,
       simulateDialog,
-      loginDialog
+      loginDialog,
+      importDialog
   },
 };
 </script>

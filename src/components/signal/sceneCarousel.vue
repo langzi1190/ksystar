@@ -64,6 +64,17 @@
             window.addEventListener("resize",(e)=>{
                 this.calContentListHeight();
             })
+
+            this.globalEvent.$on("language",()=>{
+                let sceneInfo=this.globalEvent.sceneCarousel;
+                for(let i in sceneInfo.sceneArr){
+                    sceneInfo.sceneArr[i].label=this.globalEvent.carouseName(sceneInfo.sceneArr[i]);
+                    let preset=sceneInfo.sceneArr[i].presetArr;
+                    for(let k in preset){
+                        preset[k].label=this.userSceneName(preset[k].dataArr)+this.userSceneTime(preset[k].dataArr);
+                    }
+                }
+            });
         },
         data(){
             return {

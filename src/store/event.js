@@ -106,6 +106,17 @@ let gobalEvent =new Vue({
             }
             if(this.userSceneLocalName[k]!==undefined){
                 s=this.userSceneLocalName[k];
+
+                let mid=s.split(" ");
+                if(this.language=='en' && mid[0]=='用户模式'){
+                    mid[0]="User mode";
+                    s=mid.join(" ");
+                }
+                else if(this.language=='zh' && mid[0]=='User' && mid[1]=='mode'){
+                    mid[0]="用户模式";
+                    mid[1]='';
+                    s=mid.join(" ");
+                }
             }
             return s;
         },
@@ -116,6 +127,17 @@ let gobalEvent =new Vue({
             }
             if(this.carouseLocalName[scene.sceneId]!==undefined){
                 s=this.carouseLocalName[scene.sceneId];
+
+                let mid=s.split(" ");
+                if(this.language=='en' && mid[0]=='场景轮巡'){
+                    mid[0]="Layout loop";
+                    s=mid.join(" ");
+                }
+                else if(this.language=='zh' && mid[0]=='Layout' && mid[1]=='loop'){
+                    mid[0]="场景轮巡";
+                    mid[1]='';
+                    s=mid.join(" ");
+                }
             }
 
             return s;
@@ -137,6 +159,17 @@ let gobalEvent =new Vue({
             }
             if(this.srcGroupLocalName[group.srcGroupId]!==undefined){
                 s=this.srcGroupLocalName[group.srcGroupId];
+
+                let mid=s.split(" ");
+                if(this.language=='en' && mid[0]=='信号源分组'){
+                    mid[0]="Source group";
+                    s=mid.join(" ");
+                }
+                else if(this.language=='zh' && mid[0]=='Source' && mid[1]=='group'){
+                    mid[0]="信号源分组";
+                    mid[1]='';
+                    s=mid.join(" ");
+                }
             }
             return s;
         },

@@ -56,11 +56,12 @@
                 cardIdList:['None'],
                 sourceIdList:[],
                 cardId:this.globalEvent.commonInfo.mSyncSrcCardId,
-                sourceId:this.globalEvent.commonInfo.mSyncSrcId-1,
+                sourceId:this.globalEvent.commonInfo.mSyncSrcId==0?0:this.globalEvent.commonInfo.mSyncSrcId-1,
                 LANG:LANG
             };
         },
         mounted(){
+
 
             for(let i in this.globalEvent.inputCardList){
                 this.cardIdList.push(++i);
@@ -114,10 +115,9 @@
                     if(param.srcCardId>0){
                         param.srcId=parseInt(param.srcId)+1;
                     }
-                    console.log(param);
                     this.$http.post("multiSyncWr.cgi",param,(ret)=>{
                         this.globalEvent.commonInfo.mSyncFuncSta=this.controlSync;
-                        this.globalEvent.commonInfo.mSyncSrcCardId=param.cardId;
+                        this.globalEvent.commonInfo.mSyncSrcCardId=param.srcCardId;
                         this.globalEvent.commonInfo.mSyncSrcId=param.srcId;
                         this.$emit('sub_event',{act:'close_kfs'});
                     });

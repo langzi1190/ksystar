@@ -48,6 +48,8 @@ function apiAxios(method, url, params, response) {
         "srcEdidRd.cgi":"edid_data.json",
         "syncInputInfoRd_t.cgi":"usemodeltest_singal.json",
         "syncWinInfoRd_t.cgi":"usemodel_test_windows.json",
+        "languageRd.cgi":"language.json",
+        "login.cgi":"login.json",
     };
       url=urlTrans[url];
       method='GET';

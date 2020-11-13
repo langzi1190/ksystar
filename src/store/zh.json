@@ -217,6 +217,8 @@
   "USER_TABLE_USERNAME":"用户名称",
   "USER_TABLE_SCREEN_NO":"屏幕墙号",
   "USER_TABLE_SCREE_ALL":"所有",
+  "USER_INPUT_USERNAME":"请输入用户名",
+  "USER_INPUT_PASSWD":"请输入密码",
 
   "TUNNEL_TITLE":"大屏幕控制",
   "TUNNEL_SCREEN_TYPE":"屏幕类型 : ",
@@ -268,6 +270,11 @@
 
   "EQ_TITLE":"EQ设置",
   "EQ_VALUE":"EQ值: ",
+
+  "IMPORT_TITLE":"导入配置",
+  "IMPORT_UPLOAD":"上传文件",
+  "IMPORT":"导入",
+
 
   "ALERT_MAX_WINDS":"窗口超限",
   "ALERT_API_ERROR":"下发数据未正确接收",

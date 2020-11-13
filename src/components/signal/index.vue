@@ -92,6 +92,12 @@ export default {
         this.globalEvent.$on('language',()=>{
             this.LANG=this.LANGUAGE[this.globalEvent.language];
             this.activeList=[this.LANG.SIGNAL_SOURCE,this.LANG.SIGNAL_USER_MODE,this.LANG.SIGNALLAYOUT_LOOP,this.LANG.SIGNAL_SOURCEGROUP];
+
+            // let presetStaArr=this.globalEvent.commonInfo.presetStaArr;
+            for(let i in this.globalEvent.commonInfo.presetStaArr){
+                this.userSceneList[i].label=this.globalEvent.userSceneName(i);
+            }
+
         });
         this.getSysInputInfo();
         this.globalEvent.$on("work_mode_change",()=>{

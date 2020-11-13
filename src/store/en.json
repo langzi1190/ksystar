@@ -214,6 +214,8 @@
   "USER_TABLE_USERNAME":"UserName",
   "USER_TABLE_SCREEN_NO":"Screen No",
   "USER_TABLE_SCREE_ALL":"All",
+  "USER_INPUT_USERNAME":"Username",
+  "USER_INPUT_PASSWD":"Password",
 
   "TUNNEL_TITLE":"Large Screen Operation",
   "TUNNEL_SCREEN_TYPE":"Large Screen Type : ",
@@ -257,6 +259,10 @@
 
   "EQ_TITLE":"EQ Setting",
   "EQ_VALUE":"EQ Value: ",
+
+  "IMPORT_TITLE":"Import Config",
+  "IMPORT_UPLOAD":"Upload File",
+  "IMPORT":"Import",
 
   "WORKMODE_TITLE":"工作模式",
   "WORKMODE_DP":"Manual DP",

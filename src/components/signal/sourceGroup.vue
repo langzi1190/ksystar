@@ -53,6 +53,16 @@
             window.addEventListener("resize",(e)=>{
                 this.calContentListHeight();
             })
+
+            this.globalEvent.$on("language",()=>{
+                for(let i in this.sourceList){
+                    this.sourceList[i].label=this.globalEvent.srcGroupName(this.sourceList[i]);
+                    let preset= this.sourceList[i].srcArr;
+                    for(let k in preset){
+                        preset[k].label=this.globalEvent.signalCardName(preset[k].dataArr[0],preset[k].dataArr[1]);
+                    }
+                }
+            });
         },
         data(){
             return {
