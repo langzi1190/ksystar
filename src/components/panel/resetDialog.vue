@@ -1,14 +1,14 @@
 <template>
     <div class="reset_dialog">
         <el-dialog
-                title="恢复出厂设置"
-                :visible="showDialog=='reset' && globalEvent.userInfo.type!=2"
+                :title="LANG.RESTOR_TITLE"
+                :visible="showDialog=='reset' && globalEvent.userInfo.type==0"
                 width="400px"
                 @close="op(false)"
                 center>
             <div style="height:50px;text-align:center;">
-                <el-button @click="op(true)">确定</el-button>
-                <el-button @click="op(false)">取消</el-button>
+                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -18,7 +18,9 @@
     export default {
         props:['showDialog'],
         data(){
-            return {};
+            return {
+                LANG:this.LANGUAGE[this.globalEvent.language]
+            };
         },
         methods:{
             op(b){

@@ -16,6 +16,7 @@
         <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')">{{LANG.ATTR_EXTEND}}</el-button>
         <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')">{{LANG.ATTR_RESTORE}}</el-button>
         <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')">{{LANG.ATTR_CLOSE}}</el-button>
+
       </div>
       <div class="title">
         <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">

@@ -2,10 +2,9 @@
   <div>
     <div class="set-screen">
       <div>
-        <span>屏幕分辨率:</span>
+        <span>{{LANG.SCREEN}}{{LANG.SCREEN_RESOLUTION}}:</span>
         <el-select
                 v-model="resolutionValue"
-                placeholder="请选择分辨率"
                 size="mini"
                 style="width:115px">
           <el-option
@@ -19,8 +18,8 @@
         <div class="hideShow" v-show="resolutionValue=='' || resolutionValue=='-1'">{{rv}}</div>
       </div>
       <div>
-        <span>屏幕刷新HZ:</span>
-        <el-select v-model="hertzValue" placeholder="请选择HZ" size="mini" style="width: 85px;">
+        <span>{{LANG.SCREEN_FRAME}}HZ:</span>
+        <el-select v-model="hertzValue" size="mini" style="width: 85px;">
           <el-option
             v-for="item in hertz"
             :key="item.value"
@@ -31,13 +30,13 @@
       </div>
       <div style="padding-top: 4px;">
         <el-checkbox v-model="TimingMode" :true-label=1 :false-label=0>
-          <i style="font-size: 12px;">LCD模式</i>
+          <i style="font-size: 12px;">{{LANG.SCREEN_LCD}}</i>
         </el-checkbox>
       </div>
     </div>
     <div class="set-screen">
       <div>
-        <span>行数:</span>
+        <span>{{LANG.SCREEN_ROW}}:</span>
         <el-input-number
           v-model="rowNum"
           :min="1"
@@ -46,7 +45,7 @@
         ></el-input-number>
       </div>
       <div>
-        <span>列数:</span>
+        <span>{{LANG.SCREEN_COL}}:</span>
         <el-input-number
           v-model="columnNum"
           :min="1"
@@ -55,13 +54,13 @@
         ></el-input-number>
       </div>
       <div>
-        <el-button type="danger" size="mini" @click="opScreen('del')">删除屏幕墙</el-button>
+        <el-button type="danger" size="mini" @click="opScreen('del')">{{LANG.SCREEN_REMOVE}}</el-button>
       </div>
       <div>
-        <el-button type="primary" size="mini" @click="opScreen('add')">添加屏幕墙</el-button>
+        <el-button type="primary" size="mini" @click="opScreen('add')">{{LANG.SCREEN_ADD}}</el-button>
       </div>
     </div>
-    <div style="margin-top:5px;margin-bottom:10px;font-size:12px;color:#409EFF;">提示：单击深灰色背景表格可以更改屏幕参数</div>
+    <div style="margin-top:5px;margin-bottom:10px;font-size:12px;color:#409EFF;">{{LANG.SCREEN_CONFIG_TIP}}</div>
       <Rs @sub_event="subEvent" v-if="showSetting" :showSetting="showSetting"></Rs>
       <Ts @sub_event="subEvent" v-if="showTimeSeq" :showSetting="showTimeSeq"></Ts>
   </div>
@@ -212,7 +211,8 @@ export default {
           columnNum: this.item.Col,
           TimingMode: this.item.TimingMode,
           showSetting:false,
-          showTimeSeq:false
+          showTimeSeq:false,
+          LANG:this.LANGUAGE[this.globalEvent.language]
       };
   },
     methods:{

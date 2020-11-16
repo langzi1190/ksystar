@@ -19,7 +19,7 @@
                     <input v-model="maskArr[0]" />.<input  v-model="maskArr[1]"/>.<input  v-model="maskArr[2]"/>.<input  v-model="maskArr[3]"/>
                 </div>
             </div>
-            <div class="item" style="color:#f44f44;">
+            <div class="item" style="color:#f44f44;word-break:break-word;">
                 {{LANG.IP_TIP}}
             </div>
             <div class="item">

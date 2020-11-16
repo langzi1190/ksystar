@@ -105,6 +105,7 @@
 
   "SCREEN_PORT_MAP":"输出映射",
   "SCREEN_PORT_AUTO_MAP":"自动映射",
+  "SCREEN_OUT_LAYOUT":"设备输出布局:",
   "SCREEN_TITLE":"屏幕参数设置",
   "SCREEN_WALL":"屏幕墙",
   "SCREEN":"屏幕",
@@ -117,6 +118,20 @@
   "SCREEN_NO":"屏幕编号",
   "SCREEN_LCD":"LCD模式",
   "SCREEN_FRAME":"屏幕刷新",
+  "SCREEN_CLICK_PORT":"点击Port修改",
+  "SCREEN_CONFIG_TIP":"提示：单击深灰色背景表格可以更改屏幕参数",
+
+  "RS_TITLE":"自定义输出分辨率设置",
+  "RS_TS":"输出时序",
+  "RS_WIDTH":"水平分辨率:",
+  "RS_HEIGHT":"垂直分辨率:",
+
+  "RESTOR_TITLE":"恢复出厂设置",
+
+  "TS_TITLE":"输出时序设置",
+  "TS_H_POLAR":"行极性",
+  "TS_V_POLAR":"列极性",
+
 
   "FPGA_TITLE":"FPGA升级",
   "FPGA_SYNC":"同步板卡FPGA",
@@ -244,6 +259,8 @@
   "CAROUSE_ADD_LAYOUT":"添加布局",
   "CAROUSE_DEL_LAYOUT":"删除布局",
   "CAROUSE_EDIT_LAYOUT":"编辑布局时长",
+  "CAROUSE_SINGLE_LOOP":"单个轮巡循环",
+  "CAROUSE_ALL_LOOP":"全部轮巡循环",
 
   "SOURCE_GROUP_TITLE":"信号源分组设置",
   "SOURCE_GROUP_NAME":"源组名称 : ",
@@ -257,8 +274,9 @@
   "BACKUP_SOURCE_ID":"信号源ID: ",
 
   "MODE_TITLE":"调用模式设置",
-  "MODE_ID":"模式ID: ",
-  "MODE_NAME":"模式名称: ",
+  "MODE_SAVE_TITLE":"保存模式设置",
+  "MODE_ID":"模式ID:&nbsp;",
+  "MODE_NAME":"模式名称:&nbsp;",
 
   "WORKMODE_TITLE":"工作模式",
   "WORKMODE_DP":"固定DP",
@@ -281,6 +299,8 @@
   "ALERT_NO_INPUT_CHOOSE":"未选中输入卡",
   "ALERT_NO_OUTPUT_CHOOSE":"未选中输出卡",
   "ALERT_NO_CARD_CHOOSE":"未选中板卡",
+  "ALTER_OUTCARD_NUMBER":"超出可用输出卡数量",
+  "ALTER_AT_LEAST_ONE":"至少一个屏幕墙",
   "TIP_UPGRADE_NOW":"升级中",
   "TIP_INPUT_NEW_NAME":"请输入新名称",
   "TIP_INPUT_PASSWD":"输入密码",

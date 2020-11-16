@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="屏幕参数设置"
+    :title="LANG.SCREEN_TITLE"
     :visible.sync="isVisible"
     v-if="isVisible"
     width="900px"
@@ -10,7 +10,7 @@
   >
     <div class="setting">
       <div class="setting-port">
-        <div style="margin-bottom:10px;margin-top:5px;">设备输出布局：</div>
+        <div style="margin-bottom:10px;margin-top:5px;">{{LANG.SCREEN_OUT_LAYOUT}}</div>
         <ul>
           <li v-for="(val,index) in portList" :class="{port_on:portList[totalPort-index-1]==1}" :key="index" @click="portPut(index)">
             Port {{totalPort-index}}
@@ -21,7 +21,7 @@
       <div class="setting-parameter">
         <el-tabs type="border-card" v-model="curTabName">
           <!-- 屏幕墙 -->
-          <el-tab-pane v-for="(item,index) in displayList" :key="item.tabName" :name="item.tabName" :label="'屏幕墙-'+(index+1)">
+          <el-tab-pane v-for="(item,index) in displayList" :key="item.tabName" :name="item.tabName" :label="LANG.SCREEN_WALL+'-'+(index+1)">
             <!-- 屏幕墙编辑面板 -->
             <cs-parameter @sub_event="subEvent" :item="item" :seq="index"></cs-parameter>
             <!-- 屏幕列表辑面板 -->
@@ -33,9 +33,9 @@
 
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="autoMap" size="mini">自动映射</el-button>
-       <el-button @click="isSubmit(true)" size="mini">确 定</el-button>
-      <el-button @click="isSubmit(false)" size="mini">取 消</el-button>
+      <el-button type="primary" @click="autoMap" size="mini">{{LANG.SCREEN_PORT_AUTO_MAP}}</el-button>
+       <el-button @click="isSubmit(true)" size="mini">{{LANG.BTN_SURE}}</el-button>
+      <el-button @click="isSubmit(false)" size="mini">{{LANG.BTN_CANCEL}}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -57,6 +57,7 @@ export default {
         displayList:[], // 屏幕墙列表
 
         screenInfo:{},
+        LANG:this.LANGUAGE[this.globalEvent.language],
     };
   },
     provide() {
@@ -123,7 +124,7 @@ export default {
               c+=this.displayList[i].Row*this.displayList[i].Col;
           }
           if(c>this.globalEvent.validOutCardCount){
-              alert("超出可用输出卡数量");
+              alert(this.LANG.ALTER_OUTCARD_NUMBER);
               return false;
           }
           return true;
@@ -177,7 +178,7 @@ export default {
           }
           else if(param.act=='del'){
               if(this.displayList.length==1){
-                  alert("至少一个屏幕墙");
+                  alert(this.LANG.ALTER_AT_LEAST_ONE);
                   return ;
               }
               this.displayList.splice(param.seq,1);

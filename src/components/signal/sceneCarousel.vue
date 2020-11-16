@@ -14,8 +14,8 @@
             </div>
             <div class="op_select">
                 <select v-model="mode" @change="modeChange">
-                    <option value=0>单个轮巡循环</option>
-                    <option value=1>全部轮巡循环</option>
+                    <option value=0>{{singleLoop}}</option>
+                    <option value=1>{{allLoop}}</option>
                 </select>
             </div>
 
@@ -75,8 +75,14 @@
                     }
                 }
             });
+
+            this.globalEvent.$on("language",()=>{
+                this.singleLoop=this.LANGUAGE[this.globalEvent.language].CAROUSE_SINGLE_LOOP;
+                this.allLoop=this.LANGUAGE[this.globalEvent.language].CAROUSE_ALL_LOOP;
+            })
         },
         data(){
+            let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
                 contestListHeight:'',
                 sceneList:[],
@@ -90,6 +96,8 @@
                 selectedUserMode:{},//选择的用户模式 排序用
                 selectedLevel:0,//1场景排序，2用户模式排序
                 isPlay:0,
+                singleLoop:LANG.CAROUSE_SINGLE_LOOP,
+                allLoop:LANG.CAROUSE_ALL_LOOP,
             };
         },
         methods:{

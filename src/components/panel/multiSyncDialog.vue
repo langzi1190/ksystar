@@ -69,9 +69,15 @@
             if(this.cardIdList.length>0){
                 let inputCard=this.globalEvent.inputCardList;
                 this.sourceIdList=[];
-                for(let i in inputCard[this.cardId-1].srcArr){
-                    this.sourceIdList.push(++i);
+                if(this.cardId==0){
+                    this.sourceIdList.push('None');
                 }
+                else{
+                    for(let i in inputCard[this.cardId-1].srcArr){
+                        this.sourceIdList.push(++i);
+                    }
+                }
+
             }
 
         },

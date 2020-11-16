@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-dialog
-                title="自定义输出分辨率"
+                :title="LANG.RS_TITLE"
                 :visible="isVisible"
                 width="400px"
                 @close="cancelSubmit"
@@ -10,7 +10,7 @@
         >
             <div class="inline_input">
                 <div class="input_tip">
-                    水平分辨率
+                    {{LANG.RS_WIDTH}}
                 </div>
                 <div>
                     <el-input-number @change="change('x')" v-model="x" :min="400" size="mini"></el-input-number>
@@ -18,7 +18,7 @@
             </div>
             <div class="inline_input">
                 <div class="input_tip">
-                    垂直分辨率
+                    {{LANG.HEIGHT}}
                 </div>
                 <div>
                     <el-input-number @change="change('y')" v-model="y" :min="300" size="mini"></el-input-number>
@@ -27,13 +27,13 @@
             <div class="inline_input">
                 <div class="input_tip"></div>
                 <div>
-                    <el-button @click="showTimeSeq" size="mini">输出时序</el-button>
+                    <el-button @click="showTimeSeq" size="mini">{{LANG.TS}}</el-button>
                 </div>
             </div>
             <div style="text-align:center">
                  <span slot="footer" class="dialog-footer">
-                       <el-button type="primary" @click="isSubmit" size="mini">确 定</el-button>
-                     <el-button @click="cancelSubmit" size="mini">取 消</el-button>
+                       <el-button type="primary" @click="isSubmit" size="mini">{{LANG.BTN_SURE}}</el-button>
+                     <el-button @click="cancelSubmit" size="mini">{{LANG.BTN_CANCEL}}</el-button>
                 </span>
             </div>
         </el-dialog>
@@ -48,7 +48,8 @@
             return {
                 x:this.$parent.item.FormatW,
                 y:this.$parent.item.FormatH,
-                isVisible: this.showSetting
+                isVisible: this.showSetting,
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         inject: ["comScreen"],

@@ -129,6 +129,26 @@
                 });
             }
         },
+        watch:{
+            'selectedUser.name':function (v,o) {
+                if(v.length>20){
+                    alert("用户名长度不得大于20");
+                    this.$nextTick(()=>{
+                        this.selectedUser.name=this.selectedUser.name.substring(0,20);
+                    })
+                    return ;
+                }
+            },
+            'selectedUser.pass':function (v,ov) {
+                if(v.length>20){
+                    alert("密码长度不得大于20");
+                    this.$nextTick(()=>{
+                        this.selectedUser.pass=this.selectedUser.pass.substring(0,20);
+                    })
+                    return ;
+                }
+            }
+        },
         methods:{
             selectUser(index){
                 if(this.selectedIndex==index){
@@ -138,8 +158,12 @@
                 this.selectedUser=JSON.parse(JSON.stringify(this.userList[index]));
             },
             op(act){
-                console.log(act);
+
                 if(act=='add'){
+                    if(this.userList.length>=10){
+                        alert("最多支持10个用户");
+                        return ;
+                    }
                     if(this.selectedUser.pass!=this.repeatPass){
                         alert(this.LANG.USER_PASSWD_REPEAT_WRONG);
                         return ;
@@ -190,13 +214,18 @@
                         userNum:this.userList.length,
                         userInfoArr:[]
                     };
-
+                    let rightflag=true;
                     for(let i in this.userList){
                         let user={
                             name:this.userList[i].name,
                             password:this.userList[i].pass,
                             type:this.userList[i].type,
                             srcGroupFlag:0,
+                        }
+                        if(user.password==''){
+                            alert(user.name+"密码不能为空");
+                            rightflag=false;
+                            return ;
                         }
                         if(this.userList[i].screenArr.length==0){
                             user.srcGroupFlag=0;
@@ -211,7 +240,9 @@
                         param.userInfoArr.push(user);
                     }
 
-                    console.log(param);
+                    if(!rightflag){
+                        return ;
+                    }
                     this.$http.post("userAdminWr.cgi",param,()=>{
                         this.$emit('sub_event',{'act':'close_kfs'});
                     });

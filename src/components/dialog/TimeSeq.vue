@@ -1,7 +1,7 @@
 <template>
     <div >
         <el-dialog
-                title="输出时序设置"
+                :title="LANG.TS_TITLE"
                 :visible.sync="isVisible"
                 width="700px"
                 @close="isSubmit(false)"
@@ -13,7 +13,7 @@
 
                     <div class="row_item">
                         <div class="item_title">
-                            时钟：
+                            {{LANG.EDID_CLOCK}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -25,7 +25,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            宽度：
+                            {{LANG.EDID_WIDTH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -38,7 +38,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行显示前沿：
+                            {{LANG.EDID_HFROMPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -50,7 +50,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行同步脉冲：
+                            {{LANG.EDID_HSYNCTIME}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -62,7 +62,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行显示后沿：
+                            {{LANG.EDID_HBACKPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -74,7 +74,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            行极性：
+                            {{LANG.TS_H_POLAR}}
                         </div>
                         <div class="item_input">
                             <!--<el-input-->
@@ -96,7 +96,7 @@
 
                     <div class="row_item">
                         <div class="item_title">
-                            帧率：
+                            {{LANG.EDID_FRAME}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -109,7 +109,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            高度：
+                            {{LANG.EDID_HEIGHT}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -122,7 +122,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列显示前沿：
+                            {{LANG.EDID_VFROMPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -134,7 +134,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列同步脉冲：
+                            {{LANG.EDID_VSYNCTIME}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -146,7 +146,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列显示后沿：
+                            {{LANG.EDID_VBACKPORCH}}
                         </div>
                         <div class="item_input">
                             <el-input
@@ -158,7 +158,7 @@
                     </div>
                     <div class="row_item">
                         <div class="item_title">
-                            列极性：
+                            {{LANG.TS_V_POLAR}}
                         </div>
                         <div class="item_input">
                             <!--<el-input-->
@@ -178,8 +178,8 @@
                 </div>
             </div>
             <div style="text-align:center;">
-                <el-button @click="isSubmit(true)">确定</el-button>
-                <el-button @click="isSubmit(false)">取消</el-button>
+                <el-button @click="isSubmit(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button @click="isSubmit(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>

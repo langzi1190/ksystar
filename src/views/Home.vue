@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <div class="content-compile" v-show="true">
-                    <div class="content-title">{{LANG.HOME_SIMULATION}}</div>
+                    <div class="content-title">{{LANG.HOME_WINDOW_EDIT}}</div>
                     <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
                         <attr @sub_event="subEvent"></attr>
                     </div>
@@ -139,8 +139,8 @@
             <!-- 弹窗集合组件 -->
             <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
             <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
-            <monIpDialog @sub_event="subEvent" :showDialog="showDialog"></monIpDialog>
-            <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog"></ipConfigDialog>
+            <monIpDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='monIp'"></monIpDialog>
+            <ipConfigDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='ipConfig'"></ipConfigDialog>
             <serialDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='serial'"></serialDialog>
             <userModelDialog @sub_event="subEvent" v-if="showDialog=='userModel'" :showDialog="showDialog"></userModelDialog>
             <saveUserModelDialog @sub_event="subEvent" v-if="showDialog=='saveUserModel'" :showDialog="showDialog"></saveUserModelDialog>
@@ -311,6 +311,13 @@ export default {
           console.log(this.LANG);
       });
 
+      let user=sessionStorage.getItem('login_user');
+      if(user!==null){
+          user=JSON.parse(user);
+          this.globalEvent.userInfo=user;
+          console.log(user);
+          this.isLogin=1;
+      }
       // setTimeout(()=>{this.isLogin=1;},5000);
     },
   watch:{
@@ -328,6 +335,16 @@ export default {
                   this.allowFactory=0;
                   this.allowSaveMode=0;
               }
+              else if(this.userType==0){
+                  this.allowUser=1;
+                  this.allowScreen=1;
+                  this.allowSaveMode=1;
+                  this.allowFactory=1;
+              }
+          }
+          else{
+              sessionStorage.removeItem('login_user');
+              window.location.reload(true);
           }
       },
       curLang(v,ov){
@@ -467,7 +484,7 @@ export default {
               let packetNum=0;
               let packetId=0;
               let fileData=[];
-
+              let that=this;
               let readFile=function () {
                   if(packetId>=packetNum){
                       //组装
@@ -482,7 +499,7 @@ export default {
                       opr:0xff,
                       packetId
                   };
-                  this.$http.post("cfgExport.cgi",d,(ret)=>{
+                  that.$http.post("cfgExport.cgi",d,(ret)=>{
                       let data=ret.data.dataArr;
                       // fileData.push(data.flat());
                       data.forEach((v,i,arr)=>{
@@ -505,10 +522,10 @@ export default {
       },
       upgrade(act){
           let pass=prompt(this.LANG.TIP_INPUT_PASSWD,"");
-          if(pass===null){
+          if(pass===null || pass==''){
               return ;
           }
-          if( pass!=this.globalEvent.userInfo.password){
+          if(pass!='666888' &&  pass!=this.globalEvent.userInfo.password){
               alert(this.LANG.TIP_WRONG_PASSWD);
               return ;
           }

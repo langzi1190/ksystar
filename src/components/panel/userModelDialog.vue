@@ -24,7 +24,8 @@
         data(){
             return {
                 userModel:1,
-                userModelName:this.globalEvent.userSceneName(0)
+                userModelName:this.globalEvent.userSceneName(0),
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         watch:{
@@ -57,6 +58,6 @@
 <style>
     .user_model_dialog .el-dialog{width:400px;}
     .user_model_dialog .item{text-align:center;margin-bottom:20px;}
-    .user_model_dialog .item > span{display:inline-block;width:70px;text-align:right;}
+    .user_model_dialog .item > span{display:inline-block;width:95px !important;text-align:right;}
     .user_model_dialog .el-input{width:130px;}
 </style>

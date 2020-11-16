@@ -1,12 +1,12 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog title="保存模式设置" :visible="showDialog=='saveUserModel' && globalEvent.userInfo.type!=2" @close="op(false)">
+        <el-dialog :title="LANG.MODE_SAVE_TITLE" :visible="showDialog=='saveUserModel' && globalEvent.userInfo.type==0" @close="op(false)">
             <div class="item">
-                <span>模式Id：</span>
+                <span v-html="LANG.MODE_ID"></span>
                 <el-input-number :min="1" :max="200" v-model="userModel" size="mini"></el-input-number>
             </div>
             <div class="item">
-                <span>模式名称：</span>
+                <span v-html="LANG.MODE_NAME"></span>
                 <el-input v-model="userModelName" size="mini"></el-input>
             </div>
 
@@ -22,7 +22,6 @@
     export default {
         props:['showDialog'],
         data(){
-            console.log(this.globalEvent.userInfo.type);
             return {
                 userModel:1,
                 userModelName:this.globalEvent.userSceneName(0),
@@ -56,6 +55,6 @@
 <style>
     .user_model_dialog .el-dialog{width:400px;}
     .user_model_dialog .item{text-align:center;margin-bottom:20px;}
-    .user_model_dialog .item > span{display:inline-block;width:70px;text-align:right;}
+    .user_model_dialog .item > span{display:inline-block;width:95px!important;text-align:right;}
     .user_model_dialog .el-input{width:130px;}
 </style>

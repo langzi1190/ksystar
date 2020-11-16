@@ -9,7 +9,22 @@
                     <tr>
                         <td v-html="LANG.USER_USERNAME"></td>
                         <td>
-                            <el-input v-model="user.username" :placeholder="LANG.USER_INPUT_USERNAME"></el-input>
+                            <el-input list="user_history" v-model="user.username" :placeholder="LANG.USER_INPUT_USERNAME"></el-input>
+                            <datalist id="user_history">
+                                <option v-for="item in userList">{{item}}</option>
+                            </datalist>
+                            <!--<el-select v-model="userIndex"-->
+                                       <!--allow-create-->
+                                       <!--filterable-->
+                                       <!--default-first-option-->
+                                       <!--style="width:240px;">-->
+                                <!--<el-option-->
+                                        <!--v-for="(item,index) in userList"-->
+                                        <!--:key="item"-->
+                                        <!--:label="item"-->
+                                        <!--:value="index"-->
+                                <!--&gt;</el-option>-->
+                            <!--</el-select>-->
                         </td>
                     </tr>
                     <tr>
@@ -40,13 +55,23 @@
                     username:'Administrator',
                     password:'',
                 },
+                userHistoryKey:"user_history",
+                userList:['Administrator'],
                 LANG:this.LANGUAGE[this.globalEvent.language]
             }
         },
         mounted(){
+            this.getLoginHistory();
             this.getLanguage();
         },
         methods:{
+            getLoginHistory(){
+                let userHistory=localStorage.getItem(this.userHistoryKey);
+                if(userHistory!==null){
+                    userHistory=JSON.parse(userHistory);
+                    this.userList=userHistory;
+                }
+            },
             getLanguage(){
                 this.$http.post("languageRd.cgi",{},(ret)=>{
                     this.globalEvent.language= (ret.data===undefined || ret.data.lang===undefined || ret.data.lang==0) ?'zh':'en';
@@ -55,12 +80,24 @@
                 });
             },
             doLogin(){
+
+                // console.log(this.user);
                 this.$http.post("login.cgi",{username:this.user.username,password:this.user.password},(ret)=>{
                     if(ret.data.result==1){
                         this.globalEvent.userInfo.password=this.user.password;
                         this.globalEvent.userInfo.username=this.user.username;
                         this.globalEvent.userInfo.type=ret.data.type;
+
+
+                        // console.log(this.userList.includes(this.user.username));
+                        if(!this.userList.includes(this.user.username)){
+                            this.userList.push(this.user.username);
+                            localStorage.setItem(this.userHistoryKey,JSON.stringify(this.userList));
+                        }
+
+                        sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));
                         this.$emit("sub_event",{act:'login'});
+
                     }
                     else{
                         alert("登录失败");

@@ -60,11 +60,6 @@
             let LANG=this.LANGUAGE[this.globalEvent.language];
             return {
                 title:LANG.FPGA_TITLE,
-                // titleList:{
-                //     '':'',
-                //     'fpga':'FPGA升级',
-                //     'arm':'ARM升级'
-                // },
                 inCardCount:this.globalEvent.inputCardList.length,
                 outCardCount:0,
                 cardType:-1,//0 控制版，1输入，2输出，3监视，4同步
@@ -203,6 +198,35 @@
 
                 return boardStaArr;
             },
+            CRC8(pBuffer){
+                let crc = 0;
+                let start=0;
+                let total=pBuffer.length;
+
+                if (total <= 0)
+                {
+                    return crc;
+                }
+
+                while(start < total)
+                {
+                    crc ^= pBuffer[start];
+                    for (let i=0; i<8; i++)
+                    {
+                        if (crc & 0x80)
+                        {
+                            crc = (crc<<1)^0x07;
+                        }
+                        else
+                        {
+                            crc <<= 1;
+                        }
+                    }
+                    crc &=0xff;
+                    start++;
+                }
+                return crc;
+            },
             upload(){
                 let that=this;
                 let input=this.$refs['file'+this.cardType];
@@ -256,7 +280,9 @@
                     };
 
 
-                    that.loading.setText(this.LANG.TIP_UPGRADE_NOW+" ..."+ Math.floor(i/fragmentCount)*100+'%');
+                    d.dataCRC=that.CRC8(d.dataArr);
+
+                    that.loading.setText(that.LANG.TIP_UPGRADE_NOW+" ..."+ Math.floor(i/fragmentCount*100)+'%');
 
 
                     // let t_String=[];
@@ -278,8 +304,9 @@
                     that.$http.post("firmwareUpdate.cgi",d,(ret)=>{
                         if(ret.data.result==0){
                             //未正确接收
-                            alert(this.LANG.ALERT_API_ERROR);
-                            console.log("下发数据未正确接收:",d.packetId,d.packetNum);
+                            // alert(this.LANG.ALERT_API_ERROR);
+                            console.log("校验错误,重传:",d.packetId,d.packetNum);
+
                         }
                         else{
                             curPacketId++;

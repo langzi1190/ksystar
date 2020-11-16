@@ -50,6 +50,7 @@ function apiAxios(method, url, params, response) {
         "syncWinInfoRd_t.cgi":"usemodel_test_windows.json",
         "languageRd.cgi":"language.json",
         "login.cgi":"login.json",
+        "firmwareUpdate.cgi":"upload_result.json",
     };
       url=urlTrans[url];
       method='GET';

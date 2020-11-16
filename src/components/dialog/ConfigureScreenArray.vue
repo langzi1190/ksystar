@@ -4,7 +4,6 @@
             <div v-for="(i,index) in column" :key="index">
                 <el-input
                         v-model="ranksRow[index]"
-                        placeholder="请输入内容"
                         size="mini"
                         @input="ranks('column',index,ranksRow[index])"
                 ></el-input>
@@ -14,7 +13,6 @@
             <div v-for="(i,index) in row" :key="index">
                 <el-input
                         v-model="ranksColumn[index]"
-                        placeholder="请输入内容"
                         size="mini"
                         @input="ranks('row',index,ranksColumn[index])"
                 ></el-input>
@@ -29,16 +27,16 @@
                     :class="{'display-select':displayIndex === index}"
             >
                 <div v-show="displayIndex !== index">
-                    <p>屏幕编号:{{index+1}}</p>
-                    <p>水平大小:{{item.sizeArr[0]}}</p>
-                    <p>垂直大小:{{item.sizeArr[1]}}</p>
-                    <p>输出映射:{{item.mapArr[0]+1}}</p>
+                    <p>{{LANG.SCREEN_NO}}:{{index+1}}</p>
+                    <p>{{LANG.ATTR_WIDTH}}:{{item.sizeArr[0]}}</p>
+                    <p>{{LANG.ATTR_HEIGHT}}:{{item.sizeArr[1]}}</p>
+                    <p>{{LANG.SCREEN_PORT_MAP}}:{{item.mapArr[0]+1}}</p>
                 </div>
                 <div div v-show="displayIndex === index">
-                    <p>屏幕编号:{{index+1}}</p>
-                    <p>水平大小:{{item.sizeArr[0]}}</p>
-                    <p>垂直大小:{{item.sizeArr[1]}}</p>
-                    <p>输出映射:Port{{item.mapArr[0]+1}}(点击Port修改)</p>
+                    <p>{{LANG.SCREEN_NO}}:{{index+1}}</p>
+                    <p>{{LANG.ATTR_WIDTH}}:{{item.sizeArr[0]}}</p>
+                    <p>{{LANG.ATTR_HEIGHT}}:{{item.sizeArr[1]}}</p>
+                    <p>{{LANG.SCREEN_PORT_MAP}}:Port{{item.mapArr[0]+1}}({{LANG.SCREEN_CLICK_PORT}})</p>
                 </div>
             </div>
         </div>
@@ -58,7 +56,8 @@
                 displayIndex:-1,//选中的子窗口
                 ranksRow:[],
                 ranksColumn:[],
-                portList:this.item.portArr
+                portList:this.item.portArr,
+                LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
         inject: ["comScreen"],

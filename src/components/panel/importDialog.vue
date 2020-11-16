@@ -129,7 +129,7 @@
 </script>
 
 <style>
-    .upload_area{width:100px;height:100px;line-height:100px;padding:10px;text-align:center;cursor:pointer;margin:10px auto;position:relative;border:1px solid #dcdcdc;}
+    .upload_area{width:100px;height:100px;padding:10px;text-align:center;cursor:pointer;margin:10px auto;position:relative;border:1px solid #dcdcdc;}
     .upload_area input{opacity: 0;z-index:1;position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;}
     .import_dialog button{margin:10px auto;}
 </style>

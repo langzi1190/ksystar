@@ -30,7 +30,7 @@
                     <label><input v-model="control_mode" value=1 type="radio"/>{{LANG.SERIAL_COM2_MODE1}}</label>
                 </div>
             </div>
-            <div class="item" style="color:#f44f44;width: 200px;margin: 0 auto 20px;line-height: 20px;">
+            <div class="item" style="color:#f44f44;width: 200px;margin: 0 auto 20px;line-height: 20px;word-break:break-word;">
                 {{LANG.SERIAL_TIP}}
             </div>
             <div class="item">

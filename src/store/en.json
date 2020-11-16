@@ -75,7 +75,7 @@
 
   "ATTR_CLOSEALL":"Close all",
   "ATTR_RESTORE":"Restore",
-  "ATTR_FULLSCREEN":"Full screen",
+  "ATTR_FULLSCREEN":"Fullscreen",
   "ATTR_TOP":"Top",
   "ATTR_BOTTOM":"Bottom",
   "ATTR_EXTEND":"Extend",
@@ -107,6 +107,7 @@
   "SCREEN_PORT_MAP":"Output Map",
   "SCREEN_PORT_AUTO_MAP":"Auto Map",
   "SCREEN_TITLE":"Screen Config Setting",
+  "SCREEN_OUT_LAYOUT":"Device Output Port Layout:",
   "SCREEN_WALL":"Wall",
   "SCREEN":"Screen",
   "SCREEN_ROW":"Row Num",
@@ -118,6 +119,19 @@
   "SCREEN_NO":"Screen No",
   "SCREEN_LCD":"LCD mode",
   "SCREEN_FRAME":"Screen Refresh",
+  "SCREEN_CLICK_PORT":"Click Port To Change",
+  "SCREEN_CONFIG_TIP":"Notice：Click Dark Background To Config Screen",
+
+  "RS_TITLE":"Define Output Format Setting",
+  "RS_TS":"Output Timing",
+  "RS_WIDTH":"Horizontal Size:",
+  "RS_HEIGHT":"Vertical Size:",
+
+  "RESTOR_TITLE":"Restore the factory settings",
+
+  "TS_TITLE":"Output Timing Setting",
+  "TS_H_POLAR":"H Polar",
+  "TS_V_POLAR":"V Polar",
 
   "FPGA_TITLE":"Device Hardware Upgrade",
   "FPGA_SYNC":"Sync Card FPGA Upgrade",
@@ -154,8 +168,9 @@
 
   "EDID_TITLE":"EDID Setting",
   "EDID_ADVANCE_TITLE":"Output Timing Setting",
-  "EDID_CLOCK":"Pixel Clock:",
   "EDID_DEV_NO":"Device ID:",
+  "EDID_ADVANCED":"Advance",
+  "EDID_CLOCK":"Pixel Clock:",
   "EDID_WIDTH":"Decount:",
   "EDID_HEIGHT":"ActiveLine:",
   "EDID_FRAME":"Framerate:",
@@ -241,6 +256,8 @@
   "CAROUSE_ADD_LAYOUT":"Add Layout",
   "CAROUSE_DEL_LAYOUT":"Del Layout",
   "CAROUSE_EDIT_LAYOUT":"Edit Layout Time",
+  "CAROUSE_SINGLE_LOOP":"Single Loop Cycel",
+  "CAROUSE_ALL_LOOP":"All Loop Cycel",
 
   "SOURCE_GROUP_TITLE":"Source Group Setting",
   "SOURCE_GROUP_NAME":"Source Group name: ",
@@ -254,8 +271,9 @@
   "BACKUP_SOURCE_ID":"Source ID:&nbsp;",
 
   "MODE_TITLE":"Changing the name of the mode",
-  "MODE_ID":"Mode ID: ",
-  "MODE_NAME":"Mode Name: ",
+  "MODE_SAVE_TITLE":"Save Mode Setting",
+  "MODE_ID":"Mode ID:&nbsp;",
+  "MODE_NAME":"Mode Name:&nbsp;",
 
   "EQ_TITLE":"EQ Setting",
   "EQ_VALUE":"EQ Value: ",
