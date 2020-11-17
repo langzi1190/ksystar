@@ -180,8 +180,9 @@
             op(act){
                 if(act){
                     if(this.syncSignal==''){
-                        alert("未选择同步基准源");
-                        return ;
+                        // alert("未选择同步基准源");
+                        // return ;
+                        this.syncSignal='1_1';
                     }
 
                     let param={
@@ -225,12 +226,23 @@
                     this.$http.post("KfsWr.cgi",param,(ret)=>{
                         let fSyncInfo=this.globalEvent.commonInfo.fSyncInfo;
                         fSyncInfo.fSyncFuncSta=param.funcSta;
+                        fSyncInfo.fSyncArr=[];
                         for(let i in param.inCardArr){
+                            let fSync={
+                                scrPropArr:[]
+                            };
                             for(let k in param.inCardArr[i].inCardChnArr){
-                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].inCardChnArr[k].syncEn;
-                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].inCardChnArr[k].syncCardId;
-                                fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].inCardChnArr[k].syncSrcId;
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].inCardChnArr[k].syncEn;
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].inCardChnArr[k].syncCardId;
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].inCardChnArr[k].syncSrcId;
+                                fSync.scrPropArr.push({
+                                    syncSta:param.inCardArr[i].inCardChnArr[k].syncEn,
+                                    syncCardId:param.inCardArr[i].inCardChnArr[k].syncCardId,
+                                    syncSrcId:param.inCardArr[i].inCardChnArr[k].syncSrcId
+                                });
                             }
+
+                            fSyncInfo.fSyncArr.push(fSync);
                         }
 
                         this.$emit('sub_event',{act:'sure_kfs'})

@@ -198,6 +198,7 @@
                 }
             });
 
+
             this.globalEvent.$on("change_src_card",(param)=>{
                 let w=this.globalEvent.selectedWindowIndex;
                 if(w>-1){
@@ -205,6 +206,24 @@
                 }
 
             });
+
+            this.globalEvent.$on("change_src_group",(param)=>{
+                let w=this.globalEvent.selectedWindowIndex;
+                if(w>-1){
+                    this.$refs.windowObj[w].setSrcGroup(param.group);
+                }
+            });
+
+            this.globalEvent.$on("change_src_group_name",()=>{
+                for(let i in this.windowItems){
+                    let win=this.windowItems[i];
+                    if(win.srcGroupId>0){
+                        win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
+                    }
+
+                }
+            });
+
             this.loadData();
 
             window.addEventListener('resize',(e)=>{
@@ -332,6 +351,13 @@
                                 if(!this.globalEvent.isValidResolution(win.resolution)){
                                     win.resolution=['信号丢失']
                                 }
+                                if(win.srcGroupId>0){
+                                    win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
+                                }
+                                else{
+                                    win.groupLabel='';
+                                }
+
                                 win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
                                 win.k='k'+parseInt(Math.random()*1000);
                             }
@@ -400,8 +426,6 @@
 
 
 
-
-
                 if(this.isOutResource(data)){
                     alert(this.globalEvent.alert.outResource);
                     this.loadScreenWindowItems();
@@ -443,12 +467,24 @@
                     outCardPort[cardKey].push(port);//属于同一板卡的端口
                 }
                 //计算每个窗口跨过的端口
+                // let trueFlag=true;
+                this.portStat={};
+                let cardStat={};
                 for(let i in totalWins){
 
                     let crossCards=this.getWindowCrossCard(totalWins[i],outCardPort);
+
+                    //输出板卡资源 统计
+                    for(let inner_i in crossCards){
+                        let key=crossCards[inner_i];
+                        if(typeof cardStat[key] == 'undefined'){
+                            cardStat[key]=0;
+                        }
+                        cardStat[key]++;
+                    }
+
                     let port=this.globalEvent.inputCardList[totalWins[i].srcCardId].srcArr[totalWins[i].srcId];
 
-                    // console.log(crossCards);
 
                     let resourceType=1;//默认资源数为1
                     if((port.portType==16 && port.ITESrcType==18) || (port.portType==16 && port.ITESrcType==17)){
@@ -457,27 +493,38 @@
                     else if((port.portType==18 && port.ITESrcType==18) || (port.ITESrcType==18 && port.ITESrcType==17)){
                         resourceType=2;
                     }
-                    // if((port.portType==16 || port.portType==18 )&& port.ITESrcType==17){
-                    //     resourceType=4;
-                    // }
-                    // else if(port.portType==18 && port.ITESrcType==18){
-                    //     resourceType=2;
-                    // }
 
-                    // for(let k in crossCards){
-                    //     for(let cardKey in outCardPort){
-                    //         if(outCardPort[cardKey].includes(crossPorts[k])){
-                    //             outCardUsedRes[cardKey]+=resourceType;
-                    //         }
-                    //     }
-                    // }
-                    // console.log(resourceType);
+
                     for(let k in crossCards){
                         outCardUsedRes[crossCards[k]]+=resourceType;
                     }
                 }
 
+
                 let outResource=false;
+                //输出端口 资源统计
+                if(this.globalEvent.maxWinNumPerPort>0){
+                    for(let i in this.portStat){
+                        if(this.portStat[i]>this.globalEvent.maxWinNumPerPort){
+                            console.log("超过输出端口最大窗口");
+                            outResource=true;
+                            break;
+                        }
+                    }
+                }
+                console.log(cardStat);
+                //输出板卡 资源统计
+                for(let i in this.globalEvent.outPutInfo.maxWinNumArr){
+                    let num=this.globalEvent.outPutInfo.maxWinNumArr[i];
+                    let key='card'+i;
+                    if( num>0 && typeof cardStat[key]!='undefined' && cardStat[key]>num){
+                        outResource=true;
+                        console.log("超过输出板卡最大窗口数");
+                        break ;
+                    }
+                }
+
+
                 for(let k in outCardUsedRes){
                     if(outCardUsedRes[k]>8){
                         outResource=true;
@@ -513,21 +560,28 @@
                         startRow=i;
                     }
                     if(winBottom>h){
-                        // console.log(win.winTop,win.winH,winBottom,h);
                         endRow=Math.min(i+1,this.curScreen.Row-1);
                     }
                 }
 
                 // console.log(startCol,endCol,startRow,endRow);
 
+
                 for(let i=startCol;i<=endCol;i++){
                     for(let j=startRow;j<=endRow;j++){
                         let k=this.curScreen.Col*j+parseInt(i);
 
-                        // console.log(k);
-
                         for(let cardKey in outCardPort){
-                            if(outCardPort[cardKey].includes(this.curScreen.portArr[k].mapArr[0])){
+                            let portNo=this.curScreen.portArr[k].mapArr[0];
+
+                            // 输出端口统计
+                            let portKey="port"+portNo;
+                            if(typeof this.portStat[portKey]=='undefined'){
+                                this.portStat[portKey]=0;
+                            }
+                            this.portStat[portKey]++;
+                            // 输出端口统计 end
+                            if(outCardPort[cardKey].includes(portNo)){
                                 cards.push(cardKey);//记录 端口占用的板卡号
                             }
                         }

@@ -20,7 +20,7 @@
 
             <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
-                    <span>Win-{{seq+1}}:{{item.inputCardLabel}} {{item.lock==1?'['+LANG.ATTR_LOCKED+']':''}}</span>
+                    <span>Win-{{seq+1}}:{{this.item.srcGroupId==0?item.inputCardLabel:item.groupLabel}} {{item.lock==1?'['+LANG.ATTR_LOCKED+']':''}}</span>
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
@@ -130,7 +130,6 @@
             sendSizeEvent(){
                 // console.log("init_size",this.o_width);
                 if(this.$parent.isOutResource({})){
-                    console.log('size_event');
                     alert(this.globalEvent.alert.outResource);
                     return;
                 }
@@ -152,6 +151,20 @@
                     //置顶
                     this.zIndex=this.$parent.windowItems[this.seq].layerId;
                 }
+            },
+            setSrcGroup(group){
+                this.item.groupLabel=group.label;
+                this.item.srcGroupId=parseInt(group.srcGroupId)+1;
+                let data={
+                    scrGroupId:this.globalEvent.curScreenIndex,
+                    srcGroupId:this.item.srcGroupId,
+                    winId:parseInt(this.item.winId),
+                    srcCardId:parseInt(this.item.srcCardId),
+                    srcId:parseInt(this.item.srcId)
+                };
+                this.$http.post("switchWinSrc.cgi",data,(ret)=>{
+                    console.log("signal/index.vue 切换窗口 信号源组");
+                });
             },
             setWindowSize(param){
                 //根据侧边栏的参数调整 窗口参数,/vdr/index.vue 调用

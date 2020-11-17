@@ -245,7 +245,7 @@ export default {
             this.globalEvent.$emit("change_src_card",{v:e.target.parentElement.dataset.info});
         },
         syscInputInfo(signal_list){
-            let inCardArr=signal_list.inCardArr;
+            let inCardArr=typeof signal_list.inCardArr == "undefined" ?[]:signal_list.inCardArr;
             let id=1;
             let kfsFunc=this.globalEvent.commonInfo.fSyncInfo.fSyncFuncSta;
             let fSyncArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
@@ -254,7 +254,7 @@ export default {
                 inCardArr[i].id=id++;//tree id
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
-                    inCardArr[i].srcArr[k].kfsAble=kfsFunc==0?0:fSyncArr[i].scrPropArr[k].syncEn;
+                    inCardArr[i].srcArr[k].kfsAble=kfsFunc==0?0:fSyncArr[i].scrPropArr[k].syncSta;
                     inCardArr[i].srcArr[k].id=id++;
                     if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
                         inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
@@ -270,6 +270,7 @@ export default {
                     inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);
                 }
             }
+            console.log(inCardArr);
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
 
         },

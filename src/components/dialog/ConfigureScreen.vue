@@ -67,6 +67,7 @@ export default {
     },
   created() {
 
+      //新开画面需要 接口
       if(this.globalEvent.gMode==0){
           this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
               this.screenInfo=this.globalEvent.screenInfo;//vdr index 里初始化数据

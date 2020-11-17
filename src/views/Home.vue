@@ -319,6 +319,10 @@ export default {
           this.isLogin=1;
       }
       // setTimeout(()=>{this.isLogin=1;},5000);
+
+        this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+            this.globalEvent.outPutInfo=ret.data;//configScreen
+        });
     },
   watch:{
       isLogin(v,ov){

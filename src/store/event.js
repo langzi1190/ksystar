@@ -12,6 +12,7 @@ let gobalEvent =new Vue({
             password:'',
             type:0
         },
+        outPutInfo:{},//输出端口
         language:'zh',
         pType:{
             'p0':'DEFAULT',

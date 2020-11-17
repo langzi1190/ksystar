@@ -104,7 +104,6 @@
                 }
             },
             handleNodeClick(data,node,tree){
-                console.log(data);
                 if(node.level==1){
                     this.selectedSource=data;
                     this.selectedCard={};
@@ -114,6 +113,8 @@
                     this.selectedCard=data;
                 }
                 this.selectedLevel=node.level;
+
+                this.globalEvent.$emit("change_src_group",{group:this.selectedSource});
             },
             userSceneTime(arr){
                 return "    "+arr[2]+','+this.doubleNum(arr[3])+':'+this.doubleNum(arr[4])+':'+this.doubleNum(arr[5]);
@@ -265,6 +266,10 @@
                     if(this.showSceneDialog=='edit'){
                         this.selectedSource.label=param.label;
                         this.selectedSource.srcArr=param.list;
+                        setTimeout(()=>{
+                            this.globalEvent.$emit("change_src_group_name");
+                        },800);
+
                     }
                     else{
                         let newSource={
