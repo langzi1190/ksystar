@@ -3,7 +3,7 @@
   "HOME_MAIN_FUNC":"MainFunctions",
 
   "HOME_SETTING":"Setting",
-  "HOME_MULTI_SCREEN_SWITCH":"多屏切换",
+  "HOME_MULTI_SCREEN_SWITCH":"Multi Screen",
   "HOME_EXTENAL_CONTROL":"External Control",
   "HOME_LOCK":"Lock",
   "HOME_POSITION_LOCK":"Position lock",
@@ -146,6 +146,8 @@
   "TEMP_SYNC":"Sync Card",
   "TEMP_MONITOR":"Monitor Card",
   "TEMP_CONTROL":"Control Card",
+  "TEMP_ENHANCE_INPUT":"Input Enhanced Card",
+  "TEMP_ENHANCE_OUTPUT":"output Enhanced Card",
 
   "VERSION_TITLE":"Version Info",
   "VERSION_ARM":"ARM Version",
@@ -256,8 +258,8 @@
   "CAROUSE_ADD_LAYOUT":"Add Layout",
   "CAROUSE_DEL_LAYOUT":"Del Layout",
   "CAROUSE_EDIT_LAYOUT":"Edit Layout Time",
-  "CAROUSE_SINGLE_LOOP":"Single Loop Cycel",
-  "CAROUSE_ALL_LOOP":"All Loop Cycel",
+  "CAROUSE_SINGLE_LOOP":"Single Loop Cycle",
+  "CAROUSE_ALL_LOOP":"All Loop Cycle",
 
   "SOURCE_GROUP_TITLE":"Source Group Setting",
   "SOURCE_GROUP_NAME":"Source Group name: ",
@@ -282,13 +284,31 @@
   "IMPORT_UPLOAD":"Upload File",
   "IMPORT":"Import",
 
-  "WORKMODE_TITLE":"工作模式",
+  "WORKMODE_TITLE":"Work Mode",
   "WORKMODE_DP":"Manual DP",
   "WORKMODE_HDMI":"Manual HDMI",
 
   "VGA_TITLE":"VGA Correction",
   "VGA_BTN_RESET":"Reset",
-  "VGA_BTN_APPLY":"Apply"
+  "VGA_BTN_APPLY":"Apply",
+
+  "ALERT_MAX_WINDS":"Window excess",
+  "ALERT_API_ERROR":"Receive wrong",
+  "ALERT_NO_INPUT_CHOOSE":"No Input Card",
+  "ALERT_NO_OUTPUT_CHOOSE":"No Output Card",
+  "ALERT_NO_CARD_CHOOSE":"No Card",
+  "ALTER_OUTCARD_NUMBER":"超出可用输出卡数量",
+  "ALTER_AT_LEAST_ONE":"At least one screen",
+  "ALERT_MAX_USERS":"Support no more than 10 users",
+  "ALERT_MAX_USERNAME_LENGTH":"name length should be less than 20",
+  "ALERT_MAX_PASSWORD_LENGTH":"password length should be less than 20",
+
+  "TIP_ALREADY_SAVE":"done",
+  "TIP_UPGRADE_NOW":"upgrading",
+  "TIP_INPUT_NEW_NAME":"Input new name",
+  "TIP_INPUT_PASSWD":"Input password",
+  "TIP_WRONG_PASSWD":"Wrong password",
+  "TIP_UPGRADE_SUCCESS":"Upgraded"
 
 
 

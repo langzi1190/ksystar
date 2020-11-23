@@ -21,6 +21,7 @@ time, mark, audio, video {
 	border: 0;
 	font-size: 100%;
 	font: inherit;
+	font-family: "Microsoft Ya Hei";
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -54,6 +55,37 @@ table {
 .label_group input{margin-top:0;vertical-align: middle;}
 .top_part{display:flex;}
 .el-dialog__header{text-align:left;}
+.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active,
+.el-tabs--border-card>.el-tabs__header{border:none;}
+
+.content-nav .el-collapse-item__wrap,
+.content-nav .el-tree,
+.content-nav .el-tree-node__content:hover,
+.content-nav .el-tree-node:focus>.el-tree-node__content,
+.content-nav .el-collapse-item__header{background-color:transparent;color:#fff;border:none;}
+.content-nav .el-collapse{border-bottom:none;}
+
+header .el-tabs--border-card>.el-tabs__header .el-tabs__item{border:none;}
+.attr .el-collapse-item__header{
+	background-color:#f0f3f7;margin-top:5px;padding-left:5px;
+}
+.attr .el-collapse-item__content{margin-top:5px;padding-bottom:6px;}
+.attr .control-btn .el-button{padding:0;border:none;width:37px;}
+.attr .title .el-input-group__prepend{background-color:#fff;border:none;}
+.attr .el-input-group--prepend .el-input__inner,.attr .el-input-group__append{border-radius:3px;color:#bbb;}
+.attr .signal_btn_group .el-button{border-radius: 4px;background-color: #f0f3f7;border:none;}
+
+.el-dialog__header{    height: 35px;
+	line-height: 35px;
+	padding: 0;
+	background-color: #3078ff;
+	padding-left: 10px;}
+.el-dialog__title{color:#fff;}
+.el-dialog__header .el-icon-close:before{color:#fff;content: "\e6db";}
+.el-dialog__header .el-dialog__headerbtn{    top: 7px;
+	right: 10px;
+	font-size: 20px;}
+.card-child span{margin-left:4px;}
 /*input::-webkit-outer-spin-button,*/
 /*input::-webkit-inner-spin-button {*/
 	/*-webkit-appearance: none;*/

@@ -195,6 +195,9 @@ export default {
 
       let rv=this.item.FormatW+'*'+this.item.FormatH;
       let videoId=this.item.VideoId;
+      let LANG=this.LANGUAGE[this.globalEvent.language];
+      resolution[resolution.length-1].label=LANG.SCREEN_DEFINE;
+      resolution[resolution.length-2].label=LANG.SCREEN_DEFINE;
       // console.log('fbl');
       // console.log(this.item);
       // let frameRate=this.item.FrameRate==0?60:50;
@@ -212,7 +215,7 @@ export default {
           TimingMode: this.item.TimingMode,
           showSetting:false,
           showTimeSeq:false,
-          LANG:this.LANGUAGE[this.globalEvent.language]
+          LANG:LANG
       };
   },
     methods:{

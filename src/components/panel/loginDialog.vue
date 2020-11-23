@@ -9,22 +9,25 @@
                     <tr>
                         <td v-html="LANG.USER_USERNAME"></td>
                         <td>
-                            <el-input list="user_history" v-model="user.username" :placeholder="LANG.USER_INPUT_USERNAME"></el-input>
-                            <datalist id="user_history">
-                                <option v-for="item in userList">{{item}}</option>
-                            </datalist>
-                            <!--<el-select v-model="userIndex"-->
-                                       <!--allow-create-->
-                                       <!--filterable-->
-                                       <!--default-first-option-->
-                                       <!--style="width:240px;">-->
-                                <!--<el-option-->
-                                        <!--v-for="(item,index) in userList"-->
-                                        <!--:key="item"-->
-                                        <!--:label="item"-->
-                                        <!--:value="index"-->
-                                <!--&gt;</el-option>-->
-                            <!--</el-select>-->
+                            <!--<el-input list="user_history" v-model="user.username" :placeholder="LANG.USER_INPUT_USERNAME"></el-input>-->
+                            <!--<datalist id="user_history">-->
+                                <!--<option v-for="item in userList">{{item}}</option>-->
+                            <!--</datalist>-->
+                            <el-select v-model="userIndex"
+                                       allow-create
+                                       filterable
+                                       :filter-method="filterMethod"
+                                       automatic-dropdown
+                                       default-first-option
+                                       placeholder="请输入用户名"
+                                       style="width:240px;">
+                                <el-option
+                                        v-for="(item,index) in userList"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item"
+                                ></el-option>
+                            </el-select>
                         </td>
                     </tr>
                     <tr>
@@ -55,6 +58,7 @@
                     username:'Administrator',
                     password:'',
                 },
+                userIndex:'Administrator',
                 userHistoryKey:"user_history",
                 userList:['Administrator'],
                 LANG:this.LANGUAGE[this.globalEvent.language]
@@ -65,12 +69,23 @@
             this.getLanguage();
         },
         methods:{
+            filterMethod(v){
+                this.userIndex=v;
+            },
             getLoginHistory(){
                 let userHistory=localStorage.getItem(this.userHistoryKey);
                 if(userHistory!==null){
                     userHistory=JSON.parse(userHistory);
                     this.userList=userHistory;
                 }
+                // this.$http.post("userAdminRd.cgi",{},(ret)=>{
+                //     let info=ret.data;
+                //     for(let i in info.userInfoArr){
+                //         if(!this.userList.includes(info.userInfoArr[i][0]))
+                //                 this.userList.push(info.userInfoArr[i][0]);
+                //
+                //     }
+                // });
             },
             getLanguage(){
                 this.$http.post("languageRd.cgi",{},(ret)=>{
@@ -82,6 +97,7 @@
             doLogin(){
 
                 // console.log(this.user);
+                this.user.username=this.userIndex;
                 this.$http.post("login.cgi",{username:this.user.username,password:this.user.password},(ret)=>{
                     if(ret.data.result==1){
                         this.globalEvent.userInfo.password=this.user.password;
@@ -89,13 +105,13 @@
                         this.globalEvent.userInfo.type=ret.data.type;
 
 
-                        // console.log(this.userList.includes(this.user.username));
+
                         if(!this.userList.includes(this.user.username)){
                             this.userList.push(this.user.username);
                             localStorage.setItem(this.userHistoryKey,JSON.stringify(this.userList));
                         }
 
-                        sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));
+                        sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));//保存当前用户信息
                         this.$emit("sub_event",{act:'login'});
 
                     }
@@ -103,10 +119,6 @@
                         alert("登录失败");
                     }
 
-                    // this.globalEvent.userInfo.password=this.user.password;
-                    // this.globalEvent.userInfo.username=this.user.username;
-                    // this.globalEvent.userInfo.type=0;
-                    // this.$emit("sub_event",{act:'login'});
                 });
 
                 // alert(JSON.stringify(this.user))//可以直接把this.user对象传给后端进行校验用户名和密码

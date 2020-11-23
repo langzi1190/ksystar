@@ -2,104 +2,111 @@
     <div style="height:100%;width:100%;">
         <div class="home" v-if="isLogin==1">
             <!-- 头部菜单显示 -->
-            <header>
-                <el-tabs type="border-card" value="1">
-                    <el-tab-pane :label="LANG.HOME_DEV">
-                        <div class="card-s">
-                            <card :title="LANG.HOME_DEV">
-                                <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
-                                <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
-                                <card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>
-                                <card-item :title="LANG.HOME_SYNC"></card-item>
-                                <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0"></card-item>
-                            </card>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane :label="LANG.HOME_MAIN_FUNC">
-                        <div class="card-s">
-                            <card :title="LANG.SETTING">
-                                <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="plus"></card-item>
-                                <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="display" @click.native="setting('2')"  :class="{'card-item-disabled':allowScreen==0}"></card-item>
-                            </card>
-                            <card :title="LANG.HOME_PRESET">
-                                <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'"></card-item>
-                                <card-item :title="LANG.HOME_SAVE_USER_MODE" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'"></card-item>
-                                <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"  :class="{'card-item-disabled':allowFactory==0}"></card-item>
-                                <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('sync')"></card-item>
-                                <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')"></card-item>
-                                <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')"></card-item>
-                                <card-item :title="LANG.HOME_ECHO_CONFIG" @click.native="showDialog='monIp'"></card-item>
-                            </card>
-                            <card :title="LANG.HOME_SWITCH_WALL">
-                                <card-item :title="LANG.HOME_WALL_1" seq='0' @click.native="loadScreen(0)"  iconName="display"></card-item>
-                                <card-item :title="LANG.HOME_WALL_2" seq='1' @click.native="loadScreen(1)" iconName="display"></card-item>
-                                <div class="card-item">
-                                    <card-child :title="LANG.HOME_WALL_3" seq='2' @click.native="loadScreen(2)"  iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_WALL_4" seq='3' @click.native="loadScreen(3)"  iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_WALL_5" seq='4' @click.native="loadScreen(4)"  iconName="display"></card-child>
-                                </div>
-                                <div class="card-item">
-                                    <card-child :title="LANG.HOME_WALL_6" seq='5' @click.native="loadScreen(5)"  iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_WALL_7" seq='6' @click.native="loadScreen(6)"  iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_WALL_8" seq='7' @click.native="loadScreen(7)"  iconName="display"></card-child>
-                                </div>
-                            </card>
-                            <card :title="LANG.HOME_EXTENAL_CONTROL">
-                                <div class="card-item card-external">
-                                    <card-child :title="LANG.HOME_OPEN_SCREEN"  @click.native="preinstall('10')" iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_CLOSE_SCREEN"  @click.native="preinstall('11')" iconName="display"></card-child>
-                                    <card-child :title="LANG.HOME_CHANNEL_CONFIG" iconName="display" @click.native="showDialog='screenCtr'"></card-child>
-                                </div>
-                            </card>
-                            <card :title="LANG.HOME_LOCK">
-                                <card-item
-                                        :title="LANG.HOME_POSITION_LOCK"
-                                        :isChecked="globalEvent.panelLock"
-                                        @click.native="globalEvent.panelLock=!globalEvent.panelLock"
-                                ></card-item>
-                            </card>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane :label="LANG.HOME_TOOLS">
-                        <div class="card-s">
-                            <card :title="LANG.HOME_ADVANCE_MENU">
-                                <card-item :title="LANG.HOME_USER"  :class="{'card-item-disabled':allowUser==0}" @click.native="showDialog='user'"></card-item>
-                                <card-item @click.native="showDialog='screenBright'" :title="LANG.HOME_BRIGHT"></card-item>
-                                <card-item @click.native="showDialog='kfs'" title="KFS"></card-item>
-                                <card-item @click.native="showDialog='multi'" :title="LANG.HOME_MULTI_SYNC"></card-item>
-                                <card-item :title="LANG.HOME_OUTPUT_SHUT"  @click.native="preinstall('8')"></card-item>
-                                <card-item :title="LANG.HOME_OUTPUT_ON"  @click.native="preinstall('9')"></card-item>
-                                <card-item :title="LANG.HOME_CONFIG_IMPORT" @click.native="opConfig('import')"></card-item>
-                                <card-item :title="LANG.HOME_CONFIG_EXPORT" @click.native="opConfig('export')"></card-item>
-                                <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
-                                <card-item title="EDID" @click.native="showDialog='edid'"></card-item>
-                            </card>
-                            <card :title="LANG.HOME_LANGUAGE">
-                                <!--<card-item title="语言设置"></card-item>-->
-                                <el-select v-model="curLang" size="mini" style="width:90px;">
-                                    <el-option
-                                            v-for="(item,index) in langList"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                    ></el-option>
-                                </el-select>
-                            </card>
-                            <card :title="LANG.HOME_EXPERT">
-                                <card-item @click.native="showDialog='serial'" :title="LANG.HOME_COM_CONFIG"></card-item>
-                                <card-item :title="LANG.HOME_NET_CONFIG" @click.native="showDialog='ipConfig'"></card-item>
-                                <card-item :title="LANG.HOME_COMPUTER"></card-item>
-                                <card-item :title="LANG.HOME_DEMO_MODE" @click.native="showDialog='simulate'"></card-item>
-                                <card-item @click.native="showDialog='deviceStatus'" :title="LANG.HOME_TEST"></card-item>
-                                <card-item @click.native="showDialog='version'" :title="LANG.HOME_VERSION"></card-item>
-                                <card-item @click.native="showDialog='temp'" :title="LANG.HOME_TEMPERATURE"></card-item>
-                                <card-item :title="LANG.HOME_ARM_UPGRADE" @click.native="upgrade('arm')"></card-item>
-                                <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="upgrade('fpga')"></card-item>
-                            </card>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
-            </header>
+            <div style="display:flex;">
+                <div class="logo" style="display:flex;justify-content: center;align-items: center;background:#1f2e54 url(../assets/images/logo.png) no-repeat center center / 100% auto;flex:0 0 210px;">
+                    <img src="@/assets/images/logo.png" width="200"/>
+                </div>
+                <header>
+                    <el-tabs type="border-card" value="1">
+                        <el-tab-pane :label="LANG.HOME_DEV">
+                            <div class="card-s">
+                                <card :title="LANG.HOME_DEV">
+                                    <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
+                                    <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
+                                    <card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>
+                                    <card-item :title="LANG.HOME_SYNC"></card-item>
+                                    <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0"></card-item>
+                                </card>
+                            </div>
+                        </el-tab-pane>
+                        <el-tab-pane :label="LANG.HOME_MAIN_FUNC">
+                            <div class="card-s">
+                                <card :title="LANG.HOME_SETTING">
+                                    <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="add_win"></card-item>
+                                    <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="config" @click.native="setting('2')"  :class="{'card-item-disabled':allowScreen==0}"></card-item>
+                                </card>
+                                <card :title="LANG.HOME_PRESET">
+                                    <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'" iconName="user_mode"></card-item>
+                                    <card-item :title="LANG.HOME_SAVE_USER_MODE" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'" iconName="save_mode"></card-item>
+                                    <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"  :class="{'card-item-disabled':allowFactory==0}" iconName="reset"></card-item>
+                                    <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('sync')" iconName="sync"></card-item>
+                                    <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')" iconName="echo_on"></card-item>
+                                    <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')" iconName="echo_off"></card-item>
+                                    <card-item :title="LANG.HOME_ECHO_CONFIG" @click.native="showDialog='monIp'" iconName="echo_set"></card-item>
+                                </card>
+                                <card :title="LANG.HOME_SWITCH_WALL">
+                                    <card-item :title="LANG.HOME_WALL_1" seq='0' @click.native="loadScreen(0)"  iconName="wall1"></card-item>
+                                    <card-item :title="LANG.HOME_WALL_2" seq='1' @click.native="loadScreen(1)" iconName="wall2"></card-item>
+                                    <div class="card-item">
+                                        <card-child :title="LANG.HOME_WALL_3" seq='2' @click.native="loadScreen(2)"  iconName="wall3"></card-child>
+                                        <card-child :title="LANG.HOME_WALL_4" seq='3' @click.native="loadScreen(3)"  iconName="wall4"></card-child>
+                                        <card-child :title="LANG.HOME_WALL_5" seq='4' @click.native="loadScreen(4)"  iconName="wall5"></card-child>
+                                    </div>
+                                    <div class="card-item">
+                                        <card-child :title="LANG.HOME_WALL_6" seq='5' @click.native="loadScreen(5)"  iconName="wall6"></card-child>
+                                        <card-child :title="LANG.HOME_WALL_7" seq='6' @click.native="loadScreen(6)"  iconName="wall7"></card-child>
+                                        <card-child :title="LANG.HOME_WALL_8" seq='7' @click.native="loadScreen(7)"  iconName="wall8"></card-child>
+                                    </div>
+                                </card>
+                                <card :title="LANG.HOME_EXTENAL_CONTROL" style="width:120px;">
+                                    <div class="card-item card-external">
+                                        <card-child :title="LANG.HOME_OPEN_SCREEN"  @click.native="preinstall('10')" iconName="scr_on"></card-child>
+                                        <card-child :title="LANG.HOME_CLOSE_SCREEN"  @click.native="preinstall('11')" iconName="scr_off"></card-child>
+                                        <card-child :title="LANG.HOME_CHANNEL_CONFIG" iconName="scr_set" @click.native="showDialog='screenCtr'"></card-child>
+                                    </div>
+                                </card>
+                                <card :title="LANG.HOME_LOCK">
+                                    <card-item
+                                            :title="LANG.HOME_POSITION_LOCK"
+                                            :isChecked="globalEvent.panelLock"
+                                            @click.native="globalEvent.panelLock=!globalEvent.panelLock"
+                                            iconName="pos_lock"
+                                    ></card-item>
+                                </card>
+                            </div>
+                        </el-tab-pane>
+                        <el-tab-pane :label="LANG.HOME_TOOLS">
+                            <div class="card-s">
+                                <card :title="LANG.HOME_ADVANCE_MENU">
+                                    <card-item :title="LANG.HOME_USER"  :class="{'card-item-disabled':allowUser==0}" @click.native="showDialog='user'"  iconName="user"></card-item>
+                                    <card-item @click.native="showDialog='screenBright'" :title="LANG.HOME_BRIGHT" iconName="bri"></card-item>
+                                    <card-item @click.native="showDialog='kfs'" title="KFS" iconName="kfs"></card-item>
+                                    <card-item @click.native="showDialog='multi'" :title="LANG.HOME_MULTI_SYNC" iconName="multi"></card-item>
+                                    <card-item :title="LANG.HOME_OUTPUT_SHUT"  @click.native="preinstall('8')" iconName="echo_off"></card-item>
+                                    <card-item :title="LANG.HOME_OUTPUT_ON"  @click.native="preinstall('9')" iconName="echo_on"></card-item>
+                                    <card-item :title="LANG.HOME_CONFIG_IMPORT" @click.native="opConfig('import')" iconName="import"></card-item>
+                                    <card-item :title="LANG.HOME_CONFIG_EXPORT" @click.native="opConfig('export')" iconName="export"></card-item>
+                                    <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
+                                    <card-item title="EDID" @click.native="showDialog='edid'" iconName="edid"></card-item>
+                                </card>
+                                <card :title="LANG.HOME_LANGUAGE">
+                                    <!--<card-item title="语言设置"></card-item>-->
+                                    <el-select v-model="curLang" size="mini" style="width:90px;">
+                                        <el-option
+                                                v-for="(item,index) in langList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        ></el-option>
+                                    </el-select>
+                                </card>
+                                <card :title="LANG.HOME_EXPERT">
+                                    <card-item @click.native="showDialog='serial'" :title="LANG.HOME_COM_CONFIG" iconName="serial"></card-item>
+                                    <card-item :title="LANG.HOME_NET_CONFIG" @click.native="showDialog='ipConfig'" iconName="net"></card-item>
+                                    <card-item :title="LANG.HOME_COMPUTER" iconName="cal"></card-item>
+                                    <card-item :title="LANG.HOME_DEMO_MODE" @click.native="showDialog='simulate'" iconName="show"></card-item>
+                                    <card-item @click.native="showDialog='deviceStatus'" :title="LANG.HOME_TEST" iconName="test"></card-item>
+                                    <card-item @click.native="showDialog='version'" :title="LANG.HOME_VERSION" iconName="version"></card-item>
+                                    <card-item @click.native="showDialog='temp'" :title="LANG.HOME_TEMPERATURE" iconName="temp"></card-item>
+                                    <card-item :title="LANG.HOME_ARM_UPGRADE" @click.native="upgrade('arm')" iconName="arm"></card-item>
+                                    <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="upgrade('fpga')" iconName="fpga"></card-item>
+                                </card>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
+                </header>
+            </div>
+
             <center>
                 <!-- 侧边栏选项 -->
                 <signal ref="signal"></signal>
@@ -118,24 +125,27 @@
                     </div>
                 </div>
                 <div class="content-compile" v-show="true">
-                    <div class="content-title">{{LANG.HOME_WINDOW_EDIT}}</div>
+                    <div class="content-title">
+                        <div class="title-bg"></div>
+                        <div class="title-txt">{{LANG.HOME_WINDOW_EDIT}}</div>
+                    </div>
                     <div class="content-attr" :style="{minHeight:'200px',maxHeight:maxHeight+'px','overflow-y':'auto'}">
                         <attr @sub_event="subEvent"></attr>
                     </div>
                 </div>
             </center>
             <!-- 底部设备信息 -->
-            <footer>
-                <div class="status-bar">
-                    <!--<div>通讯状态:</div>-->
-                    <!--<div>-->
-                    <!--<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />-->
-                    <!--<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />-->
-                    <!--</div>-->
-                    <div>设备型号:</div>
-                    <div>{{devType}}</div>
-                </div>
-            </footer>
+            <!--<footer>-->
+                <!--<div class="status-bar">-->
+                    <!--&lt;!&ndash;<div>通讯状态:</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div>设备型号:</div>-->
+                    <!--<div>{{devType}}</div>-->
+                <!--</div>-->
+            <!--</footer>-->
             <!-- 弹窗集合组件 -->
             <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
             <kfsDialog @sub_event="subEvent" :showDialog="showDialog" v-if="showDialog=='kfs'"></kfsDialog>
@@ -202,7 +212,7 @@ import cardChild from "@/components/operation/CardChild";
 
 import udialog from "@/components/dialog";
 
-import signal from "@/components/signal";
+import signal from "@/components/signal/signal";
 
 import vdr from "@/components/vdr";
 
@@ -483,8 +493,7 @@ export default {
               // aEle.href = window.URL.createObjectURL(blob);
               // aEle.click();// 设置点击事件 aEle.remove()
 
-              // let that=this;
-              // let fileSize=0;
+              this.fileSize=0;
               let packetNum=0;
               let packetId=0;
               let fileData=[];
@@ -514,8 +523,8 @@ export default {
                   });
               }
               this.$http.post("cfgExport.cgi",{opr:0},(ret)=>{
-                  fileSize=ret.data.fileSize;
                   packetNum=ret.data.packetNum;
+                  this.fileSize=ret.data.fileSize;
                   readFile();
               });
 
@@ -900,8 +909,13 @@ export default {
       height: 30px;
       line-height: 30px;
       border-bottom: 1px solid #dcdfe6;
-      color: #909399;
+      color:#3078ff;;
       font-size: 14px;
+        position:relative;
+        .title-bg{position:absolute;top:14px;left:10px;right:10px;height:1px;background-color:#3078ff}
+        .title-txt{background-color:#fff;padding:0 10px;position:relative;display:inline-block;}
+        .title-txt:after{content:url("../assets/images/dot.png");position:absolute;left:-1px;}
+        .title-txt:before{content:url("../assets/images/dot.png");position:absolute;right:-1px;}
     }
     .content {
       flex: 1;
@@ -964,8 +978,8 @@ export default {
         display: flex;
         align-items: center;
         .header-icon {
-          width: 18px;
-          height: 18px;
+          width: 15px;
+          height: auto;
         }
       }
       div:nth-child(4) {

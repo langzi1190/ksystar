@@ -1,21 +1,39 @@
 <template>
   <div class="attr">
     <div class="close-all">
-      <el-button type="primary" :disabled="globalEvent.panelLock"  @click="closeWindowItem('all')" size="mini" style="width:100%">{{LANG.ATTR_CLOSEALL}}</el-button>
+      <el-button type="primary" :disabled="globalEvent.panelLock"  @click="closeWindowItem('all')" size="mini" style="width:120px;background-color:#3078ff;border-radius:30px;">{{LANG.ATTR_CLOSEALL}}</el-button>
     </div>
     <div v-show="globalEvent.selectedWindowIndex>-1">
       <div class="control-btn">
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','top','')">{{LANG.ATTR_TOP}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','bottom','')">{{LANG.ATTR_BOTTOM}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" :type="lockStr" @click="sendEvent('update_window','lock','')">{{LANG.HOME_LOCK}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','partOrAll')">
-          <span v-show="isPanorama">{{LANG.ATTR_WINDOW_FULL}}</span>
-          <span v-show="!isPanorama">{{LANG.ATTR_WINDOW_PART}}</span>
-        </el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')">{{LANG.ATTR_FULLSCREEN}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')">{{LANG.ATTR_EXTEND}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')">{{LANG.ATTR_RESTORE}}</el-button>
-        <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')">{{LANG.ATTR_CLOSE}}</el-button>
+        <div style="display: flex;justify-content: space-between;">
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','top','')" :title="LANG.ATTR_TOP">
+            <img src="../../assets/images/wtop.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','bottom','')" :title="LANG.ATTR_BOTTOM">
+            <img src="../../assets/images/wbottom.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" :type="lockStr" @click="sendEvent('update_window','lock','')" :title="LANG.HOME_LOCK">
+            <img src="../../assets/images/wlock.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','partOrAll')">
+            <img v-show="isPanorama" src="../../assets/images/wfull.png" :title="LANG.ATTR_WINDOW_FULL"/>
+            <img v-show="!isPanorama" src="../../assets/images/wpart.png" :title="LANG.ATTR_WINDOW_PART"/>
+          </el-button>
+        </div>
+        <div style="display:flex;justify-content: space-between;">
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')" :title-="LANG.ATTR_FULLSCREEN">
+            <img src="../../assets/images/wfullscr.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')" :title="LANG.ATTR_EXTEND">
+            <img src="../../assets/images/wextend.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','0')" :title="LANG.ATTR_RESTORE">
+            <img src="../../assets/images/restore.png"/>
+          </el-button>
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="closeWindowItem('cur')" :title="LANG.ATTR_CLOSE">
+            <img src="../../assets/images/wclose.png"/>
+          </el-button>
+        </div>
 
       </div>
       <div class="title">
@@ -27,38 +45,38 @@
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item :title="LANG.ATTR_WINDOW_ATTR" name="1">
             <div class="position-size">
-              <span>{{LANG.ATTR_H_POS}}:</span>
+              <span>{{LANG.ATTR_H_POS}}</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('left')" v-model="left" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_V_POS}}:</span>
+              <span>{{LANG.ATTR_V_POS}}</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('top')" v-model="top" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_WIDTH}}:</span>
+              <span>{{LANG.ATTR_WIDTH}}</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('width')" v-model="width" :min="50" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_HEIGHT}}:</span>
+              <span>{{LANG.ATTR_HEIGHT}}</span>
               <el-input-number :disabled="globalEvent.panelLock" @change="change('height')" v-model="height" :min="50" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
           <el-collapse-item :title="LANG.ATTR_PART_VIEW" name="2">
             <div style="margin-bottom:10px;">{{LANG.ATTR_SINGAL_RESOLUTION}}：{{srcWidth}}*{{srcHeight}}</div>
             <div class="position-size">
-              <span>{{LANG.ATTR_H_POS}}:</span>
+              <span>{{LANG.ATTR_H_POS}}</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cleft"  @change="change('cleft')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_V_POS}}:</span>
+              <span>{{LANG.ATTR_V_POS}}</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="ctop" @change="change('ctop')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_WIDTH}}:</span>
+              <span>{{LANG.ATTR_WIDTH}}</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cwidth" @change="change('cwidth')" :min="0" size="mini"></el-input-number>
             </div>
             <div class="position-size">
-              <span>{{LANG.ATTR_HEIGHT}}:</span>
+              <span>{{LANG.ATTR_HEIGHT}}</span>
               <el-input-number :disabled="globalEvent.panelLock" v-model="cheight" @change="change('cheight')" :min="0" size="mini"></el-input-number>
             </div>
           </el-collapse-item>
@@ -66,9 +84,17 @@
       </div>
     </div>
     <div class="collapse_inner">
-      <div class="content-title">{{LANG.ATTR_SIGNAL_SETTING}}</div>
-      <div class="src_card_name">{{this.globalEvent.selectedCard.label_extra}}</div>
-      <div v-show="Object.keys(this.globalEvent.selectedCard).length>0">
+      <div class="content-title" style="border-bottom:none;">
+        <div class="title-bg"></div>
+        <div class="title-txt">{{LANG.ATTR_SIGNAL_SETTING}}</div>
+      </div>
+      <!--<div class="src_card_name">{{this.globalEvent.selectedCard.label_extra}}</div>-->
+      <div class="title" v-show="Object.keys(this.globalEvent.selectedCard).length>0">
+        <el-input v-model="selectedCardLabel" size="mini">
+          <template slot="prepend">{{LANG.ATTR_WINDOW_NAME}}:</template>
+        </el-input>
+      </div>
+      <div class="signal_btn_group" v-show="Object.keys(this.globalEvent.selectedCard).length>0">
         <el-button @click="op('rename')" size="mini">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>
         <el-button @click="op('hotBackup')" size="mini">{{LANG.ATTR_HOTBACKUP}}</el-button>
         <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">{{LANG.ATTR_VGA_CORRECTION}}</el-button>
@@ -111,7 +137,8 @@ export default {
 
             srcWidth:0,//信号源分辨率
             srcHeight:0,
-            LANG:this.LANGUAGE[this.globalEvent.language]
+            LANG:this.LANGUAGE[this.globalEvent.language],
+            selectedCardLabel:this.globalEvent.selectedCard.label_extra
         };
     },
     created(){
@@ -248,12 +275,18 @@ export default {
                 this.$emit('sub_event',{act:'show_edid_single'})
             }
             else if(act=='rename'){
-                let s=prompt(this.LANG.TIP_INPUT_NEW_NAME,this.globalEvent.selectedCard.label_extra);
-                if(s!==null && s!==undefined){
-                    this.globalEvent.selectedCard.label_extra=s;
+                // let s=prompt(this.LANG.TIP_INPUT_NEW_NAME,this.globalEvent.selectedCard.label_extra);
+                // if(s!==null && s!==undefined){
+                //     this.globalEvent.selectedCard.label_extra=s;
+                //     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
+                //     this.globalEvent.$emit("source_card_name_change");
+                // }
+                if(this.selectedCardLabel!=''){
+                    this.globalEvent.selectedCard.label_extra=this.selectedCardLabel;
                     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
                     this.globalEvent.$emit("source_card_name_change");
                 }
+
             }
             else if(act=='hotBackup'){
                 this.$emit('sub_event',{act:"hot_backup"});
@@ -288,6 +321,9 @@ export default {
             else{
                 this.lockStr='';
             }
+        },
+        'globalEvent.selectedCard.label_extra':function (v,ov) {
+            this.selectedCardLabel=v;
         }
         // top(v,ov){
         //     this.sendEvent('update_window_pos_by_side','top',v);
@@ -312,9 +348,9 @@ export default {
     }
     .control-btn {
       padding: 6px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      /*display: flex;*/
+      /*flex-wrap: wrap;*/
+      /*justify-content: space-between;*/
       .el-button {
         margin-top: 6px;
       }
@@ -337,10 +373,6 @@ export default {
       }
     }
 
-    .el-collapse-item__header {
-      height: 35px;
-      line-height: 35px;
-    }
   }
   .el-button--mini {
     padding: 6px 8px;

@@ -1,6 +1,6 @@
 <template>
     <div class="screen_bright_dialog">
-        <el-dialog :title="LANG.TITLE" :visible="showDialog=='screenBright'" @close="op(false)">
+        <el-dialog :title="LANG.BRIGHT_TITLE" :visible="showDialog=='screenBright'" @close="op(false)">
             <div class="screenWrapper">
                 <el-tabs type="border-card"
                          v-model="curTabName"
@@ -197,10 +197,10 @@
 <style>
     .screen_bright_dialog .el-dialog{width:800px;}
     .winItemWrapper{clear:both;
-        background-color:#dcdcdc;
+        background-color:#fff;
         align-content: baseline;min-height:400px; min-width:722px; border: 1px solid #dcdcdc;box-sizing: content-box;overflow:auto;}
     .winItem{text-align:center;float:left;
-        background-color:#fcf166;
+        background-color:#e6f1fa;
         border-right:1px solid #dcdcdc;
         border-bottom:1px solid #dcdcdc;
         box-sizing: border-box;
@@ -210,7 +210,7 @@
         width:144px;
         height:144px;}
     .cl_left{clear:left;}
-    .winItemCur{background-color:orange;}
+    .winItemCur{background-color:#a0daff;}
     .winItem span{display:inline-block;width:70px;text-align:left;}
     .winItem span:nth-child(odd){text-align:right;}
     .inputNumber{display:inline-block;margin-left:10px;}

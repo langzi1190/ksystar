@@ -621,7 +621,7 @@
             cardNumberStyle(index){
                 let style={
                     position:'absolute',
-                    color:"#505050",
+                    color:"#bdc6cd",
                     fontSize:"50px",
                 };
 

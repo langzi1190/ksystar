@@ -194,6 +194,7 @@
             let curScreenIndex=this.comScreen.curScreenIndex();//当前操作的屏幕
             return {
                 curScreenIndex,
+                LANG:this.LANGUAGE[this.globalEvent.language],
                 isVisible: this.showSetting,
                 curScreen:{
                     ClkFreq:526080,
@@ -443,6 +444,6 @@
     .time_seq .left_body{border:none;}
     .time_seq .right_body .el-select--mini{margin-top:0;}
     .row_item{display:flex;margin-bottom:20px;height:30px;line-height:30px;width:80%;}
-    .item_title{width:45%;text-align:left;}
+    .item_title{width:47%;text-align:left;}
     .item_input{width:55%}
 </style>

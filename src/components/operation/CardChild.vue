@@ -24,7 +24,7 @@ export default {
 
 <style lang="scss">
 .card-child {
-  width: 60px;
+  width: 65px;
   font-size: 12px;
   padding: 0 4px;
   display: flex;

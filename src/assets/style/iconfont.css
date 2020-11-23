@@ -1,8 +1,8 @@
 /* 右箭头 */
-.el-icon-arrow-right:before{
-  content: url('../images/right.png');
-}
-/* 上箭头 */
+/*.el-icon-arrow-right:before{*/
+  /*content: url('../images/right.png');*/
+/*}*/
+/*!* 上箭头 *!*/
 .el-icon-arrow-up:before{
   content: url('../images/up.png');
 }
@@ -11,16 +11,29 @@
   content: url('../images/down.png');
 }
 /* 减 */
-.el-icon-minus:before{
-  content: url('../images/subtract.png');
+.el-icon-minus:before{content:url("../images/subtract.png")}
+.windowItem .el-icon-minus{position:relative;height:18px;width:18px;}
+.windowItem .el-icon-minus:before{
+  content: " ";
+  background:url('../images/sub.png') no-repeat center center / 90% auto;    width: 18px;
+  height: 18px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.el-icon-bottom-left:before {
+  content: url("../images/extend.png");
 }
 /* 加 */
 .el-icon-plus:before{
   content: url('../images/add.png');
 }
+.windowItem .el-icon-plus:before{
+  content: url('../images/wadd.png');
+}
 /* 乘 */
 .el-icon-ride:before{
-  content: url('../images/ride.png');
+  content: url('../images/close.png');
 }
 /* 关闭 */
 .el-icon-close:before{

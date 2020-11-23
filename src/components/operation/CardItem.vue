@@ -57,7 +57,7 @@ export default {
   border-radius: 6px;
   .header-icon {
     // font-size: 34px;
-    width: 34px;
+    width: auto;
     height: 34px;
   }
   div {

@@ -13,7 +13,7 @@
                     <template  v-for="(item,index) in cardArrReverse">
                         <tr v-if="item.cardType==3">
                             <td>{{cardArrReverse.length-index}}</td>
-                            <td>空卡</td>
+                            <td>{{LANG.TEMP_NONE}}</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -40,7 +40,7 @@
                 </tbody>
 
                 <tr style="background-color:lightblue">
-                    <td colspan="5">控制卡</td>
+                    <td colspan="5">{{LANG.TEMP_CONTROL}}</td>
                     <td :class="{fail:cardStatus.ctrlCard_M==0}"><i :class="[cardStatus.ctrlCard_M==1?'el-icon-success':'el-icon-error']"></i></td>
                     <td :class="{fail:cardStatus.ctrlCard_V==0}"><i :class="[cardStatus.ctrlCard_V==1?'el-icon-success':'el-icon-error']"></i></td>
                     <td></td>
@@ -81,8 +81,8 @@
                 'type1':LANG.TEMP_OUTPUT,
                 'type2':LANG.TEMP_MONITOR,
                 'type3':LANG.TEMP_NONE,
-                'type4':'输入增强卡',
-                'type5':'输出增强卡',
+                'type4':LANG.TEMP_ENHANCE_INPUT,
+                'type5':LANG.TEMP_ENHANCE_OUTPUT,
                 'type6':LANG.TEMP_CONTROL,
                 'type7':LANG.TEMP_SYNC,
             };

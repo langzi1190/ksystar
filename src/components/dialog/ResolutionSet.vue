@@ -18,7 +18,7 @@
             </div>
             <div class="inline_input">
                 <div class="input_tip">
-                    {{LANG.HEIGHT}}
+                    {{LANG.RS_HEIGHT}}
                 </div>
                 <div>
                     <el-input-number @change="change('y')" v-model="y" :min="300" size="mini"></el-input-number>
@@ -27,7 +27,7 @@
             <div class="inline_input">
                 <div class="input_tip"></div>
                 <div>
-                    <el-button @click="showTimeSeq" size="mini">{{LANG.TS}}</el-button>
+                    <el-button @click="showTimeSeq" size="mini">{{LANG.RS_TS}}</el-button>
                 </div>
             </div>
             <div style="text-align:center">
@@ -89,5 +89,5 @@
 
 <style>
     .inline_input{display:flex;line-height:40px;width:250px;margin:0 auto 20px;}
-    .input_tip{width:100px;}
+    .input_tip{width:110px;}
 </style>

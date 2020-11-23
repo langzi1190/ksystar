@@ -1,10 +1,10 @@
 <template>
   <div class="content-nav">
-    <div class="content-title">{{activeList[parseInt(activeName)]}}</div>
+    <!--<div class="content-title">{{activeList[parseInt(activeName)]}}</div>-->
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item name="0">
         <template slot="title">
-          <img class="header-icon" src="@/assets/images/SignalManagement.png" />
+          <img class="header-icon" src="@/assets/images/hdmi.png" />
           <span class="content-list-title">{{LANG.SIGNAL_SOURCE}}</span>
         </template>
 
@@ -15,7 +15,7 @@
       </el-collapse-item>
       <el-collapse-item name="1">
         <template slot="title">
-          <img class="header-icon" src="@/assets/images/UserMode.png" />
+          <img class="header-icon" src="@/assets/images/l_user_mode.png" />
           <span class="content-list-title">{{LANG.SIGNAL_USER_MODE}}</span>
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
@@ -33,7 +33,7 @@
       </el-collapse-item>
       <el-collapse-item name="2">
         <template slot="title">
-          <img class="header-icon" src="@/assets/images/Round.png" />
+          <img class="header-icon" src="@/assets/images/l_loop.png" />
           <span class="content-list-title">{{LANG.SIGNAL_LAYOUT_LOOP}}</span>
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
@@ -42,7 +42,7 @@
       </el-collapse-item>
       <el-collapse-item name="3">
         <template slot="title">
-          <img class="header-icon" src="@/assets/images/signal.png" />
+          <img class="header-icon" src="@/assets/images/source_group.png" />
           <span class="content-list-title">{{LANG.SIGNAL_SOURCEGROUP}}</span>
         </template>
         <div class="content-list">
@@ -254,7 +254,11 @@ export default {
                 inCardArr[i].id=id++;//tree id
                 inCardArr[i].label="C"+(parseInt(i)+1);
                 for(let k in inCardArr[i].srcArr){
-                    inCardArr[i].srcArr[k].kfsAble=kfsFunc==0?0:fSyncArr[i].scrPropArr[k].syncSta;
+                    let syncSta=0;
+                    if(kfsFunc>0 && fSyncArr[i].srcPropArr.length>0){
+                        syncSta=kfsFunc==0?0:fSyncArr[i].srcPropArr[k].syncSta;
+                    }
+                    inCardArr[i].srcArr[k].kfsAble=syncSta;
                     inCardArr[i].srcArr[k].id=id++;
                     if(inCardArr[i].srcArr[k].portType!=16 && inCardArr[i].srcArr[k].portType!=18){
                         inCardArr[i].srcArr[k].label=this.globalEvent.pType['p'+inCardArr[i].srcArr[k].portType];
@@ -270,7 +274,7 @@ export default {
                     inCardArr[i].srcArr[k].label_info=this.globalEvent.signalCardInfo(i,k);
                 }
             }
-            console.log(inCardArr);
+
             this.globalEvent.inputCardList=this.inputCardList=inCardArr;
 
         },
@@ -379,7 +383,8 @@ export default {
 
 <style lang="scss">
 .content-nav {
-    border-right: 1px solid #dcdfe6;
+    /*border-right: 1px solid #dcdfe6;*/
+  background-color:#1f2e54;
     padding-left: 10px;
     flex: 0 0 200px;
     .content-title {
@@ -398,7 +403,6 @@ export default {
       border-top: none;
     }
     .content-list {
-      border-top: 1px solid #ebeef5;
       max-width:200px;
       overflow:auto;
     }
@@ -409,21 +413,26 @@ export default {
       height: 40px;
       line-height: 40px;
     }
+  .is-active .el-collapse-item__header{
+    background-image: linear-gradient(270deg, #00ebfd 0%, #2545ff 100%);
+    margin-left: -10px;
+    padding-left: 10px;
+  }
   .content-list .current-choose{color:#409eff;}
     .el-tree-node__content{user-select:none;}
     .el-tree-node>.el-tree-node__children{overflow:unset;}
     .card_label{margin-right:10px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
-    .card_label::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#f44f44;top: 7px;left: -13px;}
+    .card_label::after{content:' ';width:10px;height:10px;background:url("../../assets/images/red_spot.png") no-repeat center center / 100% auto;position:absolute;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
-    .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background-color:#00cc99;top: 7px;left: -13px;}
+    .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background:url("../../assets/images/blue_spot.png") no-repeat center center / 100% auto;top: 7px;left: -13px;}
 
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
-    .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;height:30px;line-height:30px;}
+    .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;height:30px;line-height:30px;color:#fff;}
     .list_item:nth-child(even){border:none;}
     /*.el-collapse-item__content{max-height:500px;overflow:auto;}*/
   .selected_card .card_label{color:#00cc99;}
-  .card_kfs{border:1px solid #333;}
-  .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#505050;}
+  .card_kfs{border:1px solid #dcdcdc;}
+  .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#f3f2f0;}
   .list_item_cur{background-color:#00cc99;color:#fff;}
 }
 </style>

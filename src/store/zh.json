@@ -147,6 +147,8 @@
   "TEMP_MONITOR":"监视卡",
   "TEMP_CONTROL":"控制卡",
   "TEMP_NONE":"空卡",
+  "TEMP_ENHANCE_INPUT":"输入增强卡",
+  "TEMP_ENHANCE_OUTPUT":"输出增强卡",
 
   "VERSION_TITLE":"版本信息",
   "VERSION_ARM":"ARM 版本",
@@ -301,6 +303,11 @@
   "ALERT_NO_CARD_CHOOSE":"未选中板卡",
   "ALTER_OUTCARD_NUMBER":"超出可用输出卡数量",
   "ALTER_AT_LEAST_ONE":"至少一个屏幕墙",
+  "ALERT_MAX_USERS":"最多支持10个用户",
+  "ALERT_MAX_USERNAME_LENGTH":"用户名长度不得大于20",
+  "ALERT_MAX_PASSWORD_LENGTH":"密码长度不得大于20",
+
+  "TIP_ALREADY_SAVE":"已保存",
   "TIP_UPGRADE_NOW":"升级中",
   "TIP_INPUT_NEW_NAME":"请输入新名称",
   "TIP_INPUT_PASSWD":"输入密码",

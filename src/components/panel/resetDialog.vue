@@ -7,8 +7,8 @@
                 @close="op(false)"
                 center>
             <div style="height:50px;text-align:center;">
-                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
-                <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
+                <el-button @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>

@@ -100,19 +100,12 @@
                 selectedIndex:-1,
                 userTypeList:[LANG.USER_ROLE_0,LANG.USER_ROLE_1,LANG.USER_ROLE_2],
 
-                userList:[
-                    {
-                        name:'Administrator',
-                        type:0,//0 管理员
-                        pass:'',
-                        screenArr:[]
-                    }
-                ],
+                userList:[],
                 selectedUser:{
                     name:'',
                     type:0,//0 管理员
                     pass:'',
-                    screenArr:[0,1]
+                    screenArr:Array.from({length:this.globalEvent.screenInfo.ScrGroupNum}).map((v,index)=>index),
                 },
                 repeatPass:'',
                 selectedScreen:'',
@@ -128,11 +121,37 @@
                     value:i
                 });
             }
+            this.$http.post("userAdminRd.cgi",{},(ret)=>{
+
+                let info=ret.data;
+                for(let i in info.userInfoArr){
+
+                    let user={
+                        name:info.userInfoArr[i][0],
+                        type:info.userInfoArr[i][2],
+                        pass:info.userInfoArr[i][1],
+                        screenArr:[]
+                    };
+                    let scrFlag=info.userInfoArr[i][3];
+                    for(let k=0;k<8;k++){
+                        let s=0x1;
+                        if((scrFlag & (s<<k))>0){
+                            user.screenArr.push(k);
+                        }
+                    }
+
+
+                    this.userList.push(user);
+                }
+
+                // console.log(this.userList);
+            });
+
         },
         watch:{
             'selectedUser.name':function (v,o) {
                 if(v.length>20){
-                    alert("用户名长度不得大于20");
+                    alert(this.LANG.ALERT_MAX_USERNAME_LENGTH);
                     this.$nextTick(()=>{
                         this.selectedUser.name=this.selectedUser.name.substring(0,20);
                     })
@@ -141,7 +160,7 @@
             },
             'selectedUser.pass':function (v,ov) {
                 if(v.length>20){
-                    alert("密码长度不得大于20");
+                    alert(this.LANG.ALERT_MAX_PASSWORD_LENGTH);
                     this.$nextTick(()=>{
                         this.selectedUser.pass=this.selectedUser.pass.substring(0,20);
                     })
@@ -161,7 +180,7 @@
 
                 if(act=='add'){
                     if(this.userList.length>=10){
-                        alert("最多支持10个用户");
+                        alert(this.LANG.ALERT_MAX_USERS);
                         return ;
                     }
                     if(this.selectedUser.pass!=this.repeatPass){
@@ -202,7 +221,7 @@
                         this.userList[this.selectedIndex].name=this.selectedUser.name;
                         this.userList[this.selectedIndex].type=this.selectedUser.type;
                         this.userList[this.selectedIndex].pass=this.selectedUser.pass;
-                        alert("已保存");
+                        alert(this.LANG.TIP_ALREADY_SAVE);
                     }
                 }
                 else if(act=='cancel'){
@@ -222,11 +241,11 @@
                             type:this.userList[i].type,
                             srcGroupFlag:0,
                         }
-                        if(user.password==''){
-                            alert(user.name+"密码不能为空");
-                            rightflag=false;
-                            return ;
-                        }
+                        // if(user.password==''){
+                        //     alert(user.name+"密码不能为空");
+                        //     rightflag=false;
+                        //     return ;
+                        // }
                         if(this.userList[i].screenArr.length==0){
                             user.srcGroupFlag=0;
                         }
@@ -234,7 +253,7 @@
                             for(let k in this.userList[i].screenArr){
                                 let no=this.userList[i].screenArr[k]-0;
                                 let f=0x1;
-                                user.srcGroupFlag=user.srcGroupFlag | (f<<(no+1));
+                                user.srcGroupFlag=user.srcGroupFlag | (f<<no);
                             }
                         }
                         param.userInfoArr.push(user);

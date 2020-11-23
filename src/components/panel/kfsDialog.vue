@@ -82,11 +82,11 @@
             let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
 
             for(let i in cardArr){
-                for(let k in cardArr[i].scrPropArr){
-                    let src=cardArr[i].scrPropArr[k];
+                for(let k in cardArr[i].srcPropArr){
+                    let src=cardArr[i].srcPropArr[k];
 
                     this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
-                    if(src.syncEn==1){
+                    if(src.syncSta==1){
                         this.selectedKey.push(this.signalList[i].srcArr[k].id);
 
                         this.selectedSignal.push({
@@ -106,8 +106,8 @@
                 this.showTree=false;
                 let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
                 for(let i in cardArr){
-                    for(let k in cardArr[i].scrPropArr){
-                        let src=cardArr[i].scrPropArr[k];
+                    for(let k in cardArr[i].srcPropArr){
+                        let src=cardArr[i].srcPropArr[k];
 
                         this.syncSignal=this.globalEvent.signalCardInfo(src.syncCardId,src.syncSrcId);//'S'+(src.syncCardId+1)+"_"+(src.syncSrcId+1);
                         if(src.syncEn==1){
@@ -229,13 +229,13 @@
                         fSyncInfo.fSyncArr=[];
                         for(let i in param.inCardArr){
                             let fSync={
-                                scrPropArr:[]
+                                srcPropArr:[]
                             };
                             for(let k in param.inCardArr[i].inCardChnArr){
                                 // fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].inCardChnArr[k].syncEn;
                                 // fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].inCardChnArr[k].syncCardId;
                                 // fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].inCardChnArr[k].syncSrcId;
-                                fSync.scrPropArr.push({
+                                fSync.srcPropArr.push({
                                     syncSta:param.inCardArr[i].inCardChnArr[k].syncEn,
                                     syncCardId:param.inCardArr[i].inCardChnArr[k].syncCardId,
                                     syncSrcId:param.inCardArr[i].inCardChnArr[k].syncSrcId

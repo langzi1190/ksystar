@@ -24,16 +24,16 @@
                 </div>
                 <div class="title-control">
                     <span @click.stop="windowEdit('0')">
-                        <i class="el-icon-minus" style="color: #91dd9d"></i>
+                        <i class="el-icon-minus"></i>
                     </span>
                     <span @click.stop="windowEdit('3')">
                         <i class="el-icon-bottom-left" style="font-weight:bold;font-size:18px;"></i>
                     </span>
                     <span @click.stop="windowEdit('1')">
-                        <i class="el-icon-plus" style="color: #ffcd8a"></i>
+                        <i class="el-icon-plus"></i>
                     </span>
                     <span @click.stop="windowEdit('2')">
-                        <i class="el-icon-ride" style="color: #ff8739"></i>
+                        <i class="el-icon-ride"></i>
                     </span>
                 </div>
             </div>
@@ -572,8 +572,8 @@
         position: absolute;
         width: 8px;
         height: 8px;
-        background: #FFF;
-        border: 1px solid #333;
+        border: 1px solid #1f2e54;
+        background-color: #d4e1ff;
         display:none;
         z-index:1;
     }
@@ -646,7 +646,8 @@
                 flex: 0 0 28px;
                 display: flex;
                 justify-content: space-between;
-                background: #409eff;
+                color:#fff;
+                background: #3078ff;
             .title-win {
                 cursor:default;
                 padding: 0 6px;
@@ -666,16 +667,17 @@
                 overflow: hidden;
             span {
                 padding: 2px;
+                cursor:pointer;
             }
-            span:hover {
-                border-radius: 50%;
-                background: #fff;
-                }
+            /*span:hover {*/
+                /*border-radius: 50%;*/
+                /*background: #fff;*/
+                /*}*/
             }
         }
         .content {
             flex: 1;
-            background: #e4e7ed;
+            background: #e6f1fa;
             position:relative;
             overflow: hidden;
             padding: 6px;
