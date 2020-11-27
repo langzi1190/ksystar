@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <el-dialog
                 :title="LANG.TS_TITLE"
                 :visible.sync="isVisible"
@@ -12,8 +12,7 @@
                 <div class="left_body">
 
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_CLOCK}}
+                        <div class="item_title" v-html="LANG.EDID_CLOCK">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -24,8 +23,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_WIDTH}}
+                        <div class="item_title" v-html="LANG.EDID_WIDTH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -37,8 +35,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_HFROMPORCH}}
+                        <div class="item_title" v-html="LANG.EDID_HFROMPORCH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -49,8 +46,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_HSYNCTIME}}
+                        <div class="item_title" v-html="LANG.EDID_HSYNCTIME">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -61,8 +57,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_HBACKPORCH}}
+                        <div class="item_title" v-html="LANG.EDID_HBACKPORCH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -73,8 +68,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.TS_H_POLAR}}
+                        <div class="item_title" v-html="LANG.TS_H_POLAR">
                         </div>
                         <div class="item_input">
                             <!--<el-input-->
@@ -95,8 +89,7 @@
                 <div class="right_body">
 
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_FRAME}}
+                        <div class="item_title" v-html="LANG.EDID_FRAME">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -108,8 +101,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_HEIGHT}}
+                        <div class="item_title" v-html="LANG.EDID_HEIGHT">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -121,8 +113,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_VFROMPORCH}}
+                        <div class="item_title" v-html="LANG.EDID_VFROMPORCH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -133,8 +124,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_VSYNCTIME}}
+                        <div class="item_title" v-html="LANG.EDID_VSYNCTIME">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -145,8 +135,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.EDID_VBACKPORCH}}
+                        <div class="item_title" v-html="LANG.EDID_VBACKPORCH">
                         </div>
                         <div class="item_input">
                             <el-input
@@ -157,8 +146,7 @@
                         </div>
                     </div>
                     <div class="row_item">
-                        <div class="item_title">
-                            {{LANG.TS_V_POLAR}}
+                        <div class="item_title" v-html="LANG.TS_V_POLAR">
                         </div>
                         <div class="item_input">
                             <!--<el-input-->
@@ -192,26 +180,47 @@
         props:['showSetting'],
         data(){
             let curScreenIndex=this.comScreen.curScreenIndex();//当前操作的屏幕
+            let defaultParam={
+                ClkFreq:526080,
+                FormatW:3840,
+                FormatH:2160,
+                FrameRate:60,
+                HFrontPorch:48,
+                HSyncTime:32,
+                HBackPorch:80,
+                VFrontPorch:12,
+                VSyncTime:8,
+                VBackPorch:12,
+                VPolar:1,
+                HPolar:1,
+            };
+
+            if(typeof this.$parent.w!='undefined'){
+                if(this.$parent.w==960 && this.$parent.h==2160){
+                    defaultParam={
+                        ClkFreq:148500,
+                        FormatW:960,
+                        FormatH:2160,
+                        FrameRate:60,
+                        HFrontPorch:44,
+                        HSyncTime:22,
+                        HBackPorch:74,
+                        VFrontPorch:8,
+                        VSyncTime:10,
+                        VBackPorch:72,
+                        VPolar:0,
+                        HPolar:1
+                    };
+                }
+            }
             return {
                 curScreenIndex,
                 LANG:this.LANGUAGE[this.globalEvent.language],
                 isVisible: this.showSetting,
-                curScreen:{
-                    ClkFreq:526080,
-                    FormatW:3840,
-                    FormatH:2160,
-                    FrameRate:60,
-                    HFrontPorch:48,
-                    HSyncTime:32,
-                    HBackPorch:80,
-                    VFrontPorch:12,
-                    VSyncTime:8,
-                    VBackPorch:12,
-                    VPolar:1,
-                    HPolar:1,
-                },//this.copyObject(this.comScreen.displayList[curScreenIndex]),
+                curScreen:defaultParam,//this.copyObject(this.comScreen.displayList[curScreenIndex]),
                 // FrameRateInfo:0,
-                polarList:[{label:'POSITIVE',value:1},{label:'NEGTIVE',value:0}]
+                polarList:[{label:'POSITIVE',value:1},{label:'NEGTIVE',value:0}],
+                defaultParam:JSON.parse(JSON.stringify(defaultParam))
             };
         },
         inject: ["comScreen"],
@@ -224,11 +233,15 @@
             // }
         },
         mounted(){
-            // Object.assign(this.curScreen,this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]);
-            this.curScreen=JSON.parse(JSON.stringify(this.curScreen,this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]));
-            // this.calFrameRate();
-            let defaultParam=this.GetDefineOutputTimingInfo(this.$parent.w,this.$parent.h);
-            Object.assign(this.curScreen,defaultParam);
+            if(typeof this.$parent.w!='undefined' && this.$parent.w==960 && this.$parent.h==2160){
+                this.curScreen=JSON.parse(JSON.stringify(this.defaultParam));
+            }
+            else{
+                this.curScreen=JSON.parse(JSON.stringify(this.curScreen,this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex]));
+                let defaultParam=this.GetDefineOutputTimingInfo(this.$parent.w,this.$parent.h);
+                Object.assign(this.curScreen,defaultParam);
+            }
+
             // console.log(this.curScreen);
             // if(this.curScreen.FrameRate==0){
             //     this.FrameRateInfo = 60;
@@ -278,19 +291,19 @@
             },
             GetDefineOutputTimingInfo(nDefinedWidth,nDefinedHeight)
             {
-                let timing={
-                    ClkFreq:526080,
-                    FormatW:3840,
-                    FormatH:2160,
-                    FrameRate:60,
-                    HFrontPorch:48,
-                    HSyncTime:32,
-                    HBackPorch:80,
-                    VFrontPorch:12,
-                    VSyncTime:8,
-                    VBackPorch:12,
-                };
-
+                // let timing={
+                //     ClkFreq:526080,
+                //     FormatW:3840,
+                //     FormatH:2160,
+                //     FrameRate:60,
+                //     HFrontPorch:48,
+                //     HSyncTime:32,
+                //     HBackPorch:80,
+                //     VFrontPorch:12,
+                //     VSyncTime:8,
+                //     VBackPorch:12,
+                // };
+                let timing=JSON.parse(JSON.stringify(this.defaultParam));
                 let h_blank;                                                                                             // h_blank = 行显示前沿+行同步脉冲+行显示后沿
                 if((nDefinedWidth==800) && (nDefinedHeight==1600)){                    //（自定义分辨率宽=800） 且 （自定义分辨率高 =1600）
                     timing.FormatW      = nDefinedWidth;                                    // 宽度

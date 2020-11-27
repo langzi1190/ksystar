@@ -3,7 +3,7 @@
         <div class="home" v-if="isLogin==1">
             <!-- 头部菜单显示 -->
             <div style="display:flex;">
-                <div class="logo" style="display:flex;justify-content: center;align-items: center;background:#1f2e54 url(../assets/images/logo.png) no-repeat center center / 100% auto;flex:0 0 210px;">
+                <div class="logo" style="display:flex;justify-content: center;align-items: center;background:#1f2e54 none no-repeat center center / 100% auto;flex:0 0 210px;">
                     <img src="@/assets/images/logo.png" width="200"/>
                 </div>
                 <header>
@@ -111,7 +111,7 @@
                 <!-- 侧边栏选项 -->
                 <signal ref="signal"></signal>
                 <!-- 屏幕编辑与显示 -->
-                <div class="content">
+                <div class="content win_op_area">
                     <div class="content-title">{{LANG.HOME_SIMULATION}}</div>
                     <div class="content-draw">
                         <!-- 窗口编辑面板 -->
@@ -167,13 +167,15 @@
             <eqDialog @sub_event="subEvent" v-if="showDialog=='eq'" :showDialog="showDialog"></eqDialog>
             <vgaDialog @sub_event="subEvent" v-if="showDialog=='vga'" :showDialog="showDialog"></vgaDialog>
             <resetDialog @sub_event="subEvent" v-if="showDialog=='reset'" :showDialog="showDialog"></resetDialog>
+            <shutDialog @sub_event="subEvent" v-if="showDialog=='shut'" :showDialog="showDialog"></shutDialog>
             <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
             <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
             <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
             <simulateDialog @sub_event="subEvent" v-if="showDialog=='simulate'" :showDialog="showDialog"></simulateDialog>
             <importDialog @sub_event="subEvent" v-if="showDialog=='import'" :showDialog="showDialog"></importDialog>
+            <exportDialog @sub_event="subEvent" v-if="showDialog=='export'" :showDialog="showDialog"></exportDialog>
         </div>
-        <div v-else>
+        <div v-else style="width:100%;height:100%;background-color:#131e3e;overflow:hidden;">
             <loginDialog @sub_event="subEvent"></loginDialog>
         </div>
     </div>
@@ -249,12 +251,14 @@ import workModeDialog from "@/components/panel/workModeDialog";
 import eqDialog from "@/components/panel/eqDialog";
 import vgaDialog from "@/components/panel/vgaDialog";
 import resetDialog from "@/components/panel/resetDialog";
+import shutDialog from "@/components/panel/shutDialog";
 import userDialog from "@/components/panel/userDialog";
 import showEdidDialog from "@/components/panel/showEdidDialog";
 import uploadDialog from "@/components/panel/uploadDialog";
 import simulateDialog from "@/components/panel/simulateDialog";
 import loginDialog from "@/components/panel/loginDialog";
 import importDialog from "@/components/panel/importDialog";
+import exportDialog from "@/components/panel/exportDialog";
 
 let loading ;
 // let loading_count=0;
@@ -318,7 +322,7 @@ export default {
       });
       this.globalEvent.$on('language',()=>{
           this.LANG=this.LANGUAGE[this.globalEvent.language];
-          console.log(this.LANG);
+          this.curLang=this.globalEvent.language;
       });
 
       let user=sessionStorage.getItem('login_user');
@@ -365,14 +369,23 @@ export default {
           this.globalEvent.language=v;
           this.globalEvent.$emit("language");
           this.$http.post("languageWr.cgi",{lang:v=='zh'?0:1},()=>{
-
+              localStorage.setItem('language',v);
           });
       }
   },
   data() {
+      let lang=localStorage.getItem('language');
+      if(lang===null || lang===undefined){
+          lang=this.globalEvent.language;
+      }
+      else if(lang!=this.globalEvent.language){
+          this.globalEvent.language=lang;
+          this.globalEvent.$emit('language');
+      }
+
     return {
         isLogin:0,
-        curLang:this.globalEvent.language,
+        curLang:lang,
         langList:[{value:'en',label:'English'},{value:'zh',label:'中文'}],
         // activeName: "0", // 侧边栏选项
         // activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
@@ -392,7 +405,7 @@ export default {
         EDID:[],
         curScreen:{},
         advanceScreen:{},
-        LANG:this.LANGUAGE[this.globalEvent.language],
+        LANG:this.LANGUAGE[lang],
 
         userType: 0,
         allowUser:1,
@@ -420,9 +433,11 @@ export default {
            this.showDialog='reset';
       }
       else if(setFn=='8'){
-          this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
-
-          });
+          //输出关闭
+          // this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
+          //
+          // });
+          this.showDialog='shut';
       }
       else if(setFn=='9'){
           this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
@@ -493,40 +508,7 @@ export default {
               // aEle.href = window.URL.createObjectURL(blob);
               // aEle.click();// 设置点击事件 aEle.remove()
 
-              this.fileSize=0;
-              let packetNum=0;
-              let packetId=0;
-              let fileData=[];
-              let that=this;
-              let readFile=function () {
-                  if(packetId>=packetNum){
-                      //组装
-                      let b=new Blob(fileData);
-                      let aEle = document.createElement("a");
-                      aEle.download="配置文件.bin";
-                      aEle.href=window.URL.createObjectURL(b);
-                      aEle.click();
-                      return ;
-                  }
-                  let d={
-                      opr:0xff,
-                      packetId
-                  };
-                  that.$http.post("cfgExport.cgi",d,(ret)=>{
-                      let data=ret.data.dataArr;
-                      // fileData.push(data.flat());
-                      data.forEach((v,i,arr)=>{
-                          fileData.push(v);
-                      })
-                      packetId++;
-                      readFile();
-                  });
-              }
-              this.$http.post("cfgExport.cgi",{opr:0},(ret)=>{
-                  packetNum=ret.data.packetNum;
-                  this.fileSize=ret.data.fileSize;
-                  readFile();
-              });
+             this.showDialog='export';
 
           }
           else{
@@ -550,7 +532,7 @@ export default {
                   opr:1
               }
               this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
-                  alert(this.LANG.TIP_UPGRADE_SUCCESS)
+                  alert(this.LANG.TIP_ARM_UPGRADE)
               });
           }
           else if('fpga'==act){
@@ -856,12 +838,14 @@ export default {
       eqDialog,
       vgaDialog,
       resetDialog,
+      shutDialog,
       userDialog,
       showEdidDialog,
       uploadDialog,
       simulateDialog,
       loginDialog,
-      importDialog
+      importDialog,
+      exportDialog
   },
 };
 </script>
@@ -873,6 +857,7 @@ export default {
   flex-direction: column;
   header {
     flex: 0 0 100px;
+      flex-grow: 1;
     /deep/ .el-tabs__content {
       padding: 6px;
     }
@@ -882,6 +867,8 @@ export default {
     }
     /deep/ .el-tabs--border-card {
       box-shadow: none;
+        border:none;
+        border-bottom: 5px solid #f3f3fb;
     }
     .card-s {
       display: flex;
@@ -917,6 +904,9 @@ export default {
         .title-txt:after{content:url("../assets/images/dot.png");position:absolute;left:-1px;}
         .title-txt:before{content:url("../assets/images/dot.png");position:absolute;right:-1px;}
     }
+      .win_op_area{
+          border:5px solid #f3f3fb;border-top:none;
+      }
     .content {
       flex: 1;
       .content-draw {
@@ -951,7 +941,8 @@ export default {
     }
     .content-compile {
       flex: 0 0 210px;
-      border-left: 1px solid #dcdfe6;
+      /**border-left: 1px solid #dcdfe6;    border-top: 1px solid #dcdfe6;
+        margin-top: -1px;**/
     }
   }
   footer {

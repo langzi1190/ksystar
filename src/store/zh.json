@@ -1,5 +1,6 @@
 {
   "HOME_DEV":"设备",
+  "HOME_DEV_TYPE":"设备型号：",
   "HOME_MAIN_FUNC":"主功能区",
   "HOME_SETTING":"设置",
   "HOME_MULTI_SCREEN_SWITCH":"多屏切换",
@@ -295,6 +296,17 @@
   "IMPORT_UPLOAD":"上传文件",
   "IMPORT":"导入",
 
+  "EXPORT_TITLE":"导出配置",
+  "EXPORT_IN_PROGRESS":"处理中...",
+
+  "SIMULATE_TITLE":"演示模式设置",
+  "SIMULATE_DEV_TYPE":"产品型号：",
+  "SIMULATE_OUT_NUM":"输出卡数目：",
+  "SIMULATE_IN_NUM":"输入卡数目：",
+  "SIMULATE_IMPORT":"导入演示模式：",
+  "SIMULATE_EXPORT":"导出演示模式：",
+
+  "CLOSE_TITLE":"输出关闭",
 
   "ALERT_MAX_WINDS":"窗口超限",
   "ALERT_API_ERROR":"下发数据未正确接收",
@@ -307,6 +319,7 @@
   "ALERT_MAX_USERNAME_LENGTH":"用户名长度不得大于20",
   "ALERT_MAX_PASSWORD_LENGTH":"密码长度不得大于20",
 
+  "TIP_ARM_UPGRADE":"已跳转，请重新刷新进行升级",
   "TIP_ALREADY_SAVE":"已保存",
   "TIP_UPGRADE_NOW":"升级中",
   "TIP_INPUT_NEW_NAME":"请输入新名称",

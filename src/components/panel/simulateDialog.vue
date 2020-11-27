@@ -1,12 +1,12 @@
 <template>
     <div class="simulate_dialog">
-        <el-dialog title="演示模式设置"
+        <el-dialog :title="LANG.SIMULATE_TITLE"
                    width="700px"
                    :visible="showDialog=='simulate_t'"
                    @close="op(false)">
             <div class="si_body">
                 <div class="item">
-                    <span>产品型号：</span>
+                    <span>{{LANG.SIMULATE_DEV_TYPE}} </span>
                     <div class="item_input">
                         <el-select v-model="dev" size="mini" disabled style="width:120px;">
                             <el-option
@@ -19,13 +19,13 @@
                     </div>
                 </div>
                 <div class="item">
-                    <span>输出卡数目：</span>
+                    <span>{{LANG.SIMULATE_OUT_NUM}} </span>
                     <div class="item_input">
                         <el-input size="mini" v-model.lazy="outCount" min=1 max=15 style="width:120px;"></el-input>
                     </div>
                 </div>
                 <div class="item">
-                    <span>输入卡数目：</span>
+                    <span>{{LANG.SIMULATE_IN_NUM}} </span>
                     <div class="item_input">
                         <el-input size="mini" v-model.lazy="inCount" min=1 max=60 style="width:120px;"></el-input>
                     </div>
@@ -76,14 +76,14 @@
 
                     </div>
                     <div class="r_body">
-                        <el-button>导入演示模式</el-button>
-                        <el-button>导出演示模式</el-button>
+                        <el-button size="mini">{{LANG.SIMULATE_IMPORT}}</el-button>
+                        <el-button size="mini">{{LANG.SIMULATE_EXPORT}}</el-button>
                     </div>
                 </div>
 
                 <div class="item" style="text-align:center;">
-                    <el-button size="mini" @click="op(true)">确定</el-button>
-                    <el-button size="mini" @click="op(false)">取消</el-button>
+                    <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                    <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
                 </div>
             </div>
 
@@ -133,6 +133,7 @@
 
             return {
                 devList:['KS9800A'],
+                LANG:this.LANGUAGE[this.globalEvent.language],
                 dev:0,
                 inputTypeList:inputTypeList,
                 inCount:simulateInfo.inCount,

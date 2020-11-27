@@ -398,6 +398,6 @@
     .time_seq > div{width:50%;padding:0;height:auto;}
     .time_seq .left_body{border:none;}
     .row_item{display:flex;margin-bottom:20px;height:30px;line-height:30px;width:80%;}
-    .item_title{width:45%;text-align:left;}
+    .item_title{width:50%;text-align:left;}
     .item_input{width:55%}
 </style>

@@ -41,13 +41,13 @@
                 LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
-        // created(){
-        //     this.$http.get("ipCfgRd.cgi",{},(ret)=>{
-        //         this.ipArr=ret.data.ipArr;
-        //         this.maskArr=ret.data.maskArr;
-        //         this.gateArr=ret.data.gateArr;
-        //     });
-        // },
+        created(){
+            this.$http.get("ipCfgRd.cgi",{},(ret)=>{
+                this.ipArr=ret.data.ipArr;
+                this.maskArr=ret.data.maskArr;
+                this.gateArr=ret.data.gateArr;
+            });
+        },
         watch:{
             showDialog(v,ov){
                 if(v=='ipConfig'){

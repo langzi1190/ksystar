@@ -104,7 +104,7 @@
             calContentListHeight(){
                 let curH=document.body.clientHeight;
 
-                this.contestListHeight=(curH-366)+'px';
+                this.contestListHeight=(curH-366-40)+'px';
 
             },
             syncLocalName(){
@@ -351,7 +351,7 @@
         margin-right: 5px;
         border: 1px solid #dcdcdc;
         margin-top: 5px;
-        min-height:300px;
+        /*min-height:300px;*/
         /*max-height: 450px;*/
         overflow: auto;
     }

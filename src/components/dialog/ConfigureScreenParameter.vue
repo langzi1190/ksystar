@@ -1,23 +1,23 @@
 <template>
   <div>
     <div class="set-screen">
-      <div>
+      <div class="select-screen">
         <span>{{LANG.SCREEN}}{{LANG.SCREEN_RESOLUTION}}:</span>
         <el-select
                 v-model="resolutionValue"
                 size="mini"
                 style="width:115px">
           <el-option
+                  @click.native="selectOption(item)"
             v-for="item in resolution"
-            v-show="item.videoId>-1"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
-        <div class="hideShow" v-show="resolutionValue=='' || resolutionValue=='-1'">{{rv}}</div>
+        <!--<div class="hideShow" v-show="resolutionValue=='' || resolutionValue=='-1'">{{rv}}</div>-->
       </div>
-      <div>
+      <div class="select-screen">
         <span>{{LANG.SCREEN_FRAME}}HZ:</span>
         <el-select v-model="hertzValue" size="mini" style="width: 85px;">
           <el-option
@@ -33,6 +33,9 @@
           <i style="font-size: 12px;">{{LANG.SCREEN_LCD}}</i>
         </el-checkbox>
       </div>
+    </div>
+    <div class="set-screen" v-show="resolutionValue=='' || resolutionValue=='-1'">
+      <div>{{LANG.TUNNEL_CUSTOM}}&nbsp;{{LANG.SCREEN_RESOLUTION}} : {{rv}}</div>
     </div>
     <div class="set-screen">
       <div>
@@ -157,21 +160,16 @@ const resolution = [
     {
         videoId:117,
         value: "1920*2160",
-        label: "1920*2160"
+        label: "1920*2160@30"
     },
     {
         videoId:106,
-        value: "2560*960",
-        label: "2560*960"
+        value: "960*2160",
+        label: "960*2160@60"
     },
     {
         videoId:0,
         value:'',
-        label:'自定义'
-    },
-    {
-        videoId:-1,
-        value:'-1',
         label:'自定义'
     }
 ];
@@ -194,10 +192,13 @@ export default {
   data() {
 
       let rv=this.item.FormatW+'*'+this.item.FormatH;
-      let videoId=this.item.VideoId;
+      // let videoId=this.item.VideoId;
+      if(this.item.FormatW==960 && this.item.FormatH==2160 && this.item.FrameRate==60){
+          this.item.VideoId=106;
+      }
       let LANG=this.LANGUAGE[this.globalEvent.language];
       resolution[resolution.length-1].label=LANG.SCREEN_DEFINE;
-      resolution[resolution.length-2].label=LANG.SCREEN_DEFINE;
+      // resolution[resolution.length-2].label=LANG.SCREEN_DEFINE;
       // console.log('fbl');
       // console.log(this.item);
       // let frameRate=this.item.FrameRate==0?60:50;
@@ -206,8 +207,8 @@ export default {
           hertz,
           rv,
           w:0,h:0,
-          resolutionValue:videoId==0?'-1':rv,
-          videoId:-1,
+          resolutionValue:rv,
+          videoId:this.item.VideoId,
           beforeRv:'',//自定义 前分辨率
           hertzValue:this.item.FrameRate+'HZ',
           rowNum: this.item.Row,
@@ -215,11 +216,20 @@ export default {
           TimingMode: this.item.TimingMode,
           showSetting:false,
           showTimeSeq:false,
-          LANG:LANG
+          LANG:LANG,
+          forceOut:false,//强制激活窗口
       };
   },
     methods:{
+        selectOption(item){
 
+            if(item.videoId==0 || item.videoId==106){
+                //自定义
+                this.showSetting=true;
+                return ;
+            }
+            this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:item.value,videoId:this.videoId});
+        },
         setParentData(k,v){
             this.item[k]=v;
             //k:Row,Col,hertzValue,lcdMode,resolutionValue
@@ -243,21 +253,18 @@ export default {
 
                 this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:param.x+'*'+param.y,videoId:0});
                 this.rv=param.x+'*'+param.y;
-                // this.videoId=-1;
 
                 this.showSetting=false;
-                setTimeout(()=>{
-                    //不加延迟 会被 v-model 覆盖
-                    this.resolutionValue='-1';//显示自定义
-                },600);
+                // setTimeout(()=>{
+                //     //不加延迟 会被 v-model 覆盖
+                //     this.resolutionValue='-1';//显示自定义
+                // },600);
 
             }
             else if(param.act=='showTimeSeq'){
-                console.log(param);
                 this.resolutionValue=this.beforeRv;//恢复分辨率
                 this.w=param.x;//给时序设置用
                 this.h=param.y;
-                // this.showSetting=false;
                 this.showTimeSeq=true;
             }
         }
@@ -265,29 +272,26 @@ export default {
     watch:{
         resolutionValue(v,ov){
 
-            console.log(v,this.videoId);
-
-
-            if(v=='-1'){
-                return ;
-            }
-            if(v==''){
-                this.beforeRv=ov;
-                //自定义
-                this.showSetting=true;
-                return ;
-            }
-
-            if(this.videoId==-1){
-                resolution.forEach((ele,k)=>{
-                    if(v==ele.value) {
-                        this.videoId=ele.videoId;
-                    }
-                });
-
-            }
-            this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:v,videoId:this.videoId});
-            this.videoId=-1;
+            this.beforeRv=ov;
+            // if(v=='-1'){
+            //     return ;
+            // }
+            // if(v==''){
+            //     this.beforeRv=ov;
+            //     //自定义
+            //     this.showSetting=true;
+            //     return ;
+            // }
+            // if(this.videoId==-1){
+            //     resolution.forEach((ele,k)=>{
+            //         if(v==ele.value) {
+            //             this.videoId=ele.videoId;
+            //         }
+            //     });
+            //
+            // }
+            // this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:v,videoId:this.videoId});
+            // this.videoId=-1;
 
         },
         hertzValue(v,ov){
@@ -339,5 +343,8 @@ export default {
     padding-right: 6px;
   }
   .hideShow{display:inline-block;}
+  .select-screen .el-input__suffix{margin-right: -16px;}
+  .select-screen .el-input--mini .el-input__inner{    padding-right: 21px;
+    padding-left: 10px;}
 }
 </style>

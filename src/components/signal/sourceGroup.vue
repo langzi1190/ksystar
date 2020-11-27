@@ -83,7 +83,8 @@
             calContentListHeight(){
                 let curH=document.body.clientHeight;
 
-                this.contestListHeight=(curH-366)+'px';
+                this.contestListHeight=(curH-346)+'px';
+                console.log(this.contestListHeight);
 
             },
             renderContent(h,{node,data,store}){
@@ -91,17 +92,28 @@
                     return h('span',{
                         class:{
                             'selected_scene':data.label==this.selectedSource.label
-                        }
+                        },
+                        on: {
+                            dblclick: this.changeSrcGroup
+                        },
                     },data.label);
                 }
                 else{
-                    // return h("span",data.label + data.tLabel);
                     return h('span',{
                         class:{
                             'current-choose':data.$treeNodeId==this.selectedCard.$treeNodeId
-                        }
+                        },
+                        on: {
+                            dblclick: this.changeSrcGroup
+                        },
                     },data.label + data.tLabel)
                 }
+            },
+            changeSrcGroup(){
+                setTimeout(()=>{
+                    this.globalEvent.$emit("change_src_group",{group:this.selectedSource});
+                },100);
+
             },
             handleNodeClick(data,node,tree){
                 if(node.level==1){
@@ -114,7 +126,6 @@
                 }
                 this.selectedLevel=node.level;
 
-                this.globalEvent.$emit("change_src_group",{group:this.selectedSource});
             },
             userSceneTime(arr){
                 return "    "+arr[2]+','+this.doubleNum(arr[3])+':'+this.doubleNum(arr[4])+':'+this.doubleNum(arr[5]);

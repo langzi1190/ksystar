@@ -1,5 +1,6 @@
 {
-  "HOME_DEV":"devices",
+  "HOME_DEV":"Devices",
+  "HOME_DEV_TYPE":"Device Type：",
   "HOME_MAIN_FUNC":"MainFunctions",
 
   "HOME_SETTING":"Setting",
@@ -87,8 +88,8 @@
   "ATTR_WINDOW_POS":"Pos",
   "ATTR_SIGNAL_TYPE":"Signal",
   "ATTR_CLOSE":"Close",
-  "ATTR_WINDOW_ATTR":"Property",
-  "ATTR_PART_VIEW":"Part View",
+  "ATTR_WINDOW_ATTR":"Win Para",
+  "ATTR_PART_VIEW":"Crop Para",
   "ATTR_H_POS":"X start: ",
   "ATTR_V_POS":"Y start: ",
   "ATTR_WIDTH":"Width: ",
@@ -110,15 +111,15 @@
   "SCREEN_OUT_LAYOUT":"Device Output Port Layout:",
   "SCREEN_WALL":"Wall",
   "SCREEN":"Screen",
-  "SCREEN_ROW":"Row Num",
-  "SCREEN_COL":"Col Num",
+  "SCREEN_ROW":"Row",
+  "SCREEN_COL":"Col",
   "SCREEN_RESOLUTION":"Resolution",
   "SCREEN_DEFINE":"Custom",
   "SCREEN_REMOVE":"Remove Wall",
   "SCREEN_ADD":"Add Wall",
   "SCREEN_NO":"Screen No",
   "SCREEN_LCD":"LCD mode",
-  "SCREEN_FRAME":"Screen Refresh",
+  "SCREEN_FRAME":"FrameRate ",
   "SCREEN_CLICK_PORT":"Click Port To Change",
   "SCREEN_CONFIG_TIP":"Notice：Click Dark Background To Config Screen",
 
@@ -175,7 +176,7 @@
   "EDID_CLOCK":"Pixel Clock:",
   "EDID_WIDTH":"Decount:",
   "EDID_HEIGHT":"ActiveLine:",
-  "EDID_FRAME":"Framerate:",
+  "EDID_FRAME":"FrameRate:",
   "EDID_VFROMPORCH":"V. Front Porch:",
   "EDID_VSYNCTIME":"V. Sync Time:",
   "EDID_VBACKPORCH":"V. Back Porch:",
@@ -272,7 +273,7 @@
   "BACKUP_CARD_ID":"Card ID:&nbsp;",
   "BACKUP_SOURCE_ID":"Source ID:&nbsp;",
 
-  "MODE_TITLE":"Changing the name of the mode",
+  "MODE_TITLE":"Invoke Mode Setting",
   "MODE_SAVE_TITLE":"Save Mode Setting",
   "MODE_ID":"Mode ID:&nbsp;",
   "MODE_NAME":"Mode Name:&nbsp;",
@@ -284,6 +285,9 @@
   "IMPORT_UPLOAD":"Upload File",
   "IMPORT":"Import",
 
+  "EXPORT_TITLE":"Export Config",
+  "EXPORT_IN_PROGRESS":"Progressing...",
+
   "WORKMODE_TITLE":"Work Mode",
   "WORKMODE_DP":"Manual DP",
   "WORKMODE_HDMI":"Manual HDMI",
@@ -291,6 +295,15 @@
   "VGA_TITLE":"VGA Correction",
   "VGA_BTN_RESET":"Reset",
   "VGA_BTN_APPLY":"Apply",
+
+  "SIMULATE_TITLE":"Demo Mode Setting",
+  "SIMULATE_DEV_TYPE":"Device Type:",
+  "SIMULATE_OUT_NUM":"Output Card Numbers:",
+  "SIMULATE_IN_NUM":"Input Card Numbers:",
+  "SIMULATE_IMPORT":"Import Demo Mode",
+  "SIMULATE_EXPORT":"Export Demo Mode",
+
+  "CLOSE_TITLE":"Shut Ouput",
 
   "ALERT_MAX_WINDS":"Window excess",
   "ALERT_API_ERROR":"Receive wrong",
@@ -303,6 +316,7 @@
   "ALERT_MAX_USERNAME_LENGTH":"name length should be less than 20",
   "ALERT_MAX_PASSWORD_LENGTH":"password length should be less than 20",
 
+  "TIP_ARM_UPGRADE":"Jump to IAP succeeded，Please refresh the current page to upgrade",
   "TIP_ALREADY_SAVE":"done",
   "TIP_UPGRADE_NOW":"upgrading",
   "TIP_INPUT_NEW_NAME":"Input new name",

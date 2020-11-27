@@ -36,7 +36,7 @@
           <img class="header-icon" src="@/assets/images/l_loop.png" />
           <span class="content-list-title">{{LANG.SIGNAL_LAYOUT_LOOP}}</span>
         </template>
-        <div class="content-list"  :style="{maxHeight:contestListHeight}">
+        <div class="content-list">
           <sceneCarousel v-if="activeName==2"></sceneCarousel>
         </div>
       </el-collapse-item>
@@ -50,6 +50,16 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+
+    <div style="position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 25px;
+    line-height: 24px;
+    color: #fff;
+    font-size: 14px;
+    border-top: 1px solid #dcdcdc;
+    left: 0;">{{LANG.HOME_DEV_TYPE}}{{this.$parent.devType}}</div>
   </div>
 </template>
 
@@ -89,11 +99,11 @@ export default {
         window.addEventListener("resize",(e)=>{
             this.calContentListHeight();
         });
+
         this.globalEvent.$on('language',()=>{
             this.LANG=this.LANGUAGE[this.globalEvent.language];
             this.activeList=[this.LANG.SIGNAL_SOURCE,this.LANG.SIGNAL_USER_MODE,this.LANG.SIGNALLAYOUT_LOOP,this.LANG.SIGNAL_SOURCEGROUP];
 
-            // let presetStaArr=this.globalEvent.commonInfo.presetStaArr;
             for(let i in this.globalEvent.commonInfo.presetStaArr){
                 this.userSceneList[i].label=this.globalEvent.userSceneName(i);
             }
@@ -119,12 +129,6 @@ export default {
             }
         });
 
-        // this.$http.get("scenePollingRd.cgi",{},(ret)=>{
-        //     this.scenePollingList=ret.data;
-        // });
-        // this.$http.get("srcGroupRd.cgi",{},(ret)=>{
-        //     this.srcGroupList=ret.data;
-        // });
     },
     methods:{
         // int(i){
@@ -134,6 +138,7 @@ export default {
             let curH=document.body.clientHeight;
 
             this.contestListHeight=(curH-366)+'px';
+            console.log(this.contestListHeight);
         },
         getSysInputInfo(){
             //该接口连续调用 返回数据会出错 --- vdr index loadScreenWindowItems
@@ -384,6 +389,7 @@ export default {
 <style lang="scss">
 .content-nav {
     /*border-right: 1px solid #dcdfe6;*/
+  position:relative;
   background-color:#1f2e54;
     padding-left: 10px;
     flex: 0 0 200px;

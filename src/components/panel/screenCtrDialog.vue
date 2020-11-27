@@ -21,6 +21,24 @@
                         <label><input value=1 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_2}}</label>
                         <label><input value=2 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_3}}</label>
                         <label><input value=3 v-model="scrMode"  type="radio"/>{{LANG.TUNNEL_SEQ_4}}</label>
+
+                        <div class="screen_arrange" v-show="scrMode==0">
+                            <div class="flex_div"><div>1</div><div>2</div><div>3</div></div>
+                            <div class="flex_div"><div>4</div><div>5</div><div>6</div></div>
+                        </div>
+                        <div class="screen_arrange" v-show="scrMode==1">
+                            <div class="flex_div"><div>1</div><div>3</div><div>5</div></div>
+                            <div class="flex_div"><div>2</div><div>4</div><div>6</div></div>
+                        </div>
+                        <div class="screen_arrange" v-show="scrMode==2">
+                            <div class="flex_div"><div>11</div><div>12</div><div>13</div></div>
+                            <div class="flex_div"><div>21</div><div>22</div><div>23</div></div>
+                        </div>
+
+                        <div class="screen_arrange" v-show="scrMode==3">
+                            <div class="flex_div"><div>11</div><div>21</div><div>31</div></div>
+                            <div class="flex_div"><div>12</div><div>22</div><div>32</div></div>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="right_body">
@@ -46,7 +64,7 @@
             </div>
 
             <fieldset>
-                <legend>自定义命令</legend>
+                <legend>{{LANG.TUNNEL_DEFINE}}</legend>
                 <div class="dialog_body">
                     <div class="left_body">
                         <div class="b_tip" v-html="LANG.TUNNEL_OPEN"></div>
@@ -255,5 +273,9 @@
         overflow: auto;
         padding: 5px;}
     .textarea_wrapper textarea{border:none;outline:none;min-width:270px;min-height:90px;}
-
+    .screen_arrange{position:absolute;    top: 30px; right: 30px;}
+    .screen_arrange .flex_div:last-child{margin-top:15px;}
+    .screen_arrange span{display:inline-block;}
+    .screen_arrange .flex_div{display:flex;justify-content: center;}
+    .screen_arrange .flex_div div{width: 30px;text-align:center;}
 </style>

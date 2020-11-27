@@ -1,17 +1,15 @@
 <template>
-    <div style="overflow: hidden;">
-        <div style="display: flex;justify-content: center;margin-top: 150px">
+    <div class="login_dialog">
+        <img src="@/assets/images/logo_big.png"/>
+        <div style="display: flex;justify-content: center;margin-top: 50px">
             <div style="width: 300px">
-                <div style="text-align:center;margin-bottom:20px;font-size:20px;" slot="header" class="clearfix">
-                    <span>{{LANG.USER_LOGIN}}</span>
-                </div>
                 <table>
                     <tr>
                         <td v-html="LANG.USER_USERNAME"></td>
                         <td>
                             <!--<el-input list="user_history" v-model="user.username" :placeholder="LANG.USER_INPUT_USERNAME"></el-input>-->
                             <!--<datalist id="user_history">-->
-                                <!--<option v-for="item in userList">{{item}}</option>-->
+                            <!--<option v-for="item in userList">{{item}}</option>-->
                             <!--</datalist>-->
                             <el-select v-model="userIndex"
                                        allow-create
@@ -30,6 +28,7 @@
                             </el-select>
                         </td>
                     </tr>
+                    <tr><td colspan="2" style="height:30px;"></td></tr>
                     <tr>
                         <td v-html="LANG.USER_PASSWD"></td>
                         <td>
@@ -37,18 +36,22 @@
                             <!-- @keydown.enter.native="doLogin"当按下enter键的时候也会执行doLogin方法-->
                         </td>
                     </tr>
+                    <tr><td style="height:30px;"></td><td style="height:30px;">
+                        <span style="color:#f44f44;" v-show="wrong_password">{{LANG.TIP_WRONG_PASSWD}}</span>
+                    </td></tr>
                     <tr>
                         <!-- 占两行-->
                         <td colspan="2">
                             <!-- 点击事件的两种不同的写法v-on:click和 @click-->
                             <!--<el-button style="width: 300px" type="primary" v-on:click="doLogin">登录</el-button>-->
-                            <el-button style="width: 300px" type="primary" @click="doLogin">{{LANG.USER_LOGIN}}</el-button>
+                            <el-button style="width: 300px;display:block;margin:0 auto;" type="primary" @click="doLogin">{{LANG.USER_LOGIN}}</el-button>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
+
 </template>
 <script>
     export default {
@@ -58,6 +61,8 @@
                     username:'Administrator',
                     password:'',
                 },
+                old_password:"xx",
+                wrong_password:false,
                 userIndex:'Administrator',
                 userHistoryKey:"user_history",
                 userList:['Administrator'],
@@ -67,6 +72,14 @@
         mounted(){
             this.getLoginHistory();
             this.getLanguage();
+        },
+        watch:{
+            "user.password":function (v,o) {
+                if(v!=this.old_password){
+                    this.wrong_password=false;
+                    this.old_password='xx';
+                }
+            }
         },
         methods:{
             filterMethod(v){
@@ -92,11 +105,11 @@
                     this.globalEvent.language= (ret.data===undefined || ret.data.lang===undefined || ret.data.lang==0) ?'zh':'en';
                     this.globalEvent.$emit('language');
                     this.LANG=this.LANGUAGE[this.globalEvent.language];
+                    localStorage.setItem('language',this.globalEvent.language)
                 });
             },
             doLogin(){
 
-                // console.log(this.user);
                 this.user.username=this.userIndex;
                 this.$http.post("login.cgi",{username:this.user.username,password:this.user.password},(ret)=>{
                     if(ret.data.result==1){
@@ -116,7 +129,9 @@
 
                     }
                     else{
-                        alert("登录失败");
+                        this.old_password=this.user.password;
+                        this.wrong_password=true;
+                        // this.user.password='';
                     }
 
                 });
@@ -127,5 +142,13 @@
     }
 </script>
 <style scoped>
+    .login_dialog{
+        overflow: hidden;
+        width: 560px;
+        height: 450px;
+        background-color: #fff;
+        margin: 50px auto;
+    }
     table td{height:50px;}
+    .login_dialog img{margin: 50px auto 0;display: block;width: 300px;}
 </style>

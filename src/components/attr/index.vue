@@ -21,7 +21,7 @@
           </el-button>
         </div>
         <div style="display:flex;justify-content: space-between;">
-          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')" :title-="LANG.ATTR_FULLSCREEN">
+          <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','1')" :title="LANG.ATTR_FULLSCREEN">
             <img src="../../assets/images/wfullscr.png"/>
           </el-button>
           <el-button size="mini" :disabled="globalEvent.panelLock" @click="sendEvent('update_window','window_size','3')" :title="LANG.ATTR_EXTEND">
@@ -37,7 +37,7 @@
 
       </div>
       <div class="title">
-        <el-input placeholder="请输入画面名称" @change="change('label')" v-model="label" size="mini">
+        <el-input placeholder="" @change="change('label')" v-model="label" size="mini">
           <template slot="prepend">{{LANG.ATTR_WINDOW_NAME}}:</template>
         </el-input>
       </div>

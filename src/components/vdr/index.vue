@@ -501,11 +501,13 @@
                 }
 
 
-                let outResource=false;
+                let outResource=false;//是否超出资源
                 //输出端口 资源统计
-                if(this.globalEvent.maxWinNumPerPort>0){
+                console.log(this.portStat);
+
+                if(this.globalEvent.outPutInfo.maxWinNumPerPort>0){
                     for(let i in this.portStat){
-                        if(this.portStat[i]>this.globalEvent.maxWinNumPerPort){
+                        if(this.portStat[i]>this.globalEvent.outPutInfo.maxWinNumPerPort){
                             console.log("超过输出端口最大窗口");
                             outResource=true;
                             break;
@@ -563,9 +565,6 @@
                         endRow=Math.min(i+1,this.curScreen.Row-1);
                     }
                 }
-
-                // console.log(startCol,endCol,startRow,endRow);
-
 
                 for(let i=startCol;i<=endCol;i++){
                     for(let j=startRow;j<=endRow;j++){

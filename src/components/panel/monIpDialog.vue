@@ -25,11 +25,11 @@
                 LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
-        // created(){
-        //     this.$http.get("monitorIpWr.cgi",{},(ret)=>{
-        //         this.ipArr=ret.data.ipArr;
-        //     });
-        // },
+        created(){
+            this.$http.post("monitorIpWr.cgi",{ipArr:this.ipArr},(ret)=>{
+                this.ipArr=ret.data.ipArr;
+            });
+        },
         // mounted(){
         //     this.$http.get("ipCfgRd.cgi",{},(ret)=>{
         //         console.log(ret.data);

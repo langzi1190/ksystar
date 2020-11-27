@@ -45,9 +45,14 @@
     export default {
         props:['showSetting'],
         data(){
+            let [x,y]=[this.$parent.item.FormatW,this.$parent.item.FormatH,];
+            if(this.$parent.item.videoId==106 || this.$parent.resolutionValue=='960*2160'){
+                x=960;
+                y=2160;
+            }
             return {
-                x:this.$parent.item.FormatW,
-                y:this.$parent.item.FormatH,
+                x:x,
+                y:y,
                 isVisible: this.showSetting,
                 LANG:this.LANGUAGE[this.globalEvent.language]
             };

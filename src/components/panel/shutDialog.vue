@@ -1,8 +1,8 @@
 <template>
     <div class="reset_dialog">
         <el-dialog
-                :title="LANG.RESTOR_TITLE"
-                :visible="showDialog=='reset' && globalEvent.userInfo.type==0"
+                :title="LANG.CLOSE_TITLE"
+                :visible="showDialog=='shut'"
                 width="400px"
                 @close="op(false)"
                 center>
@@ -25,17 +25,19 @@
         methods:{
             op(b){
                 if(b){
-                    this.loading=this.$loading({
-                        lock: true,
-                        text: this.LANG.EXPORT_IN_PROGRESS,
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(255, 255, 255, 0.5)'
-                    });
-                    this.$http.get("factory.cgi",{},()=>{
-                        window.location.reload(true);
+                    // this.loading=this.$loading({
+                    //     lock: true,
+                    //     text: this.LANG.EXPORT_IN_PROGRESS,
+                    //     spinner: 'el-icon-loading',
+                    //     background: 'rgba(255, 255, 255, 0.5)'
+                    // });
+                    // this.$http.get("factory.cgi",{},()=>{
+                    //     window.location.reload(true);
+                    // });
+                    this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
+
                     });
                 }
-
                 this.$emit('sub_event',{act:'close_kfs'});
             }
         }

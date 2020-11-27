@@ -160,12 +160,15 @@ export default {
                   return ;
               }
 
-              // console.log(param);
 
               let m=param.v.split('*');
               this.displayList[param.seq].FormatW=m[0];
               this.displayList[param.seq].FormatH=m[1];
               this.displayList[param.seq].VideoId=param.videoId;
+
+              if(m[0]==960 && m[1]==2160){
+                  this.displayList[param.seq].VideoId=0;
+              }
               if(param.videoId==117){
                   this.displayList[param.seq].FrameRate=30;//30;//0:60,1:50, 2:30;
               }
@@ -232,7 +235,6 @@ export default {
 
 
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
-              console.log(screenInfo);
               // this.globalEvent.screenInfo=screenInfo;
               this.globalEvent.$emit("reload_data");
               this.$emit("isDialogVisible", false); // 退出关闭弹窗

@@ -137,5 +137,5 @@
     .mutli_sync_dialog .el-dialog{width:400px;}
     .mutli_sync_dialog .item{text-align:center;margin-bottom:20px;}
     .mutli_sync_dialog .label_group{display:inline-block;}
-    .mutli_sync_dialog .sp span{display:inline-block;width:95px;text-align:right;margin-right:5px;}
+    .mutli_sync_dialog .sp span{display:inline-block;width:123px;text-align:right;margin-right:5px;}
 </style>
