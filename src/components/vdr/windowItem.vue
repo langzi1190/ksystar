@@ -315,6 +315,7 @@
                 if(w>-1){
                     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcCardId',num[0]);
                     this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcId',num[1]);
+                    this.$set(this.globalEvent.windowItemsInfo.winArr[w],'srcGroupId',0);
 
                     //保存信号源信息
                     let data={

@@ -166,8 +166,8 @@
                 </div>
             </div>
             <div style="text-align:center;">
-                <el-button @click="isSubmit(true)">{{LANG.BTN_SURE}}</el-button>
-                <el-button @click="isSubmit(false)">{{LANG.BTN_CANCEL}}</el-button>
+                <el-button @click="isSubmit(true)" size="mini">{{LANG.BTN_SURE}}</el-button>
+                <el-button @click="isSubmit(false)" size="mini">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>
     </div>

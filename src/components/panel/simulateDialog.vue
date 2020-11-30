@@ -2,7 +2,7 @@
     <div class="simulate_dialog">
         <el-dialog :title="LANG.SIMULATE_TITLE"
                    width="700px"
-                   :visible="showDialog=='simulate_t'"
+                   :visible="showDialog=='simulate'"
                    @close="op(false)">
             <div class="si_body">
                 <div class="item">
@@ -76,8 +76,16 @@
 
                     </div>
                     <div class="r_body">
-                        <el-button size="mini">{{LANG.SIMULATE_IMPORT}}</el-button>
-                        <el-button size="mini">{{LANG.SIMULATE_EXPORT}}</el-button>
+                        <div class="el_button_wrapper">
+                            <el-button size="mini">
+                                {{LANG.SIMULATE_IMPORT}}
+                                <input type="file" ref="config"/>
+                            </el-button>
+                        </div>
+                        <div class="el_button_wrapper">
+                            <el-button size="mini" @click="exportConfig">{{LANG.SIMULATE_EXPORT}}</el-button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -144,6 +152,24 @@
         },
         watch:{
             inCount(v,ov){
+                if(v==''){
+                    return;
+                }
+                if(v<1){
+                    this.$nextTick(()=>{
+                        setTimeout(()=>{
+                            this.inCount=1;
+                        },500);
+                    });
+                    return ;
+                }else if(v>60){
+                    this.$nextTick(()=>{
+                        setTimeout(()=>{
+                            this.inCount=60;
+                        },500);
+                    });
+                    return ;
+                }
                 let curInCount=this.inCardList.length;
                 // let curInCount=this.inCardList.length;
                 if(curInCount>this.inCount){
@@ -163,10 +189,39 @@
                     }
                 }
             },
+            outCount(v,ov){
+                if(v==''){
+                    return;
+                }
+                if(v<1){
+                    this.$nextTick(()=>{
+                        setTimeout(()=>{
+                            this.inCount=1;
+                        },500);
+                    });
+                    return ;
+                }else if(v>15){
+                    this.$nextTick(()=>{
+                        setTimeout(()=>{
+                            this.inCount=15;
+                        },500);
+                    });
+                    return ;
+                }
+            }
+        },
+        mounted(){
+            setTimeout(()=>{
+                this.uploadEvent()
+            },600);
         },
         methods:{
             op(act){
                 if(act){
+                    if(this.inCount=='' || this.outCount==''){
+                        alert("输入卡或输出卡数量不能为空");
+                        return ;
+                    }
                     //生成输入卡，输出卡
                     this.globalEvent.gMode=1;
                     let inCardInfo={
@@ -269,6 +324,41 @@
                 else{
                     this.$emit("sub_event",{act:'close_kfs'});
                 }
+            },
+            uploadEvent(){
+                let input=this.$refs.config;
+                let that=this;
+                input.addEventListener("change",(e)=>{
+                    let file=input.files[0];
+                    if(!!file){
+                        let reader=new FileReader();
+                        reader.readAsText(file);
+                        reader.onload=function () {
+                            let obj=JSON.parse(reader.result);
+                            that.dev=obj.dev;
+                            that.inputTypeList=obj.inputTypeList;
+                            that.inCount=obj.inCount;
+                            that.inCardList=obj.inCardList;
+                            that.outCount=obj.outCount;
+                        }
+                    }
+                })
+            },
+            exportConfig(){
+                let param={
+                    dev:this.dev,
+                    inputTypeList:this.inputTypeList,
+                    inCount:this.inCount,
+                    inCardList:this.inCardList,
+                    outCount:this.outCount
+                };
+                let b=new Blob([JSON.stringify(param)]);
+                let aEle = document.createElement("a");
+                aEle.download="demo.bin";
+                aEle.href=window.URL.createObjectURL(b);
+                aEle.click();
+
+                window.URL.revokeObjectURL(b);
             }
         }
     }
@@ -284,5 +374,13 @@
     .si_body .card_item{display: flex;height: 30px; line-height: 30px;padding-bottom:10px;background-color:#ff99;}
     .si_body .body_item{display:flex;}
     .r_body{text-align:center;}
-    .r_body button{margin-left:0 !important;margin-top:60px;}
+    .r_body button{margin-left:0 !important;width:120px;}
+    .r_body .el_button_wrapper{display:inline-block;position:relative;margin-top:60px;}
+    .r_body button input{    position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer!important;
+        top: 0;
+        opacity: 0;}
 </style>

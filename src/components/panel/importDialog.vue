@@ -88,8 +88,8 @@
 
                     that.loading.setText(that.LANG.TIP_UPGRADE_NOW+" ..."+ Math.floor(i/fragmentCount*100)+'%');
 
-                    //todo api
                     that.$http.post("cfgImport.cgi",d,(ret)=>{
+
                         if(ret.data.result==0){
                             //未正确接收
                             alert(this.LANG.ALERT_API_ERROR);

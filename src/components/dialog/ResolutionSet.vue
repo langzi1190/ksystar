@@ -80,6 +80,7 @@
                 }
             },
             showTimeSeq(){
+
                 this.$emit('sub_event',{act:'showTimeSeq',x:this.x,y:this.y});
             },
             cancelSubmit(){

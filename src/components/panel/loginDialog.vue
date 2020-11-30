@@ -1,6 +1,10 @@
 <template>
     <div class="login_dialog">
-        <img src="@/assets/images/logo_big.png"/>
+        <div class="img_wrapper">
+            <img src="@/assets/images/kystarlogo.png"/>
+            <div style="color: #09c3fd;
+font-weight: bold;">凯视达拼接器</div>
+        </div>
         <div style="display: flex;justify-content: center;margin-top: 50px">
             <div style="width: 300px">
                 <table>
@@ -150,5 +154,12 @@
         margin: 50px auto;
     }
     table td{height:50px;}
-    .login_dialog img{margin: 50px auto 0;display: block;width: 300px;}
+    .login_dialog .img_wrapper{ width: 257px;
+        display: flex;
+        margin: 40px auto 0;
+        height: 50px;
+        font-size: 30px;
+        line-height: 50px;}
+    .login_dialog img{width:50px;margin-right:20px;}
+    /*.login_dialog img{margin: 50px auto 0;display: block;width: 300px;}*/
 </style>

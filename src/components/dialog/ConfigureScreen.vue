@@ -139,7 +139,6 @@ export default {
               }
           }
 
-          console.log(port);
           if(port.length==[...new Set(port)].length){
               flag=false;//未占用
           }
@@ -156,19 +155,17 @@ export default {
           else if(param.act=='resolutionValue'){
 
               if(param.videoId==-1){
-                  console.log('videoId:',param.videoId);
                   return ;
               }
-
 
               let m=param.v.split('*');
               this.displayList[param.seq].FormatW=m[0];
               this.displayList[param.seq].FormatH=m[1];
               this.displayList[param.seq].VideoId=param.videoId;
 
-              if(m[0]==960 && m[1]==2160){
-                  this.displayList[param.seq].VideoId=0;
-              }
+              // if(m[0]==960 && m[1]==2160){
+              //     this.displayList[param.seq].VideoId=0;
+              // }
               if(param.videoId==117){
                   this.displayList[param.seq].FrameRate=30;//30;//0:60,1:50, 2:30;
               }
@@ -197,7 +194,8 @@ export default {
 
       },
       isSubmit(bool) {
-        if (bool) {
+
+        if(bool){
             if(!this.isValidCardCount()){
                 //检查端口使用数量，
                 return ;
@@ -214,12 +212,21 @@ export default {
               alert("存在重复使用端口");
               return ;
           }
-
+          if(this.globalEvent.gMode==1){
+              //演示模式
+              this.$emit("isDialogVisible", false); // 退出关闭弹窗
+              this.screenInfo.scrGroupArr=this.displayList;
+              this.globalEvent.$emit("reload_data");
+              return ;
+          }
           let copyDisplayList=JSON.parse(JSON.stringify(this.displayList));
           for(let i in copyDisplayList){
               delete copyDisplayList[i].tabName;
               for(let k in copyDisplayList[i].portArr){
                   // copyDisplayList[i].FrameRate=copyDisplayList[i].FrameRate==30?2:(copyDisplayList[i].FrameRate==60?0:1);
+                  if(copyDisplayList[i].VideoId==106){
+                      copyDisplayList[i].VideoId=0;
+                  }
                   copyDisplayList[i].FormatH=parseInt(copyDisplayList[i].FormatH);
                   copyDisplayList[i].FormatW=parseInt(copyDisplayList[i].FormatW);
                   let size=copyDisplayList[i].portArr[k].sizeArr;
@@ -233,9 +240,7 @@ export default {
               scrGroupArr:copyDisplayList
           };
 
-
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
-              // this.globalEvent.screenInfo=screenInfo;
               this.globalEvent.$emit("reload_data");
               this.$emit("isDialogVisible", false); // 退出关闭弹窗
           });

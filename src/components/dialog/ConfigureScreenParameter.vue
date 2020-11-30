@@ -223,9 +223,16 @@ export default {
     methods:{
         selectOption(item){
 
-            if(item.videoId==0 || item.videoId==106){
+            if(item.videoId==0){
                 //自定义
                 this.showSetting=true;
+                return ;
+            }
+            else if(item.videoId==106){
+
+                this.w=960;//给时序设置用
+                this.h=2160;
+                this.showTimeSeq=true;
                 return ;
             }
             this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:item.value,videoId:this.videoId});
@@ -262,7 +269,7 @@ export default {
 
             }
             else if(param.act=='showTimeSeq'){
-                this.resolutionValue=this.beforeRv;//恢复分辨率
+                // this.resolutionValue=this.beforeRv;//恢复分辨率
                 this.w=param.x;//给时序设置用
                 this.h=param.y;
                 this.showTimeSeq=true;

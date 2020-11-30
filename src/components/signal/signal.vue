@@ -352,7 +352,8 @@ export default {
         },
         loadScene(){
             if(this.userSceneList[this.selectedSceneIndex].value==0){
-                alert("该模式没有内容");
+                // alert("该模式没有内容");
+                console.log("该模式没有内容");
             }
             else{
                 //载入用户模式
