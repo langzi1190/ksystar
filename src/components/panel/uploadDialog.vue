@@ -237,7 +237,7 @@
 
                 let file=input.files[0];
                 let totalSize=0;
-                let fragment=512;
+                let fragment=1024;
                 let fragmentCount=0;
 
                 let curPacketId=0;
@@ -276,6 +276,7 @@
                         board:that.cardType-0,
                         packetNum:fragmentCount,
                         packetId:i,
+                        dataCRC:0,
                         dataArr:hexBuffer.slice(start,end).map((v,k)=>Number('0x'+v))
                     };
 
