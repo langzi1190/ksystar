@@ -11,9 +11,10 @@
                         <el-tab-pane :label="LANG.HOME_DEV">
                             <div class="card-s">
                                 <card :title="LANG.HOME_DEV">
-                                    <card-item :title="LANG.HOME_DEV_SELECT"></card-item>
-                                    <card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>
-                                    <card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>
+                                    <!--<card-item :title="LANG.HOME_DEV_SELECT"></card-item>-->
+                                    <!--<card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>-->
+                                    <!--<card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>-->
+                                    <card-item :title="LANG.HOME_ABOUT" @click.native="showDialog='about'"></card-item>
                                     <card-item :title="LANG.HOME_SYNC"></card-item>
                                     <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0"></card-item>
                                 </card>
@@ -174,6 +175,7 @@
             <simulateDialog @sub_event="subEvent" v-if="showDialog=='simulate'" :showDialog="showDialog"></simulateDialog>
             <importDialog @sub_event="subEvent" v-if="showDialog=='import'" :showDialog="showDialog"></importDialog>
             <exportDialog @sub_event="subEvent" v-if="showDialog=='export'" :showDialog="showDialog"></exportDialog>
+            <aboutDialog @sub_event="subEvent" v-if="showDialog=='about'" :showDialog="showDialog"></aboutDialog>
         </div>
         <div v-else style="width:100%;height:100%;background-color:#131e3e;overflow:hidden;">
             <loginDialog @sub_event="subEvent"></loginDialog>
@@ -259,6 +261,7 @@ import simulateDialog from "@/components/panel/simulateDialog";
 import loginDialog from "@/components/panel/loginDialog";
 import importDialog from "@/components/panel/importDialog";
 import exportDialog from "@/components/panel/exportDialog";
+import aboutDialog from "@/components/panel/aboutDialog";
 
 let loading ;
 // let loading_count=0;
@@ -845,7 +848,8 @@ export default {
       simulateDialog,
       loginDialog,
       importDialog,
-      exportDialog
+      exportDialog,
+      aboutDialog
   },
 };
 </script>

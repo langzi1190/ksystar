@@ -1,5 +1,7 @@
 {
   "HOME_DEV":"Devices",
+  "HOME_ABOUT":"About",
+  "ABOUT_TITLE":"Web Version",
   "HOME_DEV_TYPE":"Device Type：",
   "HOME_MAIN_FUNC":"MainFunctions",
 
@@ -273,7 +275,7 @@
   "BACKUP_CARD_ID":"Card ID:&nbsp;",
   "BACKUP_SOURCE_ID":"Source ID:&nbsp;",
 
-  "MODE_TITLE":"Invoke Mode Setting",
+  "MODE_TITLE":"Call Mode Setting",
   "MODE_SAVE_TITLE":"Save Mode Setting",
   "MODE_ID":"Mode ID:&nbsp;",
   "MODE_NAME":"Mode Name:&nbsp;",

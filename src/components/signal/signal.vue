@@ -40,7 +40,7 @@
           <sceneCarousel v-if="activeName==2"></sceneCarousel>
         </div>
       </el-collapse-item>
-      <el-collapse-item name="3">
+      <el-collapse-item name="3" v-if="this.$parent.devType!='KS6800' && this.$parent.devType!='KS8800'">
         <template slot="title">
           <img class="header-icon" src="@/assets/images/source_group.png" />
           <span class="content-list-title">{{LANG.SIGNAL_SOURCEGROUP}}</span>

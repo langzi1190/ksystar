@@ -276,7 +276,7 @@
             isSubmit(on){
                 if(!on){
 
-                    this.$emit('sub_event',{act:'closeTimeSeqDialog'});
+                    this.$emit('sub_event',{act:'closeTimeSeqDialog',action:'cancel'});
                 }
                 else{
                     //提交
@@ -286,7 +286,7 @@
                         }
                     }
                     Object.assign(this.comScreen.displayList[this.curScreenIndex],this.curScreen);
-                    this.$emit('sub_event',{act:'closeTimeSeqDialog'});
+                    this.$emit('sub_event',{act:'closeTimeSeqDialog',action:'sure'});
                 }
             },
             GetDefineOutputTimingInfo(nDefinedWidth,nDefinedHeight)
@@ -453,7 +453,7 @@
 
 <style scoped>
     .time_seq{width: 540px;margin: 0 auto;}
-    .time_seq > div{width:50%;padding:0;height:auto;}
+    .time_seq > div{width:56%;padding:0;height:auto;}
     .time_seq .left_body{border:none;}
     .time_seq .right_body .el-select--mini{margin-top:0;}
     .row_item{display:flex;margin-bottom:20px;height:30px;line-height:30px;width:80%;}

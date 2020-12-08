@@ -54,7 +54,7 @@
                     this.globalEvent.sceneCarousel=sceneInfo;
                     this.sceneList=this.globalEvent.sceneCarousel.sceneArr;
                     this.mode=sceneInfo.mode;
-
+                    this.isPlay=sceneInfo.funcSta;
                     this.syncLocalName();
                 }
 

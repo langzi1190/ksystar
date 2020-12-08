@@ -222,7 +222,7 @@ export default {
   },
     methods:{
         selectOption(item){
-
+            this.videoId=item.videoId;
             if(item.videoId==0){
                 //自定义
                 this.showSetting=true;
@@ -254,6 +254,18 @@ export default {
                 this.showSetting=false;
             }
             else if(param.act=='closeTimeSeqDialog'){
+                if(this.videoId==106 && param.action=='sure'){
+                    this.$emit('sub_event',{act:'resolutionValue',seq:this.seq,v:'960*2160',videoId:this.videoId});
+                }
+                else if(this.videoId==106 && param.action=='cancel'){
+                    this.resolutionValue=this.beforeRv;
+                    console.log(this.beforeRv);
+                      resolution.forEach((ele,k)=>{
+                          if(this.resolutionValue==ele.value) {
+                              this.videoId=ele.videoId;
+                          }
+                      });
+                }
                 this.showTimeSeq=false;
             }
             else if(param.act=='setResolution'){

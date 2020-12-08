@@ -3,6 +3,7 @@ import Vue from 'vue'
 let gobalEvent =new Vue({
     data:{
         gMode:0,//0正常，1演示
+        version:'1.0',
         modeInfo:{
             inCardInfo:{},
             outCardInfo:{}

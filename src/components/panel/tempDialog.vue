@@ -57,7 +57,9 @@
     let tempArr=[];
     let timeout_event=0;
     let temp_index=0,lastx=0,lasty=0;
-    let color_arr=['black','red','orange','gray','blue','chocolate','brown'];
+    let color_arr=['black','red','orange','gray','blue','chocolate','brown','gold','goldenrod','green',
+                    'hotpink','#CD5C5C','#F0E68C','#E6E6FA','#7CFC00','LightBlue','#778899','#FF00FF',
+                    '#F08080','LightGray','LightGreen','#3CB371','#C71585','#808000','#6B8E23'];
     let color_index=0;
     let readCountPerSec=2;//每秒读取次数
     let maxArrLen=60*readCountPerSec;//存储最长数据
@@ -123,7 +125,7 @@
                     this.$set(this.tempInfo,key,[]);
                     for(let i in param){
                         let card={
-                            color:color_arr[color_index++],
+                            color:color_arr[color_index++ % color_arr.length],
                             show:1,
                             temp:param[i]/10,
                             tempData:[param[i]/10]
@@ -185,7 +187,8 @@
 
 <style>
     .temp_dialog .el-dialog{width:800px;}
-    .top_part > div{display:inline-block;}
+    .temp_dialog .top_part{flex-wrap:wrap;}
+    .top_part > div{display:inline-block;margin-bottom:5px;}
     .top_part .temp{display:inline-block;color:#fff;height: 25px;line-height: 25px;margin: 0 10px;padding: 0 5px;width:30px;vertical-align: middle;}
     .top_part label input{vertical-align: middle;margin-right:5px;}
     .canvas_wrapper{margin-top:15px;}
