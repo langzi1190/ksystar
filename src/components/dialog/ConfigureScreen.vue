@@ -222,23 +222,29 @@ export default {
           let copyDisplayList=JSON.parse(JSON.stringify(this.displayList));
           for(let i in copyDisplayList){
               delete copyDisplayList[i].tabName;
-              for(let k in copyDisplayList[i].portArr){
-                  // copyDisplayList[i].FrameRate=copyDisplayList[i].FrameRate==30?2:(copyDisplayList[i].FrameRate==60?0:1);
+              let portArr=copyDisplayList[i].portArr;
+              copyDisplayList[i].portArr=[];
+              for(let k in portArr){
                   if(copyDisplayList[i].VideoId==106){
                       copyDisplayList[i].VideoId=0;
                   }
                   copyDisplayList[i].FormatH=parseInt(copyDisplayList[i].FormatH);
                   copyDisplayList[i].FormatW=parseInt(copyDisplayList[i].FormatW);
-                  let size=copyDisplayList[i].portArr[k].sizeArr;
-                  copyDisplayList[i].portArr[k].sizeArr=size.map((v,k)=>{return parseInt(v);});
-                  delete copyDisplayList[i].portArr[k].briArr;
-                  delete copyDisplayList[i].portArr[k].conArr;
+                  let size=portArr[k].sizeArr;
+                  let sizeArr=size.map((v,k)=>{return parseInt(v);});
+                  sizeArr.push(parseInt(portArr[k].mapArr[0]));
+                  copyDisplayList[i].portArr.push(sizeArr);
+                  // delete copyDisplayList[i].portArr[k].briArr;
+                  // delete copyDisplayList[i].portArr[k].conArr;
               }
+
           }
           let screenInfo={
               ScrGroupNum:copyDisplayList.length,
               scrGroupArr:copyDisplayList
           };
+
+          console.log(screenInfo);
 
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
               this.globalEvent.$emit("reload_data");

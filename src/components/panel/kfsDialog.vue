@@ -63,10 +63,8 @@
             }
         },
         mounted(){
+
             this.signalList=this.globalEvent.inputCardList;
-            // if(this.syncEnable==1){
-            //     this.reloadTree();
-            // }
 
             for(let i in this.signalList){
                 for(let k in this.signalList[i].srcArr){
@@ -76,8 +74,6 @@
                     });
                 }
             }
-
-            // console.log(this.globalEvent.commonInfo);
 
             let cardArr=this.globalEvent.commonInfo.fSyncInfo.fSyncArr;
 
@@ -199,26 +195,27 @@
 
                     for(let i in this.signalList){
                         let inCard={
-                            inCardChnArr:[]
+                            chnArr:[]
                         };
                         for(let k in this.signalList[i].srcArr){
                             let src=this.signalList[i].srcArr[k].label_info;
-                            let inCardChn={
-                                syncEn:0,
-                                syncCardId:syncCardId,
-                                syncSrcId:syncSrcId
-                            };
-
+                            // let inCardChn={
+                            //     syncEn:0,
+                            //     syncCardId:syncCardId,
+                            //     syncSrcId:syncSrcId
+                            // };
+                            let inCardChn=[0,syncCardId,syncSrcId];
                             for(let t in this.selectedSignal){
                                 if(this.selectedSignal[t].value==src){
-                                    inCardChn.syncEn=1;
+                                    // inCardChn.syncEn=1;
+                                    inCardChn[0]=1;
                                     break;
                                 }
                             }
 
-                            inCard.inCardChnArr.push(inCardChn);
+                            inCard.chnArr.push(inCardChn);
                         }
-                        inCard.srcNum=inCard.inCardChnArr.length;
+                        inCard.srcNum=inCard.chnArr.length;
                         param.inCardArr.push(inCard);
                     }
 
@@ -231,14 +228,14 @@
                             let fSync={
                                 srcPropArr:[]
                             };
-                            for(let k in param.inCardArr[i].inCardChnArr){
-                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].inCardChnArr[k].syncEn;
-                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].inCardChnArr[k].syncCardId;
-                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].inCardChnArr[k].syncSrcId;
+                            for(let k in param.inCardArr[i].chnArr){
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncEn=param.inCardArr[i].chnArr[k].syncEn;
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncCardId=param.inCardArr[i].chnArr[k].syncCardId;
+                                // fSyncInfo.fSyncArr[i].scrPropArr[k].syncSrcId=param.inCardArr[i].chnArr[k].syncSrcId;
                                 fSync.srcPropArr.push({
-                                    syncSta:param.inCardArr[i].inCardChnArr[k].syncEn,
-                                    syncCardId:param.inCardArr[i].inCardChnArr[k].syncCardId,
-                                    syncSrcId:param.inCardArr[i].inCardChnArr[k].syncSrcId
+                                    syncSta:param.inCardArr[i].chnArr[k][0],//param.inCardArr[i].chnArr[k].syncEn,
+                                    syncCardId:param.inCardArr[i].chnArr[k][1],//param.inCardArr[i].chnArr[k].syncCardId,
+                                    syncSrcId:param.inCardArr[i].chnArr[k][2]//param.inCardArr[i].chnArr[k].syncSrcId
                                 });
                             }
 

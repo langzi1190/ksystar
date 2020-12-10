@@ -77,6 +77,7 @@
 
   "ATTR_CLOSEALL":"关闭所有",
   "ATTR_RESTORE":"还原",
+  "ATTR_SIGNAL_LOST":"信号丢失",
   "ATTR_FULLSCREEN":"全屏",
   "ATTR_TOP":"置顶",
   "ATTR_BOTTOM":"置底",

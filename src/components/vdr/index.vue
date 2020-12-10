@@ -78,10 +78,13 @@
                     h:0
                 },
                 refreshWindowItemsEvent:0,
+                LANG:this.globalEvent.LANGUAGE[this.globalEvent.language]
             };
         },
         created() {
-
+            // this.globalEvent.$on("language",()=>{
+            //     this.LANG=this.globalEvent.LANGUAGE[this.globalEvent.language];
+            // });
             this.globalEvent.$on("add_window_item",(param)=>{
                 //添加窗口事件,添加完，可以直接 loadScreenWindowItems，
                 this.addWindowItem(param);
@@ -254,9 +257,28 @@
                             ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
                         }
 
-                        this.globalEvent.screenInfo=ret.data;
+                        // this.globalEvent.screenInfo=ret.data;
+                        // this.loadScreen(0)
 
-                        this.loadScreen(0)
+                        this.$http.get("scrColorRd.cgi",{},(bright)=>{
+                            let data=bright.data;
+                            for(let i in data.scrGroupArr){
+                                let portArr=ret.data.scrGroupArr[i].portArr;
+                                ret.data.scrGroupArr[i].portArr=[];
+                                for(let k in data.scrGroupArr[i]){
+                                    let bri=data.scrGroupArr[i][k];
+                                    ret.data.scrGroupArr[i].portArr.push({
+                                        sizeArr:[portArr[k][0],portArr[k][1]],
+                                        mapArr:[portArr[k][2]],
+                                        briArr:bri[0],
+                                        conArr:bri[1]
+                                    });
+                                }
+                            }
+
+                            this.globalEvent.screenInfo=ret.data;
+                            this.loadScreen(0)
+                        });
                     })
                 }
                 else{
@@ -349,7 +371,7 @@
                                 win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
                                 // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
                                 if(!this.globalEvent.isValidResolution(win.resolution)){
-                                    win.resolution=['信号丢失']
+                                    win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
                                 }
                                 if(win.srcGroupId>0){
                                     win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
@@ -428,15 +450,43 @@
 
                 if(this.isOutResource(data)){
                     alert(this.globalEvent.alert.outResource);
-                    this.loadScreenWindowItems();
+                    // this.loadScreenWindowItems();
                     return ;
                 }
 
 
 
                 this.$http.post("winOpr.cgi",data,(ret)=>{
+                    // this.loadScreenWindowItems();
+                    let win={
+                        lock:0,
+                        zoom:0,
+                        inputCardLabel:this.globalEvent.signalCardName(data.srcCardId,data.srcId),
+                        winId:	data.winId,
+                        srcGroupId:	0,
+                        srcCardId:	data.srcCardId,
+                        srcId:	data.srcId,
+                        layerId:	data.layerId,
+                        partOrAll:	0,
+                        cropSizeArr:	[0, 0, 0, 0],
+                        winSizeArr:	[data.winLeft, data.winTop, data.winW, data.winH]
 
-                    this.loadScreenWindowItems();
+                    };
+                    win.resolution=this.globalEvent.inputCardList[data.srcCardId].srcArr[data.srcId].resolArr;
+                    if(!this.globalEvent.isValidResolution(win.resolution)){
+                        win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
+                    }
+                    if(win.srcGroupId>0){
+                        win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:data.srcGroupId-1});
+                    }
+                    else{
+                        win.groupLabel='';
+                    }
+
+                    win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,this.windowItems.length);
+                    win.k='k'+parseInt(Math.random()*1000);
+                    this.windowItems.push(win);
+                    this.globalEvent.windowItemsInfo.winArr=this.windowItems;
                 });
             },
             isOutResource(newWin={}){

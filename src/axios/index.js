@@ -53,6 +53,8 @@ function apiAxios(method, url, params, response) {
         "languageRd.cgi":"language.json",
         "login.cgi":"login.json",
         "firmwareUpdate.cgi":"upload_result.json",
+        "KfsRd.cgi":"kfs.json",
+        "scrColorRd.cgi":"screen_bright.json",
     };
       url=urlTrans[url];
       method='GET';

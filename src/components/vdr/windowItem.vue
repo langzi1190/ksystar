@@ -337,7 +337,7 @@
                         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
                         win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
                         if(!this.globalEvent.isValidResolution(win.resolution)){
-                            win.resolution=['信号丢失']
+                            win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
                         }
 
                         console.log("signal/index.vue 切换窗口源信号");
@@ -551,6 +551,9 @@
         mounted(){
             this.globalEvent.$on('language',()=>{
                 this.LANG=this.LANGUAGE[this.globalEvent.language];
+                if(this.item.resolution.length==1){
+                    this.item.resolution=[this.LANG.ATTR_SIGNAL_LOST];
+                }
             })
         }
     }

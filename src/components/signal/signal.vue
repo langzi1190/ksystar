@@ -109,7 +109,10 @@ export default {
             }
 
         });
-        this.getSysInputInfo();
+        this.globalEvent.$on("getSysInputInfo",()=>{
+            this.getSysInputInfo();
+        });
+
         this.globalEvent.$on("work_mode_change",()=>{
             //信号源工作模式发生改变 修改前端名称 workModeDialog
             let inCardArr=this.inputCardList;
@@ -141,9 +144,20 @@ export default {
             console.log(this.contestListHeight);
         },
         getSysInputInfo(){
+
             //该接口连续调用 返回数据会出错 --- vdr index loadScreenWindowItems
             setTimeout(()=>{
                 this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+                    for(let i in ret.data.inCardArr){
+                        for(let k in ret.data.inCardArr[i].srcArr){
+                            let srcArr=ret.data.inCardArr[i].srcArr[k];
+                            srcArr.portType=srcArr.type;
+                            srcArr.ITESrcType=srcArr.ITE;
+                            srcArr.bakFuncSta=srcArr.bakArr[0];
+                            srcArr.bakSrcCardId=srcArr.bakArr[1];
+                            srcArr.bakSrcId=srcArr.bakArr[2];
+                        }
+                    }
                     this.syscInputInfo(ret.data);
                 });
             },200)
@@ -165,7 +179,31 @@ export default {
                     });
                 }
                 this.syncLocalName();
-                this.globalEvent.commonInfo=ret.data;
+
+                this.$http.get("KfsRd.cgi",{},(kfs)=>{
+                    let data=kfs.data;
+                    ret.data.fSyncInfo={
+                        inCardNum:data.inCardNum,
+                        fSyncFuncSta:data.funcSta,
+                        fSyncArr:[]
+                    };
+                    for(let i in data.inCardArr){
+                        let srcPropArr=[];
+                        for(let k in data.inCardArr[i].chnArr){
+                            let chn=data.inCardArr[i].chnArr[k];
+                            srcPropArr.push({
+                                syncSta:chn[0],
+                                syncCardId:chn[1],
+                                syncSrcId:chn[2]
+                            });
+                        }
+                        ret.data.fSyncInfo.fSyncArr.push({
+                            srcPropArr:srcPropArr
+                        });
+                    }
+                    this.globalEvent.commonInfo=ret.data;
+                    this.globalEvent.$emit('getSysInputInfo');
+                });
             });
         },
         syncLocalName(){

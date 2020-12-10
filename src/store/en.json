@@ -78,6 +78,7 @@
 
   "ATTR_CLOSEALL":"Close all",
   "ATTR_RESTORE":"Restore",
+  "ATTR_SIGNAL_LOST":"Signal Lost",
   "ATTR_FULLSCREEN":"Fullscreen",
   "ATTR_TOP":"Top",
   "ATTR_BOTTOM":"Bottom",
