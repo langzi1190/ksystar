@@ -205,11 +205,6 @@
                     this.cropSizeArr=[this.item.cropSizeArr[0],this.item.cropSizeArr[1],this.item.cropSizeArr[0]+this.item.cropSizeArr[2],this.item.cropSizeArr[1]+this.item.cropSizeArr[3]];
                 }
 
-                // setTimeout(()=>{
-                //     //this.ptop 会 重新计算 this.o_top
-                //     [this.o_top,this.o_left,this.o_width,this.o_height]=this.item.winSizeArr;
-                //
-                // },300);
             },
             percent2Ratio(){
                 //比例数据 转化 为相对数据
@@ -272,10 +267,10 @@
                                 return Math.min(100,Math.ceil(v/this.$parent.totalWidth*100));
                             }
                         });
+
                     this.percent2Ratio();
-
-
                     this.sendSizeEvent();
+
                 }
                 else if (val === "2") {
                     //关闭
@@ -283,28 +278,87 @@
                     this.globalEvent.$emit("close_window_item",{act:'cur'});
                 }
                 else if(val==='3'){
+                    // if(this.isExtended()){
+                    //     return ;
+                    // }
                     //扩张
                     //检测辅助线
                     [this.o_top,this.o_left,this.o_width,this.o_height]=this.$parent.getWindowSize([this.o_top,this.o_left,this.o_width,this.o_height]);
+
                     //保存 数据
+
                     if(this.stickSize.length==0)
                         this.stickSize=[this.ptop,this.pleft,this.pwidth,this.pheight];//如果拖动距离超过10像素则清空
 
                     [this.ptop,this.pleft,this.pwidth,this.pheight]=[this.o_top,this.o_left,this.o_width,this.o_height]
                                                                     .map((v,k)=>{
                                                                         if(k==0 || k==3){
-                                                                            return Math.ceil(v/this.$parent.totalHeight*100);
+                                                                            // return Math.ceil(v/this.$parent.totalHeight*100);
+                                                                            return v/this.$parent.totalHeight*100;
                                                                         }
                                                                         else{
-                                                                            return Math.ceil(v/this.$parent.totalWidth*100);
+                                                                            // return Math.ceil(v/this.$parent.totalWidth*100);
+                                                                            return v/this.$parent.totalWidth*100;
                                                                         }
                                                                     });
+
                     //修改 拖拽坐标 可以在窗口放大后 拖拽
                     this.percent2Ratio();
                     this.sendSizeEvent();
+
+                    let o=[this.o_top,this.o_left,this.o_width,this.o_height];
+                    this.$nextTick(()=>{
+                        //this.ptop 会有误差，还原
+                        [this.o_top,this.o_left,this.o_width,this.o_height]=o;
+                    })
                 }
 
             },
+            // isExtended(act='detect'){
+            //     let curScreen=this.globalEvent.screenInfo.scrGroupArr[this.globalEvent.curScreenIndex];
+            //     let portArr=curScreen.portArr;
+            //     let v=0;
+            //     let h=0;
+            //     let delta=2;
+            //     let top_delta=delta;
+            //     let left_delta=delta;
+            //     let right_delta=delta;
+            //     let bottom_delta=delta;
+            //
+            //     let o_right=parseInt(this.o_left)+parseInt(this.o_width);
+            //     let o_bottom=parseInt(this.o_top)+parseInt(this.o_height);
+            //
+            //     for(let i in portArr){
+            //         if(i<curScreen.Col){
+            //             v+=parseInt(portArr[i].sizeArr[0]);
+            //
+            //             if(this.o_left==0){
+            //                 left_delta=0;
+            //             }
+            //             else{
+            //                 left_delta=Math.min(left_delta,Math.abs(v-this.o_left));
+            //             }
+            //
+            //             right_delta=Math.min(right_delta,Math.abs(v-o_right));
+            //         }
+            //         if(i%curScreen.Col==0){
+            //             h+=parseInt(portArr[i].sizeArr[1]);
+            //
+            //             if(this.o_top==0){
+            //                 top_delta=0;
+            //             }
+            //             else{
+            //                 top_delta=Math.min(top_delta,Math.abs(h-this.o_top));
+            //             }
+            //
+            //             bottom_delta=Math.min(bottom_delta,Math.abs(h-o_bottom));
+            //         }
+            //     }
+            //
+            //     if(act=='detect'){
+            //         return top_delta<delta && left_delta<delta && right_delta<delta && bottom_delta<delta;
+            //     }
+            // },
             setSrcCard(v){
                 //切换 信号源
                 let w=this.globalEvent.selectedWindowIndex;

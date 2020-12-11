@@ -148,6 +148,7 @@ export default {
             //该接口连续调用 返回数据会出错 --- vdr index loadScreenWindowItems
             setTimeout(()=>{
                 this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
+
                     for(let i in ret.data.inCardArr){
                         for(let k in ret.data.inCardArr[i].srcArr){
                             let srcArr=ret.data.inCardArr[i].srcArr[k];
@@ -161,9 +162,6 @@ export default {
                     this.syscInputInfo(ret.data);
                 });
             },200)
-            // this.$http.get("syncInputInfoRd.cgi",{},(ret)=>{
-            //     this.syscInputInfo(ret.data);
-            // });
 
         },
         getCommonInfo(){
