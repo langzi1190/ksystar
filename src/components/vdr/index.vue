@@ -78,6 +78,7 @@
                     h:0
                 },
                 refreshWindowItemsEvent:0,
+                minWinWidth:30,//窗口最小值 50 换算为相对宽度的值
                 LANG:this.globalEvent.LANGUAGE[this.globalEvent.language]
             };
         },
@@ -242,6 +243,7 @@
         },
         computed:{
             ratioWidth(){
+                this.minWinWidth=50*this.ratio;
                 return this.totalWidth*this.ratio;
             },
             ratioHeight(){
@@ -357,12 +359,12 @@
                 }
             },
             loadScreenWindowItems(){
-                this.windowItems=[];
                 if(this.globalEvent.gMode==0){
                     setTimeout(()=>{
                         this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
                             // console.log(ret.data);
                             //
+                            this.windowItems=[];
                             for(let i in ret.data.winArr){
                                 let win=ret.data.winArr[i];
                                 win.lock=0;//锁定
@@ -685,31 +687,12 @@
                 let row_width=this.ratioWidth/this.curScreen.Col;
                 let row_height=this.ratioHeight/this.curScreen.Row;
 
-                // if(this.ratioWidth<400){
-                //     r1=this.ratioWidth/400;
-                //     // style.fontSize=50*r+'px';
-                //     // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
-                //     // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
-                // }
-                // if(this.ratioHeight<200){
-                //     r2=this.ratioHeight/200;
-                //     // console.log(this.ratioHeight,r);
-                //     // style.fontSize=50*r+'px';
-                //     // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
-                //     // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
-                // }
                 if(row_width<200){
                     r1=row_width/200;
-                    // style.fontSize=50*r+'px';
-                    // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
-                    // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
+
                 }
                 if(row_height<100){
                     r2=row_height/100;
-                    // console.log(this.ratioHeight,r);
-                    // style.fontSize=50*r+'px';
-                    // style.top=row==0?30*r+'px':(this.lineH[2*row-1])*this.ratio+30*r+'px';
-                    // style.left=col==0?30*r + 'px':(this.lineV[2*col-1])*this.ratio+30*r+'px';
                 }
                 let r=Math.min(r1,r2);
                 style.fontSize=50*r+'px';
@@ -877,7 +860,7 @@
 
                     originPos.x=e.pageX;
                     originPos.y=e.pageY;
-                    that.dragRect.x=originPos.x-pos.left- draw_panel.scrollLeft;
+                    that.dragRect.x=originPos.x-pos.left+ draw_panel.scrollLeft;
                     that.dragRect.y=originPos.y-pos.top + draw_panel.scrollTop;
 
                     let mm=function(e){
@@ -894,16 +877,19 @@
                         {
                             that.dragRect.h=deltay;
                         }
-                        console.log(that.dragRect);
 
                     };
                     let mu=function(){
                         document.removeEventListener("mousemove",mm);
                         document.removeEventListener("mouseup",mu);
 
-                        if(that.dragRect.w>30 && that.dragRect.h>30){
+                        if(that.dragRect.w>that.minWinWidth && that.dragRect.h>that.minWinWidth ){
                             //拖动特定 长宽 才生成窗口
                             that.addWindowItem({act:'drag'});
+                        }
+                        else{
+                            that.dragRect.w=0;
+                            that.dragRect.h=0;
                         }
 
                     };
