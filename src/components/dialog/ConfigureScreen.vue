@@ -94,12 +94,9 @@ export default {
       },
       updateUsedPort(){
           this.usedPort=[];
-          // for(let i in this.portList){
-          //     this.usedPort.push(this.portList[i].mapArr[0]);
-          // }
+
           for(let i in this.displayList){
               for(let k in this.displayList[i].portArr){
-                  // this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()]);
                   this.usedPort.push(this.displayList[i].portArr[k].mapArr[0]);
               }
           }
@@ -108,6 +105,7 @@ export default {
           //屏幕墙
           this.displayList=JSON.parse(JSON.stringify(this.screenInfo.scrGroupArr));
           this.curTabName=this.displayList[0].tabName;
+          this.updateUsedPort();
       },
       newTabname(){
           return 'name'+parseInt(Math.random()*10000);
@@ -201,11 +199,12 @@ export default {
               }
               this.displayList.splice(param.seq,1);
               this.showTab(0);
+              this.updateUsedPort();
           }
           else if(param.act=='add'){
               let emptyScreen=JSON.parse(JSON.stringify(this.displayList[param.seq]));//相当于复制当前的屏幕
-              for(let i in emptyScreen.portList){
-                  this.portList[i].mapArr=[-1];
+              for(let i in emptyScreen.portArr){
+                  emptyScreen.portArr[i].mapArr=[-1];
               }
 
               emptyScreen.tabName=this.newTabname();

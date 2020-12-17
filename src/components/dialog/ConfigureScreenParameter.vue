@@ -259,7 +259,6 @@ export default {
                 }
                 else if(this.videoId==106 && param.action=='cancel'){
                     this.resolutionValue=this.beforeRv;
-                    console.log(this.beforeRv);
                       resolution.forEach((ele,k)=>{
                           if(this.resolutionValue==ele.value) {
                               this.videoId=ele.videoId;

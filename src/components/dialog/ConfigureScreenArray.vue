@@ -82,7 +82,7 @@
             },
         },
         mounted(){
-            this.initScreenPlace()
+            this.initScreenPlace('')
         },
         methods:{
             setArraySize(k,v){
@@ -107,7 +107,7 @@
 
                 this.comScreen.updateUsedPort();
             },
-            initScreenPlace(){
+            initScreenPlace(act='reset'){
                 //重排列
 
                 let deltaCount=this.column*this.row-this.portList.length;
@@ -124,10 +124,13 @@
                     this.portList.splice(this.portList.length+deltaCount,-deltaCount);
                 }
 
-
-                for(let i in this.portList){
-                    this.portList[i].mapArr=[-1];
+                if(act=='reset'){
+                    for(let i in this.portList){
+                        this.portList[i].mapArr=[-1];
+                    }
                 }
+
+
                 this.calRowColumnRank();
             },
             calRowColumnRank(){

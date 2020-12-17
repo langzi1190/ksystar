@@ -145,7 +145,6 @@ export default {
             let curH=document.body.clientHeight;
 
             this.contestListHeight=(curH-366)+'px';
-            console.log(this.contestListHeight);
         },
         getSysInputInfo(){
 
