@@ -154,6 +154,7 @@ export default {
               }
           }
 
+
           if(port.length==[...new Set(port)].length){
               flag=false;//未占用
           }
@@ -267,7 +268,7 @@ export default {
           // console.log(screenInfo);
           this.loading=this.$loading({
               lock: true,
-              text: this.LANG.TIP_UPGRADE_NOW,
+              text: this.LANG.EXPORT_IN_PROGRESS,
               spinner: 'el-icon-loading',
               background: 'rgba(255, 255, 255, 0.5)'
           });
@@ -307,7 +308,13 @@ export default {
   components: {
     csParameter,
     csArray,
-  }
+  },
+    watch:{
+      curTabName(v,o){
+          //重置选中端口
+          this.globalEvent.selectedPort=-1;
+      }
+    }
 };
 </script>
 

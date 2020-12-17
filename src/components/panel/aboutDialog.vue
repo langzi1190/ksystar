@@ -1,10 +1,11 @@
 <template>
     <div class="about_dialog">
         <el-dialog
-                width="300px"
+                width="280px"
                 :title="LANG.ABOUT_TITLE" :visible="showDialog=='about'" @close="op(false)"
         >
-            {{LANG.ABOUT_TITLE}} : {{globalEvent.version}}
+            {{LANG.ABOUT_TITLE}} : {{globalEvent.version}}<br/>
+            {{globalEvent.versionDate}}
         </el-dialog>
     </div>
 </template>
@@ -25,6 +26,6 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .about_dialog .el-dialog__body{line-height:25px;padding:20px;}
 </style>

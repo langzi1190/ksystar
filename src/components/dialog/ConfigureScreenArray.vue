@@ -66,7 +66,7 @@
         watch:{
             "globalEvent.selectedPort":function (v,ov) {
 
-                if(this.displayIndex>-1 && this.comScreen.curTabName == this.comScreen.displayList[this.seq].tabName){
+                if(v>-1 && this.displayIndex>-1 && this.comScreen.curTabName == this.comScreen.displayList[this.seq].tabName){
                     // console.log(this.displayIndex,this.seq);
 
                     this.$set(this.portList[this.displayIndex].mapArr,0,v);
@@ -148,6 +148,8 @@
             displaySelect(index) {
                 // 当前选中的屏幕
                 this.displayIndex = index;
+                //重置选中端口
+                this.globalEvent.selectedPort=-1;
             },
             ranks(rc, count, val) {
                 //修改行与列的分辨率

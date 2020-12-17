@@ -4,6 +4,7 @@ let gobalEvent =new Vue({
     data:{
         gMode:0,//0正常，1演示
         version:'1.0',
+        versionDate:'Dec 17 2020 15:09:30',
         modeInfo:{
             inCardInfo:{},
             outCardInfo:{}
@@ -53,7 +54,7 @@ let gobalEvent =new Vue({
         },
         screenInfo:{},//所有屏幕墙
         curScreenIndex:-1,//当前操作的屏幕序号，/vdr index.vue
-        selectedPort:0,//屏幕参数设置，选择端口
+        selectedPort:-1,//屏幕参数设置，选择端口
         inputCardList:[],//signal index.vue 初始化
         commonInfo:{},
         sceneCarousel:{},//用户场景轮巡
