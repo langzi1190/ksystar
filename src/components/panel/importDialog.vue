@@ -70,8 +70,9 @@
                     let i = curPacketId;
                     if(i>=fragmentCount){
                         // alert("已更新");
-                        that.loading.close();
-                        that.op(false)
+                        // that.loading.close();
+                        // that.op(false)
+                        window.location.reload(true);
                         return ;
                     }
                     let start = i * fragment,

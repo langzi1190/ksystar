@@ -23,8 +23,8 @@
         props:['showDialog'],
         data(){
             return {
-                userModel:1,
-                userModelName:this.globalEvent.userSceneName(0),
+                userModel:this.globalEvent.userModel,
+                userModelName:this.globalEvent.userSceneName(this.globalEvent.userModel-1),
                 LANG:this.LANGUAGE[this.globalEvent.language]
             };
         },
@@ -38,7 +38,9 @@
                 if(act){
 
                     this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
+                        this.globalEvent.userModel=this.userModel+1;
                         this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+                        alert(this.LANG.TIP_ALREADY_SAVE);
                     });
 
                 }

@@ -14,9 +14,9 @@
                                     <!--<card-item :title="LANG.HOME_DEV_SELECT"></card-item>-->
                                     <!--<card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>-->
                                     <!--<card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>-->
-                                    <card-item :title="LANG.HOME_ABOUT" @click.native="showDialog='about'"></card-item>
-                                    <card-item :title="LANG.HOME_SYNC"></card-item>
-                                    <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0"></card-item>
+                                    <card-item :title="LANG.HOME_ABOUT" @click.native="showDialog='about'" iconName="about"></card-item>
+                                    <card-item :title="LANG.HOME_SYNC"  @click.native="preinstall('sync')" iconName="sync"></card-item>
+                                    <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0" iconName="quit"></card-item>
                                 </card>
                             </div>
                         </el-tab-pane>

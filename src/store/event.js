@@ -8,6 +8,7 @@ let gobalEvent =new Vue({
             inCardInfo:{},
             outCardInfo:{}
         },
+        userModel:1,
         userInfo:{
             username:'',
             password:'',

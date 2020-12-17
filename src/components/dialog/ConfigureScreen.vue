@@ -14,6 +14,7 @@
         <ul>
           <li v-for="(val,index) in portList" :class="{port_on:portList[totalPort-index-1]==1}" :key="index" @click="portPut(index)">
             Port {{totalPort-index}}
+            <div class="spot" :class="{spot_green:usedPort.includes(totalPort-index-1)}"></div>
           </li>
         </ul>
 
@@ -52,6 +53,7 @@ export default {
         portList: [], // 端口port列表
         totalPort:0,
         selectedPort:-1,
+        usedPort:[],
 
         curTabName:'',
         displayList:[], // 屏幕墙列表
@@ -90,6 +92,18 @@ export default {
           this.totalPort=this.portList.length;
           this.globalEvent.validOutCardCount=this.portList.reduce((k,v)=>k+v);
       },
+      updateUsedPort(){
+          this.usedPort=[];
+          // for(let i in this.portList){
+          //     this.usedPort.push(this.portList[i].mapArr[0]);
+          // }
+          for(let i in this.displayList){
+              for(let k in this.displayList[i].portArr){
+                  // this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()]);
+                  this.usedPort.push(this.displayList[i].portArr[k].mapArr[0]);
+              }
+          }
+      },
       syncScrInfoRd(){
           //屏幕墙
           this.displayList=JSON.parse(JSON.stringify(this.screenInfo.scrGroupArr));
@@ -117,6 +131,8 @@ export default {
                   this.$set(this.displayList[i].portArr[k],'mapArr',[validPos.shift()]);
               }
           }
+
+          this.updateUsedPort();
       },
       isValidCardCount(){
           //计算数量
@@ -135,7 +151,8 @@ export default {
           let port=[];
           for(let i in this.displayList){
               for(let k in this.displayList[i].portArr){
-                  port.push(this.displayList[i].portArr[k].mapArr[0]);
+                  if(this.displayList[i].portArr[k].mapArr[0]>-1)
+                    port.push(this.displayList[i].portArr[k].mapArr[0]);
               }
           }
 
@@ -187,6 +204,10 @@ export default {
           }
           else if(param.act=='add'){
               let emptyScreen=JSON.parse(JSON.stringify(this.displayList[param.seq]));//相当于复制当前的屏幕
+              for(let i in emptyScreen.portList){
+                  this.portList[i].mapArr=[-1];
+              }
+
               emptyScreen.tabName=this.newTabname();
               this.displayList.push(emptyScreen);
               this.showTab(this.displayList.length-1);
@@ -244,11 +265,21 @@ export default {
               scrGroupArr:copyDisplayList
           };
 
-          console.log(screenInfo);
+          // console.log(screenInfo);
+          this.loading=this.$loading({
+              lock: true,
+              text: this.LANG.TIP_UPGRADE_NOW,
+              spinner: 'el-icon-loading',
+              background: 'rgba(255, 255, 255, 0.5)'
+          });
 
           this.$http.post("scrParamWr.cgi",screenInfo,(ret)=>{
               this.globalEvent.$emit("reload_data");
               this.$emit("isDialogVisible", false); // 退出关闭弹窗
+              setTimeout(()=>{
+                  this.loading.close();
+              },500);
+
           });
       },
       portPut(io) {
@@ -299,12 +330,20 @@ export default {
       li {
         width: 50px;
         height: 28px;
+        position:relative;
         box-sizing: border-box;
         border-right: 1px solid #dcdfe6;
         border-bottom: 1px solid #dcdfe6;
         text-align: center;
         line-height: 28px;
         font-size: 12px;
+        .spot{
+          position:absolute;
+          bottom:2px;right:2px;width:5px;height:5px;border-radius:5px;background-color:#dcdcdc;
+        }
+        .spot_green{
+          background-color:green;
+        }
       }
       li:hover {
         background-color: #f5f7fa;
@@ -394,8 +433,21 @@ export default {
           }
           text-align: center;
         }
+        .right_arrow{display:none;
+          position: absolute;
+          top: 5px;
+          right: 10px;
+          color: #00cc99;
+          width: 20px;
+          height: 20px;
+          line-height: 20px;
+          cursor: pointer;
+          font-size: 25px;}
         .display-select {
-          background: #e4e7ed;
+          background: #e4e7ed;position:relative;
+          .right_arrow{
+            display:block;
+          }
         }
       }
     }

@@ -25,7 +25,7 @@
         </div>
         <div
                 id="grids"
-                @wheel="mouseWheel"
+                @wheel.stop="mouseWheel"
                 :style="`height: ${ratioHeight}px; width: ${ratioWidth}px; position: relative;`"
         >
             <div class="dragRect"
@@ -79,7 +79,8 @@
                 },
                 refreshWindowItemsEvent:0,
                 minWinWidth:30,//窗口最小值 50 换算为相对宽度的值
-                LANG:this.globalEvent.LANGUAGE[this.globalEvent.language]
+                LANG:this.globalEvent.LANGUAGE[this.globalEvent.language],
+                mouseCenter:[0,0,0,0],
             };
         },
         created() {
@@ -107,9 +108,24 @@
                 else{
                     this.windowItems.splice(this.globalEvent.selectedWindowIndex,1);
                     data.winId=this.globalEvent.selectedWindowIndex;
+
+
+                    for(let i in this.windowItems){
+                        if(this.windowItems[i].winId>data.winId){
+                            this.windowItems[i].winId=this.windowItems[i].winId-1;
+                        }
+                    }
+
+                    this.loading=this.$loading({
+                        lock: true,
+                        text: this.LANG.EXPORT_IN_PROGRESS,
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(255, 255, 255, 0.5)'
+                    });
                     this.$http.post("closeWin.cgi",data,(ret)=>{
                         //重新载入
-                        this.loadScreenWindowItems();
+                        this.loading.close();
+                        // this.loadScreenWindowItems();
                     });
                 }
 
@@ -129,7 +145,6 @@
                 let k =this.globalEvent.selectedWindowIndex;
                 if(param.act=='top' || param.act=='bottom'){
                     //置顶,置底,设置为当前最大值，
-                    console.log(JSON.parse(JSON.stringify(this.windowItems)));
                     let maxIndexPos=param.act=='top'?this.getMaxIndexPos():this.getMinIndexPos();
 
                     this.windowItems[maxIndexPos[0]].layerId=this.windowItems[k].layerId;
@@ -137,7 +152,6 @@
                     //子组件更新参数
                     this.$refs.windowObj[maxIndexPos[0]].setProp(param);
                     this.$refs.windowObj[k].setProp(param);
-                    console.log(JSON.parse(JSON.stringify(this.windowItems)));
                     this.$http.post("winLayerWr.cgi",{
                         type:param.act=='top'?1:0,
                         groupId:this.globalEvent.curScreenIndex,
@@ -357,63 +371,112 @@
                 else{
                     this.ratio=1;
                 }
+
             },
             loadScreenWindowItems(){
+                let allWinItems=[];
                 if(this.globalEvent.gMode==0){
                     setTimeout(()=>{
-                        this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
-                            // console.log(ret.data);
-                            //
-                            this.windowItems=[];
-                            for(let i in ret.data.winArr){
-                                let win=ret.data.winArr[i];
-                                win.lock=0;//锁定
-                                win.zoom=0;//扩张，还原
-                                win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
-                                win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
-                                // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
-                                if(!this.globalEvent.isValidResolution(win.resolution)){
-                                    win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
-                                }
-                                if(win.srcGroupId>0){
-                                    win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
+                        let that=this;
+                        let packetId=0;
+                        let getSubWin=function () {
+                            that.$http.post("syncWinInfoRd.cgi",{scrGroupId:that.globalEvent.curScreenIndex,packetId},(ret)=>{
+                                packetId++;
+                                allWinItems=allWinItems.concat(ret.data.winArr);
+                                if(ret.packetNum>packetId){
+                                    getSubWin();
                                 }
                                 else{
-                                    win.groupLabel='';
-                                }
+                                    that.windowItems=[];
+                                    for(let i in allWinItems){
+                                        let win=allWinItems[i];
+                                        win.lock=0;//锁定
+                                        win.zoom=0;//扩张，还原
+                                        win.inputCardLabel=that.globalEvent.signalCardName(win.srcCardId,win.srcId);
+                                        win.resolution=that.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+                                        if(!that.globalEvent.isValidResolution(win.resolution)){
+                                            win.resolution=[that.LANG.ATTR_SIGNAL_LOST]
+                                        }
+                                        if(win.srcGroupId>0){
+                                            win.groupLabel=that.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
+                                        }
+                                        else{
+                                            win.groupLabel='';
+                                        }
 
-                                win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
-                                win.k='k'+parseInt(Math.random()*1000);
-                            }
-                            this.globalEvent.windowItemsInfo=ret.data;
-                            this.windowItems=this.globalEvent.windowItemsInfo.winArr;
-                            this.syncLocalName();
-                        });
+                                        win.label=that.globalEvent.windowItemName(that.globalEvent.curScreenIndex,i);
+                                        win.k='k'+parseInt(Math.random()*1000);
+                                    }
+                                    that.globalEvent.windowItemsInfo=ret.data;
+                                    that.windowItems=that.globalEvent.windowItemsInfo.winArr;
+                                    that.syncLocalName();
+
+                                    if(typeof that.loading!='undefined')
+                                        that.loading.close();
+                                }
+                            });
+                        }
+
+                        getSubWin();
                     },500);
                 }
-
-                // this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
-                //     // console.log(ret.data);
-                //     //
-                //     for(let i in ret.data.winArr){
-                //         let win=ret.data.winArr[i];
-                //         win.lock=0;//锁定
-                //         win.zoom=0;//扩张，还原
-                //         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
-                //         win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
-                //         // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
-                //         if(!this.globalEvent.isValidResolution(win.resolution)){
-                //             win.resolution=['信号丢失']
-                //         }
-                //         win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
-                //         win.k='k'+parseInt(Math.random()*1000);
-                //     }
-                //     this.globalEvent.windowItemsInfo=ret.data;
-                //     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
-                //     this.syncLocalName();
-                // });
-
             },
+            // loadScreenWindowItems(){
+            //     if(this.globalEvent.gMode==0){
+            //         setTimeout(()=>{
+            //             this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+            //                 // console.log(ret.data);
+            //                 //
+            //                 this.windowItems=[];
+            //                 for(let i in ret.data.winArr){
+            //                     let win=ret.data.winArr[i];
+            //                     win.lock=0;//锁定
+            //                     win.zoom=0;//扩张，还原
+            //                     win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+            //                     win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+            //                     // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
+            //                     if(!this.globalEvent.isValidResolution(win.resolution)){
+            //                         win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
+            //                     }
+            //                     if(win.srcGroupId>0){
+            //                         win.groupLabel=this.globalEvent.srcGroupName({srcGroupId:win.srcGroupId-1});
+            //                     }
+            //                     else{
+            //                         win.groupLabel='';
+            //                     }
+            //
+            //                     win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
+            //                     win.k='k'+parseInt(Math.random()*1000);
+            //                 }
+            //                 this.globalEvent.windowItemsInfo=ret.data;
+            //                 this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+            //                 this.syncLocalName();
+            //             });
+            //         },500);
+            //     }
+            //
+            //     // this.$http.post("syncWinInfoRd.cgi",{scrGroupId:this.globalEvent.curScreenIndex},(ret)=>{
+            //     //     // console.log(ret.data);
+            //     //     //
+            //     //     for(let i in ret.data.winArr){
+            //     //         let win=ret.data.winArr[i];
+            //     //         win.lock=0;//锁定
+            //     //         win.zoom=0;//扩张，还原
+            //     //         win.inputCardLabel=this.globalEvent.signalCardName(win.srcCardId,win.srcId);
+            //     //         win.resolution=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].resolArr;
+            //     //         // win.portTypeInfo=this.globalEvent.inputCardList[win.srcCardId].srcArr[win.srcId].label;
+            //     //         if(!this.globalEvent.isValidResolution(win.resolution)){
+            //     //             win.resolution=['信号丢失']
+            //     //         }
+            //     //         win.label=this.globalEvent.windowItemName(this.globalEvent.curScreenIndex,i);
+            //     //         win.k='k'+parseInt(Math.random()*1000);
+            //     //     }
+            //     //     this.globalEvent.windowItemsInfo=ret.data;
+            //     //     this.windowItems=this.globalEvent.windowItemsInfo.winArr;
+            //     //     this.syncLocalName();
+            //     // });
+            //
+            // },
 
             addWindowItem(param){
 
@@ -728,6 +791,11 @@
                 }
                 this.initScreenPanel();
 
+                if(e.pageX!=this.mouseCenter[6] || e.pageY!=this.mouseCenter[7]){
+                    this.setMouseCenter(e.pageX,e.pageY);
+                }
+
+
                 // clearTimeout(this.refreshWindowItemsEvent)
                 // this.refreshWindowItemsEvent=setTimeout(()=>{
                 //     this.loadScreenWindowItems();
@@ -870,10 +938,10 @@
                             return ;
                         }
 
-                        if(e.pageX-pos.left<=that.ratioWidth){
+                        if(deltax + that.dragRect.x<=that.ratioWidth){
                             that.dragRect.w=deltax;
                         }
-                        if(e.pageY-pos.top<=that.ratioHeight)
+                        if(deltay + that.dragRect.y<=that.ratioHeight)
                         {
                             that.dragRect.h=deltay;
                         }
@@ -909,16 +977,38 @@
                 }
                 let o = {};
 
-                // let panel= olement.parentElement.parentElement.parentElement;
                 o.left = offsetLeft;
                 o.top = offsetTop;
                 return o;
+            },
+            setMouseCenter(x,y){
+                let grids=document.getElementById("grids");
+                let draw_panel=grids.parentElement.parentElement.parentElement;
+                let pos=this.getLocation(grids);
+                let ow = x - pos.left + draw_panel.scrollLeft;
+                let oh = y - pos.top  + draw_panel.scrollTop;
+                let x_per=ow/this.ratioWidth;
+                let y_per=oh/this.ratioHeight;
+                this.mouseCenter=[ow,oh,x_per,y_per,draw_panel.scrollLeft,draw_panel.scrollTop,x,y];
+
             }
         },
         mounted(){
             setTimeout(()=>{
                 this.initDragOpenWin();
             },300);
+        },
+        watch:{
+            scale(v,o){
+                let cur_w=this.normalWidth*v*this.mouseCenter[2];
+                let cur_h=this.normalWidth*v*this.totalHeight/this.totalWidth*this.mouseCenter[3];
+                let grids=document.getElementById("grids");
+                let draw_panel=grids.parentElement.parentElement.parentElement;
+
+                draw_panel.scrollLeft=this.mouseCenter[4]+(cur_w-this.mouseCenter[0]);
+                draw_panel.scrollTop=this.mouseCenter[5]+(cur_h-this.mouseCenter[1]);
+
+            }
         },
         components: {
             windowItem
@@ -928,6 +1018,7 @@
 
 <style>
     .draw-vdr{
+        user-select: none;
         position: relative;
     }
     .grids{

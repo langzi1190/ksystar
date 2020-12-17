@@ -38,6 +38,8 @@
                     <p>{{LANG.ATTR_HEIGHT}}:{{item.sizeArr[1]}}</p>
                     <p>{{LANG.SCREEN_PORT_MAP}}:Port{{item.mapArr[0]+1}}({{LANG.SCREEN_CLICK_PORT}})</p>
                 </div>
+
+                <div class="right_arrow" @click="autoSelect"><i class="el-icon-arrow-right"></i></div>
             </div>
         </div>
 
@@ -73,6 +75,8 @@
                         alert("该端口已被使用");
                     }
 
+                    this.comScreen.updateUsedPort();
+
                 }
 
             },
@@ -88,8 +92,20 @@
                 else if(k=='Row'){
                     this.row=v;
                 }
-
                 this.initScreenPlace();
+            },
+            autoSelect(){
+                let curPort=this.portList[this.displayIndex].mapArr[0];
+                let startPort=curPort+1;
+                let startIndex=this.displayIndex+1;
+                while(startIndex % this.column >0){
+
+                    this.$set(this.portList[startIndex].mapArr,0,startPort);
+                    startPort++;
+                    startIndex++;
+                }
+
+                this.comScreen.updateUsedPort();
             },
             initScreenPlace(){
                 //重排列
@@ -106,6 +122,11 @@
                 else{
 
                     this.portList.splice(this.portList.length+deltaCount,-deltaCount);
+                }
+
+
+                for(let i in this.portList){
+                    this.portList[i].mapArr=[-1];
                 }
                 this.calRowColumnRank();
             },

@@ -20,13 +20,13 @@
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <template v-for="(item,index) in userSceneList">
-            <div class="list_item" :class="{list_item_cur:item.value==1}" @click="selectedSceneIndex=index">
+            <div class="list_item" :class="{list_item_cur:item.value==1,list_item_selected:selectedSceneIndex==index}" @click="showUserModel(index)">
               {{item.label}}
             </div>
-            <div class="list_item" v-show="selectedSceneIndex==index">
-              <el-button size="mini" @click="editScene">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>
-              <el-button size="mini" :disabled="item.value==0" @click="loadScene">{{LANG.SIGNAL_LOAD}}</el-button>
-            </div>
+            <!--<div class="list_item" v-show="selectedSceneIndex==index">-->
+              <!--<el-button size="mini" @click="editScene">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>-->
+              <!--<el-button size="mini" :disabled="item.value==0" @click="loadScene">{{LANG.SIGNAL_LOAD}}</el-button>-->
+            <!--</div>-->
           </template>
 
         </div>
@@ -60,12 +60,15 @@
     font-size: 14px;
     border-top: 1px solid #dcdcdc;
     left: 0;">{{LANG.HOME_DEV_TYPE}}{{this.$parent.devType}}</div>
+
+    <userModel @sub_event="subEvent" :showDialog="showUserModelDialog" v-if="showUserModelDialog"></userModel>
   </div>
 </template>
 
 <script>
   import sceneCarousel from "@/components/signal/sceneCarousel";
   import sourceGroup from "@/components/signal/sourceGroup";
+  import userModel from "@/components/panel/userModel";
 export default {
     created(){
         this.getCommonInfo();
@@ -76,6 +79,7 @@ export default {
     data() {
         let LANG=this.LANGUAGE[this.globalEvent.language];
         return {
+            showUserModelDialog:false,
             inputCardList:[],
             userSceneList:[],//用户模式 列表
             selectedSceneIndex:-1,//选中的用户模式
@@ -210,7 +214,19 @@ export default {
         renderContent(h,{node,data,store}){
             if(node.level==1){
 
-               return h('span',data.label)
+                let hasValidSignal=false;
+                for(let i in data.srcArr){
+                    if(this.globalEvent.isValidResolution(data.srcArr[i].resolArr)){
+                        hasValidSignal=true;
+                        break;
+                    }
+                }
+               return h('span',{
+                   class:{
+                       'super_card':true,
+                       'card_label_valid':hasValidSignal
+                   }
+               },data.label)
             }
             else if(node.level==2){
                 return h('span',{
@@ -413,11 +429,28 @@ export default {
                 // console.log(ret.data);
 
             });
+        },
+        showUserModel(index){
+            this.selectedSceneIndex=index;
+            this.showUserModelDialog=true;
+        },
+        subEvent(param){
+            this.showUserModelDialog=false;
+            if(param.act=='edit_model'){
+                this.editScene();
+            }
+            else if(param.act=='load_model'){
+                this.loadScene();
+            }
+            // else if(param.act=='close'){
+            //
+            // }
         }
     },
     components:{
         sceneCarousel,
-        sourceGroup
+        sourceGroup,
+        userModel
     },
 
 };
@@ -465,17 +498,20 @@ export default {
     .el-tree-node__content{user-select:none;}
     .el-tree-node>.el-tree-node__children{overflow:unset;}
     .card_label{margin-right:10px;color:#f44f44;    width: 65px;text-align: left;display: inline-block;position:relative;}
-    .card_label::after{content:' ';width:10px;height:10px;background:url("../../assets/images/red_spot.png") no-repeat center center / 100% auto;position:absolute;top: 7px;left: -13px;}
+    .card_label::after,.super_card::after{content:' ';width:10px;height:10px;background:url("../../assets/images/red_spot.png") no-repeat center center / 100% auto;position:absolute;top: 7px;left: -13px;}
     .card_label_valid{position:relative;display:inline-block;}
     .card_label_valid::after{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;background:url("../../assets/images/blue_spot.png") no-repeat center center / 100% auto;top: 7px;left: -13px;}
 
+    .super_card{position:relative;}
+    .super_card::after{top:6px;left:20px;}
     .el-tree-node__content .is-current{background-color:#f3f2f0;}
     .list_item{cursor:pointer;border: 1px solid #dcdcdc;border-radius: 5px;margin-top: 5px;width: 150px;height:30px;line-height:30px;color:#fff;}
-    .list_item:nth-child(even){border:none;}
+    /*.list_item:nth-child(even){border:none;}*/
     /*.el-collapse-item__content{max-height:500px;overflow:auto;}*/
   .selected_card .card_label{color:#00cc99;}
   .card_kfs{border:1px solid #dcdcdc;}
   .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#f3f2f0;}
   .list_item_cur{background-color:#00cc99;color:#fff;}
+  .list_item_selected{color:#00cc99;background-color:#f3f2f0;}
 }
 </style>

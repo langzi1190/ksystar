@@ -65,7 +65,6 @@
             if(this.item.zoom==1){
                 ptop=pleft=0;
                 pwidth=pheight=100;
-
             }
 
             return {
@@ -76,10 +75,10 @@
 
                 zoom:this.item.zoom,//最大化
 
-                top:parseInt(ptop*this.$parent.ratioHeight/100),//相对当前面板的坐标,目标拖拽使用
-                left:parseInt(pleft*this.$parent.ratioWidth/100),
-                width:parseInt(pwidth*this.$parent.ratioWidth/100),
-                height:parseInt(pheight*this.$parent.ratioHeight/100),
+                top:(ptop*this.$parent.ratioHeight/100),//相对当前面板的坐标,目标拖拽使用
+                left:(pleft*this.$parent.ratioWidth/100),
+                width:(pwidth*this.$parent.ratioWidth/100),
+                height:(pheight*this.$parent.ratioHeight/100),
 
                 minWidth:parseInt(50/this.$parent.totalWidth*this.$parent.ratioWidth),
                 minHeight:parseInt(50/this.$parent.totalHeight*this.$parent.ratioHeight),
@@ -208,11 +207,15 @@
             },
             percent2Ratio(){
                 //比例数据 转化 为相对数据
-                this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
-                this.height=Math.min(Math.ceil(this.pheight*this.$parent.ratioHeight/100),this.$parent.ratioHeight);
-                this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
-                this.width=Math.min(Math.ceil(this.pwidth*this.$parent.ratioWidth/100),this.$parent.ratioWidth);
+                // this.top=Math.ceil(this.ptop*this.$parent.ratioHeight/100);
+                // this.height=Math.min(Math.ceil(this.pheight*this.$parent.ratioHeight/100),this.$parent.ratioHeight);
+                // this.left=Math.ceil(this.pleft*this.$parent.ratioWidth/100);
+                // this.width=Math.min(Math.ceil(this.pwidth*this.$parent.ratioWidth/100),this.$parent.ratioWidth);
 
+                this.top=(this.ptop*this.$parent.ratioHeight/100);
+                this.height=Math.min((this.pheight*this.$parent.ratioHeight/100),this.$parent.ratioHeight);
+                this.left=(this.pleft*this.$parent.ratioWidth/100);
+                this.width=Math.min((this.pwidth*this.$parent.ratioWidth/100),this.$parent.ratioWidth);
 
                 this.minWidth=parseInt(50/this.$parent.totalWidth*this.$parent.ratioWidth);
                 this.minHeight=parseInt(50/this.$parent.totalHeight*this.$parent.ratioHeight);
@@ -256,8 +259,8 @@
                     this.o_width=this.$parent.totalWidth;
                     this.o_height=this.$parent.totalHeight;
 
-                    if(this.stickSize.length==0)
-                        this.stickSize=[this.ptop,this.pleft,this.pwidth,this.pheight];//如果拖动距离超过10像素则清空
+                    // if(this.stickSize.length==0)
+                    this.stickSize=[this.ptop,this.pleft,this.pwidth,this.pheight];//如果拖动距离超过10像素则清空
                     [this.ptop,this.pleft,this.pwidth,this.pheight]=[this.o_top,this.o_left,this.o_width,this.o_height]
                         .map((v,k)=>{
                             if(k==0 || k==3){
@@ -382,7 +385,6 @@
                     if(this.$parent.isOutResource({})){
                         //检测是否超资源
                         this.loadScreenWindowItems();
-                        console.log('set_src_card');
                         alert(this.globalEvent.alert.outResource);
                         return ;
                     }
@@ -424,6 +426,7 @@
 
                 let type=ev.target.dataset.type;
 
+
                 let mv=function(e) {
                     var new_x=e.pageX;
                     var new_y=e.pageY;
@@ -438,7 +441,6 @@
                         //忽略鼠标 5像素以内的位移
                         return ;
                     }
-
 
                     switch(type){
                         case "top":
@@ -574,10 +576,13 @@
                     that.height=Math.max(that.height,that.minHeight);
                     that.width=Math.max(that.width,that.minWidth);
 
-                    // console.log(that.left,that.top,that.width,that.height);
 
-                    that.ptop=Math.min(100,that.top/that.$parent.ratioHeight*100);
-                    that.pleft=Math.min(100,that.left/that.$parent.ratioWidth*100);
+                    // if(['top','top_left','top_right'].includes(type))
+                        that.ptop=Math.min(100,that.top/that.$parent.ratioHeight*100);
+                    // if(['left','top_left','bottom_left'])
+                        that.pleft=Math.min(100,that.left/that.$parent.ratioWidth*100);
+
+                    // console.log(that.pleft);
                     that.pheight=Math.min(100,that.height/that.$parent.ratioHeight*100);
                     that.pwidth=Math.min(100,that.width/that.$parent.ratioWidth*100);
 
