@@ -1,5 +1,5 @@
 <template>
-    <div class="draw-vdr">
+    <div class="draw-vdr" v-show="ready">
         <!-- 网格 -->
         <div class="grids" :style="{height:ratioHeight+'px',width:ratioWidth+'px'}">
             <div class="line_h"
@@ -55,6 +55,7 @@
     export default {
         data() {
             return {
+                ready:false,
                 // windowList:[],//视频窗口
                 activeWindow:-1,
                 totalWidth:0,
@@ -80,7 +81,10 @@
                 refreshWindowItemsEvent:0,
                 minWinWidth:30,//窗口最小值 50 换算为相对宽度的值
                 LANG:this.globalEvent.LANGUAGE[this.globalEvent.language],
-                mouseCenter:[0,0,0,0],
+                mouseCenter:{
+                    pageX:0,
+                    pageY:0
+                },
             };
         },
         created() {
@@ -762,25 +766,26 @@
                 style.top=row==0?8*r+'px':(this.lineH[2*row-1])*this.ratio+8*r+'px';
                 style.left=col==0?15*r + 'px':(this.lineV[2*col-1])*this.ratio+15*r+'px';
 
-                // if(this.ratio<0.25){
-                //     let scale=this.ratio/0.25;
-                //     // style.top=style.top.replace('px','')*scale+'px';
-                //     // style.left=style.left.replace('px','')*scale+'px';
-                //     style.top=style.top.replace('px','')/this.ratioHeight();
-                //     style.transform='scale('+scale+')';
-                //     console.log(style);
-                // }
                 return style;
             },
 
             mouseWheel(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+
+                if(Math.abs(e.pageX-this.mouseCenter.pageX)>6 || Math.abs(e.pageY-this.mouseCenter.pageY)>6){
+                    //鼠标是否移动
+                    this.setMouseCenter(e.pageX,e.pageY,this.ratioWidth,this.ratioHeight,this.scale);
+                }
+
                 if(e.wheelDelta>0){
                     //变大
                     this.scale=this.scale+0.03;
 
-                    if(this.scale>4){
-                        this.scale=4;
-                    }
+                    // if(this.scale>4){
+                    //     this.scale=4;
+                    // }
                 }
                 else{
                     //变小
@@ -789,17 +794,9 @@
                         this.scale=0.05;
                     }
                 }
+
                 this.initScreenPanel();
 
-                if(e.pageX!=this.mouseCenter[6] || e.pageY!=this.mouseCenter[7]){
-                    this.setMouseCenter(e.pageX,e.pageY);
-                }
-
-
-                // clearTimeout(this.refreshWindowItemsEvent)
-                // this.refreshWindowItemsEvent=setTimeout(()=>{
-                //     this.loadScreenWindowItems();
-                // },500);
 
             },
             getWindowSize(wSize){
@@ -895,41 +892,24 @@
                     //如果都统一保存 然后再读取（ loadScreenWindowItems），就没必要修改属性（减少复杂度 代码量）。。。 调用
                 });
             },
-            // subEvent(param){
-            //     if('delete_window_item'==param.act){
-            //         this.windowItems.splice(param.seq,1);
-            //         if(this.globalEvent.selectedWindowIndex==param.seq){
-            //             this.globalEvent.selectedWindowIndex=-1;
-            //             this.$http.post("closeWin.cgi",{groupId:this.curScreenIndex,winId:param.seq},(ret)=>{
-            //                 console.log("vdr/index.vue 关闭窗口。。。");
-            //             });
-            //         }
-            //     }
-            //     else if('update_window_pos'==param.act){
-            //
-            //         this.windowItems[param.seq].winSizeArr[param.pos]=param.v;
-            //         //通知侧边修改 窗口参数
-            //         this.globalEvent.$emit("update_side_attr");
-            //     }
-            // }
+
             initDragOpenWin(){
                 let panel=document.getElementById("grids");
                 let that=this;
-                let originPos={};
-                let pos=this.getLocation(panel);
+                let originPos={};//鼠标位置
 
-                let draw_panel=panel.parentElement.parentElement.parentElement;
+
+                // let draw_panel=panel.parentElement.parentElement.parentElement;
                 panel.addEventListener("mousedown",function (e) {
                     if(that.globalEvent.panelLock){
                         //位置锁定
                         return ;
                     }
-
-
+                    let pos=that.getLocation(panel);
                     originPos.x=e.pageX;
                     originPos.y=e.pageY;
-                    that.dragRect.x=originPos.x-pos.left+ draw_panel.scrollLeft;
-                    that.dragRect.y=originPos.y-pos.top + draw_panel.scrollTop;
+                    that.dragRect.x=originPos.x-pos.left;//+ that.$parent.scrollL;//draw_panel.scrollLeft;
+                    that.dragRect.y=originPos.y-pos.top;// - that.$parent.scrollT;//draw_panel.scrollTop;
 
                     let mm=function(e){
                         let deltax=e.pageX-originPos.x;
@@ -981,33 +961,67 @@
                 o.top = offsetTop;
                 return o;
             },
-            setMouseCenter(x,y){
+            setMouseCenter(x,y,oldWidth,oldHeight,scale){
                 let grids=document.getElementById("grids");
-                let draw_panel=grids.parentElement.parentElement.parentElement;
-                let pos=this.getLocation(grids);
-                let ow = x - pos.left + draw_panel.scrollLeft;
-                let oh = y - pos.top  + draw_panel.scrollTop;
-                let x_per=ow/this.ratioWidth;
-                let y_per=oh/this.ratioHeight;
-                this.mouseCenter=[ow,oh,x_per,y_per,draw_panel.scrollLeft,draw_panel.scrollTop,x,y];
+                let pos=this.getLocation(grids);//相对于 画布得位置
+                let panel_pos=this.getLocation(grids.parentElement.parentElement.parentElement);//draw_panel
+                let ow = x - pos.left;
+                let oh = y - pos.top;
+                let x_per=ow/oldWidth;
+                let y_per=oh/oldHeight;
+                this.mouseCenter={
+                    ow,oh,x_per,y_per,
+                    pageX:x,
+                    pageY:y,
+                    panelX:panel_pos.left,
+                    panelY:panel_pos.top,
+                    oldMtop:this.$parent.calMtop,
+                    oldMleft:this.$parent.calMleft,
+                    oldScale:scale,
+                    oldWidth:oldWidth,//this.normalWidth*scale,
+                    oldHeight:oldHeight//this.normalWidth*scale*this.totalHeight/this.totalWidth
+                };//鼠标相对panel的位置
 
+            },
+            calParentScrollPos(){
+                let param={
+                    deltax:0,
+                    deltay:0,
+                    ratioW:this.ratioWidth,
+                    ratioH:this.ratioHeight
+                };
+
+                if(this.mouseCenter.ow!==undefined){
+                    let delta_width=this.normalWidth*(this.scale-this.mouseCenter.oldScale);
+                    param.deltax=this.mouseCenter.oldMleft-delta_width*this.mouseCenter.x_per;
+                    param.deltay=this.mouseCenter.oldMtop-delta_width*this.totalHeight/this.totalWidth*this.mouseCenter.y_per;
+
+                }
+
+
+                this.$parent.calScrollPos(param);
+                this.ready=true;
             }
         },
         mounted(){
             setTimeout(()=>{
                 this.initDragOpenWin();
+                this.calParentScrollPos();
+
             },300);
+
         },
         watch:{
             scale(v,o){
-                let cur_w=this.normalWidth*v*this.mouseCenter[2];
-                let cur_h=this.normalWidth*v*this.totalHeight/this.totalWidth*this.mouseCenter[3];
-                let grids=document.getElementById("grids");
-                let draw_panel=grids.parentElement.parentElement.parentElement;
+                // let cur_w=this.normalWidth*v*this.mouseCenter[2];
+                // let cur_h=this.normalWidth*v*this.totalHeight/this.totalWidth*this.mouseCenter[3];
+                // let grids=document.getElementById("grids");
+                // let draw_panel=grids.parentElement.parentElement.parentElement;
+                //
+                // draw_panel.scrollLeft=this.mouseCenter[4]+(cur_w-this.mouseCenter[0]);
+                // draw_panel.scrollTop=this.mouseCenter[5]+(cur_h-this.mouseCenter[1]);
 
-                draw_panel.scrollLeft=this.mouseCenter[4]+(cur_w-this.mouseCenter[0]);
-                draw_panel.scrollTop=this.mouseCenter[5]+(cur_h-this.mouseCenter[1]);
-
+                this.calParentScrollPos();
             }
         },
         components: {

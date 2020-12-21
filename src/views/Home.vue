@@ -116,8 +116,26 @@
                     <div class="content-title">{{LANG.HOME_SIMULATION}}</div>
                     <div class="content-draw">
                         <!-- 窗口编辑面板 -->
-                        <div class="draw-panel">
-                            <div class="draw-content" :class="{'draw-center':(drawCenter&&!isEcho)}">
+                        <div class="draw-panel" ref="draw_panel">
+                            <div class="scroll_bar_h"
+                                 @mousedown.stop="scroll($event,'h')"
+                                 :style="{
+                                    height:scrollH+'px',
+                                    top:scrollT+'px'
+                                 }"
+                            ></div>
+                            <div class="scroll_bar_w"
+                                 @mousedown.stop="scroll($event,'w')"
+                                 :style="{
+                                    width:scrollW+'px',
+                                    left:scrollL+'px'
+                                 }"
+                            ></div>
+                            <div class="draw-content draw-center"
+                                 :style="{
+                                        marginTop:calMtop+'px',
+                                        marginLeft:calMleft+'px'
+                                    }">
                                 <vdr ref="vdr"  v-if="updateFlip"  @alignCenter="alignCenter"></vdr>
                             </div>
                         </div>
@@ -189,30 +207,6 @@
 import card from "@/components/operation/Card";
 import cardItem from "@/components/operation/CardItem";
 import cardChild from "@/components/operation/CardChild";
-
-// const udialog = ()=>import("@/components/dialog");
-// const signal = ()=>import("@/components/signal");
-// const vdr = ()=>import("@/components/vdr");
-// const attr = ()=>import("@/components/attr");
-// const kfsDialog = ()=>import("@/components/panel/kfsDialog");
-// const serialDialog = ()=>import("@/components/panel/serialDialog");
-// const multiSyncDialog = ()=>import("@/components/panel/multiSyncDialog");
-// const userModelDialog = ()=>import("@/components/panel/userModelDialog");
-// const saveUserModelDialog = ()=>import("@/components/panel/saveUserModelDialog");
-// const monIpDialog = ()=>import("@/components/panel/monIpDialog");
-// const ipConfigDialog = ()=>import("@/components/panel/ipConfigDialog");
-// const edidDialog = ()=>import("@/components/panel/edidDialog");
-// const screenCtrDialog = ()=>import("@/components/panel/screenCtrDialog");
-// const screenBrightDialog = ()=>import("@/components/panel/screenBrightDialog");
-// const tempDialog = ()=>import("@/components/panel/tempDialog");
-// const versionDialog = ()=>import("@/components/panel/versionDialog");
-// const deviceStatusDialog = ()=>import("@/components/panel/deviceStatusDialog");
-// const edidAdvancedDialog = ()=>import("@/components/panel/edidAdvancedDialog");
-// const hotBackupDialog = ()=>import("@/components/panel/hotBackupDialog");
-// const workModeDialog = ()=>import("@/components/panel/workModeDialog");
-// const eqDialog = ()=>import("@/components/panel/eqDialog");
-// const vgaDialog = ()=>import("@/components/panel/vgaDialog");
-
 
 import udialog from "@/components/dialog";
 
@@ -322,7 +316,19 @@ export default {
       this.maxHeight=window.innerHeight-200;
       window.addEventListener("resize",()=>{
           this.maxHeight=window.innerHeight-200;
+          // this.$nextTick(()=>{
+          //     setTimeout(()=>{
+          //         this.getPanelSize();
+          //     },500);
+          //
+          // })
       });
+        // this.$nextTick(()=>{
+        //     setTimeout(()=>{
+        //         this.getPanelSize();
+        //     },500);
+        //
+        // })
       this.globalEvent.$on('language',()=>{
           this.LANG=this.LANGUAGE[this.globalEvent.language];
           this.curLang=this.globalEvent.language;
@@ -332,7 +338,6 @@ export default {
       if(user!==null){
           user=JSON.parse(user);
           this.globalEvent.userInfo=user;
-          console.log(user);
           this.isLogin=1;
       }
       // setTimeout(()=>{this.isLogin=1;},5000);
@@ -389,6 +394,21 @@ export default {
     return {
         isLogin:0,
         curLang:lang,
+        mleft:0,
+        mtop:0,
+        panelW:0,
+        panelH:0,
+
+
+        calMleft:0,
+        calMtop:0,
+        // mouseX:0,
+        // mouseY:0,
+        scrollW:0,
+        scrollL:0,
+        scrollH:0,
+        scrollT:0,
+
         langList:[{value:'en',label:'English'},{value:'zh',label:'中文'}],
         // activeName: "0", // 侧边栏选项
         // activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
@@ -422,10 +442,6 @@ export default {
     // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
       preinstall(setFn) {
 
-          // this.globalEvent.language='zh';
-          // this.globalEvent.$emit('language');
-
-      console.log(setFn);
       if (setFn === "5") {
         this.isEcho = true;
       }
@@ -542,32 +558,229 @@ export default {
               this.showUploadDialog='fpga'
           }
       },
-      reloadMainPane(){
-          //刷新界面
-          this.updateFlip=false;
-          this.$nextTick(()=>{
-              setTimeout(()=>{
-                  this.updateFlip=true;
-              },300);
-          })
+
+        getPanelSize(){
+            this.panelW=this.$refs.draw_panel.clientWidth;
+            this.panelH=this.$refs.draw_panel.clientHeight;
+        },
+      calScrollPos(param){
+          this.getPanelSize();
+
+          this.ratioWidth=param.ratioW;
+          this.ratioHeight=param.ratioH;
+
+          this.calMleft=param.deltax;
+          this.calMtop=param.deltay;
+
+          let wr=this.panelW/this.ratioWidth;
+          let hr=this.panelH/this.ratioHeight;
+
+          if(this.calMleft<0){
+              this.scrollL=(0-this.calMleft)*wr;
+              let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
+              if(leftL>=0){
+                  this.scrollW=this.panelW-this.scrollL;
+              }
+              else{
+                  this.scrollW=this.panelW-this.scrollL+leftL*wr;
+              }
+          }
+          else{
+              this.scrollL=0;
+              let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
+              if(leftL>=0){
+                  // this.scrollW=this.panelW;
+                  this.scrollW=0;//全长置0
+              }
+              else{
+                  this.scrollW=this.panelW+leftL*wr;
+              }
+          }
+
+          if(this.calMtop<0){
+              this.scrollT=(0-this.calMtop)*hr;
+              let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
+              if(bottomL>=0){
+                  this.scrollH=this.panelH-this.scrollT;
+              }
+              else{
+                  this.scrollH=this.panelH-this.scrollT+bottomL*hr;
+              }
+          }
+          else{
+              this.scrollT=0;
+              let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
+              if(bottomL>=0){
+                  // this.scrollH=this.panelH;
+                  this.scrollH=0;//全长置0
+              }
+              else{
+                  this.scrollH=this.panelH+bottomL*hr;
+              }
+          }
+
       },
-      // winLock(){
-      //     //位置锁定
-      //     this.positionLock=!this.positionLock;
-      //     let w=this.globalEvent.selectedWindowIndex;
-      //     if(w>-1){
-      //         this.globalEvent.windowItemsInfo.winArr[w].lock=this.positionLock?1:0;
+      // calScrollPos(param){
+      //     this.getPanelSize();
+      //
+      //     this.ratioWidth=param.ratioW;
+      //     this.ratioHeight=param.ratioH;
+      //
+      //     this.calMleft=param.deltax;
+      //     this.calMtop=param.deltay;
+      //
+      //     let calWidth=param.ratioW+this.calMleft;
+      //     if(this.calMleft<0){
+      //         calWidth=param.ratioW-this.calMleft;
       //     }
+      //
+      //     let calHeight=param.ratioH+this.calMtop;
+      //     if(this.calMtop<0){
+      //         calHeight=param.ratioH-this.calMtop;
+      //     }
+      //
+      //     let wr=this.panelW/calWidth;
+      //     let hr=this.panelH/calHeight;
+      //     //宽度
+      //     if(calWidth>this.panelW){
+      //         this.scrollW=this.panelW*wr;
+      //         if(this.calMleft>0)
+      //             this.scrollL=0;
+      //         else{
+      //             this.scrollL=(0-this.calMleft)*wr
+      //         }
+      //     }
+      //     else{
+      //         this.scrollW=0;
+      //         this.scrollL=0;
+      //
+      //     }
+      //
+      //     //高度
+      //     if(calHeight>this.panelH){
+      //         this.scrollH=this.panelH*hr;
+      //         if(this.calMtop>0){
+      //             this.scrollT=0;
+      //         }
+      //         else{
+      //             this.scrollT=(0-this.calMtop)*hr;
+      //         }
+      //
+      //     }
+      //     else{
+      //         this.scrollH=0;
+      //         this.scrollT=0;
+      //     }
+      //
+      //
+      // },
+      scroll(e,act){
+          e.stopPropagation();
+          e.preventDefault();
+          let originPos={
+              x:e.pageX,
+              y:e.pageY,
+              oldCalMtop:this.calMtop,
+              oldCalMleft:this.calMleft,
+              scrollL:this.scrollL,
+              scrollT:this.scrollT
+          };
+          let deltax=0;
+          let deltay=0;
+          let that=this;
+          let mm=function (e) {
+              deltax=e.pageX-originPos.x;
+              deltay=e.pageY-originPos.y;
+              let newT=0;
+              let newL=0;
+              let end=-1;
+              if(act=='w'){
+                  newL=originPos.scrollL+deltax;
+                  if(newL<0){
+                      newL=0;
+                      end=0;
+                  }
+                  else if(newL+that.scrollW>=that.panelW){
+                      newL=that.panelW-that.scrollW;
+                      end=1;
+                  }
+              }
+              else{
+                  newT=originPos.scrollT+deltay;
+                  if(newT<0){
+                      newT=0;
+                      end=0;
+                  }
+                  else if(newT+that.scrollH>=that.panelH){
+                      newT=that.panelH-that.scrollH;
+                      end=1;
+                  }
+
+              }
+
+              that.calMargin({
+                  act,
+                  newT,newL,end,
+                  oldScrollL:originPos.scrollL,
+                  oldScrollT:originPos.scrollT,
+                  oldMtop:originPos.oldCalMtop,
+                  oldMleft:originPos.oldCalMleft
+              });
+          }
+          let mu=function(){
+              document.removeEventListener("mousemove",mm);
+              document.removeEventListener('mouseup',mu);
+          };
+          document.addEventListener('mousemove',mm);
+          document.addEventListener('mouseup',mu);
+      },
+      calMargin(param){
+          // console.log(param);
+          if(param.act=='h'){
+              this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight;
+              this.scrollT=param.newT;
+              if(param.end==1){
+                  this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight-5;
+              }
+              else if(param.end==0){
+                  this.calMtop=5;
+              }
+
+          }
+          else{
+
+              this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth;
+              this.scrollL=param.newL;
+              if(param.end==1){
+                  this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth-5;
+              }
+              else if(param.end==0){
+                  this.calMleft=5;
+              }
+          }
+
+      },
+      // calMargin(param){
+      //     if(param.act=='h'){
+      //         this.scrollT=param.newT;
+      //         this.calMtop=0-this.scrollT/this.panelH*this.ratioHeight;
+      //
+      //         if(param.end==1){
+      //             this.calMtop=this.calMtop-3;
+      //         }
+      //
+      //     }
+      //     else{
+      //         this.scrollL=param.newL;
+      //         this.calMleft=0-this.scrollL/this.panelW*this.ratioWidth;
+      //         if(param.end==1){
+      //             this.calMleft=this.calMleft-3;
+      //         }
+      //     }
+      //
       // },
       calClock(){
-          // for(let k in curScreen){
-          //     curScreen[k]=parseInt(curScreen[k]);
-          // }
-          // let hTotal=curScreen.FormatW+curScreen.HFrontPorch+curScreen.HSyncTime+curScreen.HBackPorch;
-          // let vTotal=curScreen.FormatH+curScreen.VFrontPorch+curScreen.VSyncTime+curScreen.VBackPorch;
-          // // curScreen.FrameRate=Number(curScreen.ClkFreq*1000/hTotal/vTotal).toFixed(2);
-          // curScreen.ClkFreq=curScreen.FrameRate*hTotal*vTotal/1000;
-          // return curScreen;
+
           for(let k in this.curScreen){
               this.curScreen[k]=parseInt(this.curScreen[k]);
           }
@@ -578,7 +791,6 @@ export default {
 
       },
       subEvent(param){
-          console.log(param);
           if('login'==param.act){
               this.isLogin=1;
           }
@@ -645,7 +857,6 @@ export default {
                   info.srcCardId=0xff;
               }
 
-              console.log(info);
               this.$http.post("srcEdidWr.cgi",info,()=>{
                   // this.info={};
                   this.advanceScreen={};
@@ -670,7 +881,6 @@ export default {
               this.showDialog='workMode';
           }
           else if('eq'==param.act){
-              console.log("eq");
               this.showDialog='eq';
           }
           else if('vga'==param.act){
@@ -918,18 +1128,35 @@ export default {
         display: flex;
         flex-direction: column;
         .draw-panel {
-          flex: 1;
+            height:100%;
           min-height: 418px;
           position: relative;
-          overflow: scroll;
-        /*  .draw-center {
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+          overflow: hidden;
+            .scroll_bar_h{
+                position:absolute;
+                cursor:pointer;
+                z-index:1;
+                width: 8px;
+                right:2px;
+                border-radius: 8px;
+                background-color: rgba(199,199,199,0.4);
+            }
+            .scroll_bar_w{
+                position: absolute;
+                cursor:pointer;
+                z-index:1;
+                bottom:2px;
+                height: 8px;
+                border-radius: 8px;
+                background-color:  rgba(199,199,199,0.4);
+            }
+            /*.draw-center {
+               top: 50%;
+               left: 50%;
           }*/
           .draw-content {
             background-color: #f5f7fa;
-            border: 1px solid #dcdfe6;
+              border: 1px solid #dcdfe6;
             position: absolute;
           }
         }
