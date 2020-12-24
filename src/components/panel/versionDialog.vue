@@ -44,12 +44,14 @@
     export default {
         props:['showDialog'],
         data(){
+            let inCardArr=JSON.parse(JSON.stringify(this.globalEvent.versionInfo.inCardArr));
+            let outCardArr=JSON.parse(JSON.stringify(this.globalEvent.versionInfo.outCardArr));
             return {
                 ctrlCard:this.globalEvent.versionInfo.ctrlCardArr,
                 syncCard:this.globalEvent.versionInfo.syncCardArr,
                 monitorCard:this.globalEvent.versionInfo.monitorCardArr,
-                inputCard:this.globalEvent.versionInfo.inCardArr.reverse(),
-                outCard:this.globalEvent.versionInfo.outCardArr.reverse(),
+                inputCard:inCardArr.reverse(),
+                outCard:outCardArr.reverse(),
                 LANG:this.LANGUAGE[this.globalEvent.language]
 
             };

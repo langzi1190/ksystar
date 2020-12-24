@@ -257,7 +257,7 @@ import importDialog from "@/components/panel/importDialog";
 import exportDialog from "@/components/panel/exportDialog";
 import aboutDialog from "@/components/panel/aboutDialog";
 
-let loading ;
+let loading='';
 // let loading_count=0;
 const EDID_DETAILED_TIMING_OFFSET_8K = 128;
 const EDID_DT_CFGBYTE_SYNC_WIDTH_L_8K = 12;// 7680
@@ -332,6 +332,20 @@ export default {
       this.globalEvent.$on('language',()=>{
           this.LANG=this.LANGUAGE[this.globalEvent.language];
           this.curLang=this.globalEvent.language;
+      });
+
+      this.globalEvent.$on("load_name_complete",()=>{
+
+          if(loading != ''){
+              setTimeout(()=>{
+                  loading.close();
+                  loading='';
+              },2000);
+              this.$refs.signal.getCommonInfo();
+              this.$refs.signal.getSysInputInfo();
+              this.$refs.vdr.loadData();
+          }
+
       });
 
       let user=sessionStorage.getItem('login_user');
@@ -483,10 +497,8 @@ export default {
               spinner: 'el-icon-loading',
               background: 'rgba(255, 255, 255, 0.5)'
           });
-          setTimeout(()=>{loading.close();},2000);
-          this.$refs.signal.getCommonInfo();
-          this.$refs.signal.getSysInputInfo();
-          this.$refs.vdr.loadData();
+          this.globalEvent.loadName();
+
       }
     },
     // 设置:2-屏幕配置

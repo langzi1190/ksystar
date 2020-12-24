@@ -54,6 +54,7 @@ function apiAxios(method, url, params, response) {
         "login.cgi":"login.json",
         "firmwareUpdate.cgi":"upload_result.json",
         "KfsRd.cgi":"kfs.json",
+        "renameCfgRd.cgi":"write_back.json",
         "scrColorRd.cgi":"screen_bright.json",
     };
       url=urlTrans[url];

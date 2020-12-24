@@ -37,12 +37,16 @@
             op(act){
                 if(act){
 
-                    this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
-                        this.globalEvent.userModel=this.userModel+1;
-                        this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
-                        alert(this.LANG.TIP_ALREADY_SAVE);
+                    this.globalEvent.userModel=this.userModel;
+
+                    this.loading=this.$loading({
+                        lock: true,
+                        text: this.LANG.EXPORT_IN_PROGRESS,
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(255, 255, 255, 0.5)'
                     });
 
+                    this.globalEvent.saveName();
                 }
                 else{
                     this.$emit('sub_event',{act:'close_kfs'});
@@ -50,6 +54,17 @@
 
 
             }
+        },
+        mounted(){
+            this.globalEvent.$off("upload_name_complete");
+            this.globalEvent.$on("upload_name_complete",()=>{
+                this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
+                    this.globalEvent.userModel=this.userModel+1;
+                    this.loading.close();
+                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
+                    alert(this.LANG.TIP_ALREADY_SAVE);
+                });
+            });
         }
     }
 </script>

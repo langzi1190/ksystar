@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import Axios from '../axios';
+Vue.prototype.$http = Axios;
 
 let gobalEvent =new Vue({
     data:{
@@ -9,12 +11,13 @@ let gobalEvent =new Vue({
             inCardInfo:{},
             outCardInfo:{}
         },
-        userModel:1,
+        userModel:1,//用户模式id
         userInfo:{
             username:'',
             password:'',
             type:0
         },
+        nameInfo:{},
         outPutInfo:{},//输出端口
         language:'zh',
         pType:{
@@ -76,9 +79,8 @@ let gobalEvent =new Vue({
         windowItemLocalName:{},//窗口名
     },
     created(){
-        // this.opSrcGroupName('load');
-        // this.opCarouseName('load');
-        this.loadLocalName();
+        this.loadName();
+
     },
     methods:{
         sourceCardNumber(){
@@ -261,6 +263,147 @@ let gobalEvent =new Vue({
         isValidResolution(resolArr){
             //从分辨率判断，输入信号是否存在
             return resolArr[1]>200 && resolArr[0]>300
+        },
+        loadPacket(totalNum){
+            let packetId=0;
+            let buffer=[];
+            let that=this;
+            let loadFile=function () {
+                if(packetId>=totalNum){
+                    let unitBuffer=new Uint8Array(buffer);
+                    let blob = new Blob([unitBuffer]);
+                    let reader = new FileReader();
+                        reader.readAsText(blob, 'utf-8');
+                        reader.onload = function (e) {
+                            let nameInfo=JSON.parse(reader.result);
+                            that.globalEvent.nameInfo=nameInfo;
+                            for(let key in nameInfo){
+                                if(typeof nameInfo[key] =='string')
+                                    localStorage.setItem(key,nameInfo[key]);
+                                else
+                                    localStorage.setItem(key,JSON.stringify(nameInfo[key]))
+                            }
+                            //加载用户模式窗口名
+                            let userModelWindowNameKey='userModel'+that.globalEvent.commonInfo.curPreset;
+                            for(let key in nameInfo[userModelWindowNameKey]){
+                                localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey]));
+                            }
+
+                            that.loadLocalName();
+                            that.$emit('load_name_complete');
+                        }
+                    return ;
+                }
+                that.$http.post("renameCfgRd.cgi",{opr:0xff,packetId},(ret)=>{
+                    packetId++;
+                    let data=ret.data.dataArr;
+                    data.forEach((v,i,arr)=>{
+                        buffer.push(v);
+                    })
+
+                    loadFile();
+                });
+            }
+
+            loadFile();
+        },
+        loadName(){
+            let totalNum=0;
+            this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
+                let data=ret.data;
+                totalNum=data.packetNum;
+                if(totalNum>0){
+                    this.loadPacket(totalNum);
+                }
+                else{
+                    this.$emit('load_name_complete');
+                }
+            });
+        },
+        saveName(){
+            let nameInfo=this.globalEvent.nameInfo;
+            let that=this;
+            for(let k in this.keys){
+                let info=localStorage.getItem(this.keys[k]);
+                if(info!==null){
+                    nameInfo[this.keys[k]]=JSON.parse(info);
+                }
+            }
+
+            let windowNameInfo={};
+            for(let k in this.screenInfo.scrGroupArr){
+
+                let key=this.keys.windowItem+'_'+k;
+                let info=localStorage.getItem(key);
+                if(info!=null){
+                    windowNameInfo[key]=JSON.parse(info);
+                }
+            }
+
+            nameInfo['userModel'+this.globalEvent.userModel]=windowNameInfo;
+
+            let nameInfoStr=JSON.stringify(nameInfo);
+            let blob = new Blob([nameInfoStr]);
+            let reader=new FileReader(blob);
+                reader.readAsArrayBuffer(blob)
+                reader.onload=function () {
+                    let buffer=reader.result;
+                    let hexBuffer=Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2));
+                    // let hexBufferNumberArr=hexBuffer.map((v,k)=>Number('0x'+v))
+                    that.$http.post("renameCfgWr.cgi",{opr:0,fileSize:hexBuffer.length},(ret)=>{
+                        if(ret.data.result==1){
+                            that.uploadName(hexBuffer);
+                        }
+                        else{
+                            console.log("擦除数据失败");
+                        }
+                    });
+                }
+        },
+        uploadName(hexBuffer){
+            let curPacketId=0;
+            let fragement=1024;
+            let totalSize=hexBuffer.length;
+            let fragmentCount=Math.ceil(totalSize/fragement);
+            let that=this;
+            let uploadFile=function(){
+                let i = curPacketId;
+                if(i>=fragmentCount){
+
+                    that.loading.close();
+                    that.$emit("upload_name_complete");
+                    return ;
+                }
+                let start = i * fragment,
+                    end = Math.min(totalSize, start + fragment);
+
+
+                let d={
+                    opr:1,
+                    packetNum:fragmentCount,
+                    packetId:i,
+                    dataArr:hexBuffer.slice(start,end).map((v,k)=>Number('0x'+v))
+                };
+
+
+                that.loading.setText(that.LANG.EXPORT_IN_PROGRESS+" ..."+ Math.floor(i/fragmentCount*100)+'%');
+
+                that.$http.post("renameCfgWr.cgi",d,(ret)=>{
+
+                    if(ret.data.result==0){
+                        //未正确接收
+                        alert(this.LANG.ALERT_API_ERROR);
+                        console.log("下发数据未正确接收:",d.packetId,d.packetNum);
+                    }
+                    else{
+                        curPacketId++;
+                        uploadFile();
+                    }
+                });
+            };
+
+            uploadFile();
+
         }
     }
 });
