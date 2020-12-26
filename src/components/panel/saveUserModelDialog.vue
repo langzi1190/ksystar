@@ -37,9 +37,10 @@
             op(act){
                 if(act){
 
+                    this.globalEvent.editName(this.userModelName,this.globalEvent.keys['sceneUserName']);
                     this.globalEvent.userModel=this.userModel;
 
-                    this.loading=this.$loading({
+                    window.loading=this.$loading({
                         lock: true,
                         text: this.LANG.EXPORT_IN_PROGRESS,
                         spinner: 'el-icon-loading',
@@ -60,7 +61,7 @@
             this.globalEvent.$on("upload_name_complete",()=>{
                 this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
                     this.globalEvent.userModel=this.userModel+1;
-                    this.loading.close();
+                    window.loading.close();
                     this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
                     alert(this.LANG.TIP_ALREADY_SAVE);
                 });

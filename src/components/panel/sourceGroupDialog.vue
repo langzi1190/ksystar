@@ -116,6 +116,7 @@
         methods:{
             op(act){
                 if(act){
+                    this.globalEvent.editName(this.srcGroupName,this.globalEvent.keys['srcGroup']);
                     this.$emit("sub_event",{act:'updateSrcGroup',label:this.srcGroupName,list:this.selectedSrcCardList});
                 }else{
                     this.$emit("sub_event",{act:'closeDialog'});

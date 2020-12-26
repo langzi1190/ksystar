@@ -275,14 +275,9 @@ export default {
                 this.$emit('sub_event',{act:'show_edid_single'})
             }
             else if(act=='rename'){
-                // let s=prompt(this.LANG.TIP_INPUT_NEW_NAME,this.globalEvent.selectedCard.label_extra);
-                // if(s!==null && s!==undefined){
-                //     this.globalEvent.selectedCard.label_extra=s;
-                //     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
-                //     this.globalEvent.$emit("source_card_name_change");
-                // }
                 if(this.selectedCardLabel!=''){
                     this.globalEvent.selectedCard.label_extra=this.selectedCardLabel;
+                    this.globalEvent.editName(this.selectedCardLabel,this.globalEvent.keys['sourceCardName']);
                     this.globalEvent.syncLocalName('sourceCardName',this.globalEvent.inputCardList);
                     this.globalEvent.$emit("source_card_name_change");
                 }

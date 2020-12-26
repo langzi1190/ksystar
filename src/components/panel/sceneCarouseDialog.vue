@@ -117,6 +117,7 @@
         methods:{
             op(act){
                 if(act){
+                    this.globalEvent.editName(this.sceneName,this.globalEvent.keys['sceneCarouse']);
                     this.$emit("sub_event",{act:'updateScene',label:this.sceneName,list:this.selectedUserSceneList});
                 }else{
                     this.$emit("sub_event",{act:'closeDialog'});

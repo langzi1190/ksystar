@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Axios from '../axios';
 Vue.prototype.$http = Axios;
+Vue.prototype.LANGUAGE={
+    zh:require("./zh.json"),
+    en:require("./en.json"),
+};
 
 let gobalEvent =new Vue({
     data:{
@@ -275,14 +279,44 @@ let gobalEvent =new Vue({
                     let reader = new FileReader();
                         reader.readAsText(blob, 'utf-8');
                         reader.onload = function (e) {
-                            let nameInfo=JSON.parse(reader.result);
+                            let nameInfo={};
+                            try{
+                                nameInfo=JSON.parse(reader.result);
+                            }
+                            catch(err){
+                                return ;
+                            }
                             that.globalEvent.nameInfo=nameInfo;
                             for(let key in nameInfo){
                                 if(typeof nameInfo[key] =='string')
                                     localStorage.setItem(key,nameInfo[key]);
                                 else
                                     localStorage.setItem(key,JSON.stringify(nameInfo[key]))
+
+                                if(key==this.keys['sceneUserName']){
+                                    //记录文件 已命名文件
+                                    for(let existKey in nameInfo[key]){
+                                        this.editName(nameInfo[key][existKey],this.keys['sceneUserName'])
+                                    }
+                                }
+                                else if(key==this.keys['sceneUserName']){
+                                    for(let existKey in nameInfo[key]){
+                                        this.editName(nameInfo[key][existKey],this.keys['sourceCardName'])
+                                    }
+                                }
+                                else if(key==this.keys['sceneCarouse']){
+                                    for(let existKey in nameInfo[key]){
+                                        this.editName(nameInfo[key][existKey],this.keys['sceneCarouse'])
+                                    }
+                                }
+                                else if(key==this.keys['srcGroup']){
+                                    for(let existKey in nameInfo[key]){
+                                        this.editName(nameInfo[key][existKey],this.keys['srcGroup'])
+                                    }
+                                }
                             }
+
+
                             //加载用户模式窗口名
                             let userModelWindowNameKey='userModel'+that.globalEvent.commonInfo.curPreset;
                             for(let key in nameInfo[userModelWindowNameKey]){
@@ -320,29 +354,89 @@ let gobalEvent =new Vue({
                 }
             });
         },
+        isSavedName(name,pkey=''){
+            let key=pkey+"_saved_name_"+name;
+            return sessionStorage.getItem(key,name)!==null;
+        },
+        editName(name,pkey){
+            let key=pkey+"_saved_name_"+name;
+            sessionStorage.setItem(key,name);
+        },
         saveName(){
             let nameInfo=this.globalEvent.nameInfo;
             let that=this;
             for(let k in this.keys){
+
                 let info=localStorage.getItem(this.keys[k]);
                 if(info!==null){
-                    nameInfo[this.keys[k]]=JSON.parse(info);
+                    info=JSON.parse(info);
+                    if(k=='sceneUserName'){
+                        for(let existKey in info){
+                            if(!this.isSavedName(info[existKey],this.keys[k])){
+                                delete info[existKey];
+                            }
+                        }
+                    }
+                    else if(k=='sourceCardName'){
+                        for(let existKey in info){
+                            if(!this.isSavedName(info[existKey],this.keys[k])){
+                                delete info[existKey];
+                            }
+                        }
+                    }
+                    else if(k=='sceneCarouse'){
+                        let newInfo={};
+                        for(let i in info){
+                            if(!this.isSavedName(info[i],this.keys[k])){
+                                newInfo[i]=info[i];
+                            }
+                        }
+                        info=newInfo;
+                    }
+                    else if(k=='srcGroup'){
+                        let newInfo={};
+                        for(let i in info){
+                            if(!this.isSavedName(info[i],this.keys[k])){
+                                newInfo[i]=info[i];
+                            }
+                        }
+                        info=newInfo;
+                    }
+                    nameInfo[this.keys[k]]=info;
                 }
             }
 
             let windowNameInfo={};
-            for(let k in this.screenInfo.scrGroupArr){
-
-                let key=this.keys.windowItem+'_'+k;
-                let info=localStorage.getItem(key);
-                if(info!=null){
-                    windowNameInfo[key]=JSON.parse(info);
+            for(let key in this.globalEvent.nameInfo){
+                if(key.indexOf('userModel')>-1){
+                    windowNameInfo=this.globalEvent.nameInfo[key];
                 }
             }
 
-            nameInfo['userModel'+this.globalEvent.userModel]=windowNameInfo;
+            for(let k in this.screenInfo.scrGroupArr){
+                let key=this.keys.windowItem+'_'+k;
+                let info=localStorage.getItem(key);
+                if(info!=null){
+                    info=JSON.parse(info);
+                    for(let infoKey in info){
+                        if(info[infoKey]==''){
+                            delete info[infoKey];
+                        }
+                    }
+                    if(Object.keys(info).length>0){
+                        windowNameInfo[key]=info;
+                    }
 
+                }
+            }
+
+            if(Object.keys(windowNameInfo).length>0){
+                nameInfo['userModel'+this.globalEvent.userModel]=windowNameInfo;
+            }
+
+            console.log(nameInfo);
             let nameInfoStr=JSON.stringify(nameInfo);
+
             let blob = new Blob([nameInfoStr]);
             let reader=new FileReader(blob);
                 reader.readAsArrayBuffer(blob)
@@ -361,16 +455,17 @@ let gobalEvent =new Vue({
                 }
         },
         uploadName(hexBuffer){
+            this.LANG=this.LANGUAGE[this.language];
             let curPacketId=0;
-            let fragement=1024;
+            let fragment=1024;
             let totalSize=hexBuffer.length;
-            let fragmentCount=Math.ceil(totalSize/fragement);
+            let fragmentCount=Math.ceil(totalSize/fragment);
             let that=this;
             let uploadFile=function(){
                 let i = curPacketId;
                 if(i>=fragmentCount){
 
-                    that.loading.close();
+                    window.loading.close();
                     that.$emit("upload_name_complete");
                     return ;
                 }
@@ -386,13 +481,13 @@ let gobalEvent =new Vue({
                 };
 
 
-                that.loading.setText(that.LANG.EXPORT_IN_PROGRESS+" ..."+ Math.floor(i/fragmentCount*100)+'%');
+                window.loading.setText(that.LANG.EXPORT_IN_PROGRESS+" ..."+ Math.floor(i/fragmentCount*100)+'%');
 
                 that.$http.post("renameCfgWr.cgi",d,(ret)=>{
 
                     if(ret.data.result==0){
                         //未正确接收
-                        alert(this.LANG.ALERT_API_ERROR);
+                        alert(that.LANG.ALERT_API_ERROR);
                         console.log("下发数据未正确接收:",d.packetId,d.packetNum);
                     }
                     else{
