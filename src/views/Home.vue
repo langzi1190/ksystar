@@ -155,15 +155,15 @@
             </center>
             <!-- 底部设备信息 -->
             <!--<footer>-->
-                <!--<div class="status-bar">-->
-                    <!--&lt;!&ndash;<div>通讯状态:</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div>设备型号:</div>-->
-                    <!--<div>{{devType}}</div>-->
-                <!--</div>-->
+            <!--<div class="status-bar">-->
+            <!--&lt;!&ndash;<div>通讯状态:</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<img v-show="false" class="header-icon" src="@/assets/images/succeed.png" />&ndash;&gt;-->
+            <!--&lt;!&ndash;<img v-show="true" class="header-icon" src="@/assets/images/failed.png" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--<div>设备型号:</div>-->
+            <!--<div>{{devType}}</div>-->
+            <!--</div>-->
             <!--</footer>-->
             <!-- 弹窗集合组件 -->
             <udialog :title="dialogTitle" :dialogVisible="dialogVisible" @isDialogVisible="isDialogVisible"></udialog>
@@ -203,1027 +203,1020 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import card from "@/components/operation/Card";
-import cardItem from "@/components/operation/CardItem";
-import cardChild from "@/components/operation/CardChild";
+    // @ is an alias to /src
+    import card from "@/components/operation/Card";
+    import cardItem from "@/components/operation/CardItem";
+    import cardChild from "@/components/operation/CardChild";
 
-import udialog from "@/components/dialog";
+    import udialog from "@/components/dialog";
 
-import signal from "@/components/signal/signal";
+    import signal from "@/components/signal/signal";
 
-import vdr from "@/components/vdr";
+    import vdr from "@/components/vdr";
 
-import attr from "@/components/attr";
+    import attr from "@/components/attr";
 
-import kfsDialog from "@/components/panel/kfsDialog";
+    import kfsDialog from "@/components/panel/kfsDialog";
 
-import serialDialog from "@/components/panel/serialDialog";
+    import serialDialog from "@/components/panel/serialDialog";
 
-import multiSyncDialog from "@/components/panel/multiSyncDialog";
+    import multiSyncDialog from "@/components/panel/multiSyncDialog";
 
-import userModelDialog from "@/components/panel/userModelDialog";
+    import userModelDialog from "@/components/panel/userModelDialog";
 
-import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
+    import saveUserModelDialog from "@/components/panel/saveUserModelDialog";
 
-import monIpDialog from "@/components/panel/monIpDialog";
+    import monIpDialog from "@/components/panel/monIpDialog";
 
-import ipConfigDialog from "@/components/panel/ipConfigDialog";
+    import ipConfigDialog from "@/components/panel/ipConfigDialog";
 
-import edidDialog from "@/components/panel/edidDialog";
+    import edidDialog from "@/components/panel/edidDialog";
 
-import screenCtrDialog from "@/components/panel/screenCtrDialog";
+    import screenCtrDialog from "@/components/panel/screenCtrDialog";
 
-import screenBrightDialog from "@/components/panel/screenBrightDialog";
+    import screenBrightDialog from "@/components/panel/screenBrightDialog";
 
-import tempDialog from "@/components/panel/tempDialog";
+    import tempDialog from "@/components/panel/tempDialog";
 
-import versionDialog from "@/components/panel/versionDialog";
+    import versionDialog from "@/components/panel/versionDialog";
 
-import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
-import edidAdvancedDialog from "@/components/panel/edidAdvancedDialog";
-import hotBackupDialog from "@/components/panel/hotBackupDialog";
-import workModeDialog from "@/components/panel/workModeDialog";
-import eqDialog from "@/components/panel/eqDialog";
-import vgaDialog from "@/components/panel/vgaDialog";
-import resetDialog from "@/components/panel/resetDialog";
-import shutDialog from "@/components/panel/shutDialog";
-import userDialog from "@/components/panel/userDialog";
-import showEdidDialog from "@/components/panel/showEdidDialog";
-import uploadDialog from "@/components/panel/uploadDialog";
-import simulateDialog from "@/components/panel/simulateDialog";
-import loginDialog from "@/components/panel/loginDialog";
-import importDialog from "@/components/panel/importDialog";
-import exportDialog from "@/components/panel/exportDialog";
-import aboutDialog from "@/components/panel/aboutDialog";
+    import deviceStatusDialog from "@/components/panel/deviceStatusDialog";
+    import edidAdvancedDialog from "@/components/panel/edidAdvancedDialog";
+    import hotBackupDialog from "@/components/panel/hotBackupDialog";
+    import workModeDialog from "@/components/panel/workModeDialog";
+    import eqDialog from "@/components/panel/eqDialog";
+    import vgaDialog from "@/components/panel/vgaDialog";
+    import resetDialog from "@/components/panel/resetDialog";
+    import shutDialog from "@/components/panel/shutDialog";
+    import userDialog from "@/components/panel/userDialog";
+    import showEdidDialog from "@/components/panel/showEdidDialog";
+    import uploadDialog from "@/components/panel/uploadDialog";
+    import simulateDialog from "@/components/panel/simulateDialog";
+    import loginDialog from "@/components/panel/loginDialog";
+    import importDialog from "@/components/panel/importDialog";
+    import exportDialog from "@/components/panel/exportDialog";
+    import aboutDialog from "@/components/panel/aboutDialog";
 
-let loading='';
-// let loading_count=0;
-const EDID_DETAILED_TIMING_OFFSET_8K = 128;
-const EDID_DT_CFGBYTE_SYNC_WIDTH_L_8K = 12;// 7680
-const EDID_DT_CFGBYTE_SYNC_WIDTH_H_8K= 13;
-const EDID_DT_CFGBYTE_SYNC_HIGH_L_8K = 14;// 1080
-const EDID_DT_CFGBYTE_SYNC_HIGH_H_8K=15
-const EDID_DT_CFGBYTE_PIXELCLOCK_L_8K=41// 52250 - 1 = pixel clock freq - 1
-const EDID_DT_CFGBYTE_PIXELCLOCK_H_8K=42
-const EDID_DT_CFGBYTE_ACTIVE_PIXEL_L_8K=45// 7680 - 1 = active pixel - 1
-const EDID_DT_CFGBYTE_ACTIVE_PIXEL_H_8K=46
-const EDID_DT_CFGBYTE_H_BLANKING_L_8K = 47// 160 - 1 = h blank - 1
-const EDID_DT_CFGBYTE_H_BLANKING_H_8K =48
-const EDID_DT_CFGBYTE_H_SYNC_OFFSET_L_8K=49// 48 - 1 = h frontporch and + hsync - 1
-const EDID_DT_CFGBYTE_H_SYNC_OFFSET_H_8K=50
-const EDID_DT_CFGBYTE_H_SYNC_WIDTH_L_8K=51// 32 - 1 = h synctime - 1
-const EDID_DT_CFGBYTE_H_SYNC_WIDTH_H_8K=52
-const EDID_DT_CFGBYTE_ACTIVE_LINE_L_8K =53// 1080 - 1 = active line - 1
-const EDID_DT_CFGBYTE_ACTIVE_LINE_H_8K =54
-const EDID_DT_CFGBYTE_V_BLANKING_L_8K =55// 31 - 1 = v blank - 1
-const EDID_DT_CFGBYTE_V_BLANKING_H_8K =56
-const EDID_DT_CFGBYTE_V_SYNC_OFFSET_L_8K =57// 3 - 1 = v frontporch and -vsync - 1
-const EDID_DT_CFGBYTE_V_SYNC_OFFSET_H_8K =58
-const EDID_DT_CFGBYTE_V_SYNC_WIDTH_L_8K =59// 10 - 1 = v synctime - 1
-const EDID_DT_CFGBYTE_V_SYNC_WIDTH_H_8K =60
+    let loading='';
+    // let loading_count=0;
+    const EDID_DETAILED_TIMING_OFFSET_8K = 128;
+    const EDID_DT_CFGBYTE_SYNC_WIDTH_L_8K = 12;// 7680
+    const EDID_DT_CFGBYTE_SYNC_WIDTH_H_8K= 13;
+    const EDID_DT_CFGBYTE_SYNC_HIGH_L_8K = 14;// 1080
+    const EDID_DT_CFGBYTE_SYNC_HIGH_H_8K=15
+    const EDID_DT_CFGBYTE_PIXELCLOCK_L_8K=41// 52250 - 1 = pixel clock freq - 1
+    const EDID_DT_CFGBYTE_PIXELCLOCK_H_8K=42
+    const EDID_DT_CFGBYTE_ACTIVE_PIXEL_L_8K=45// 7680 - 1 = active pixel - 1
+    const EDID_DT_CFGBYTE_ACTIVE_PIXEL_H_8K=46
+    const EDID_DT_CFGBYTE_H_BLANKING_L_8K = 47// 160 - 1 = h blank - 1
+    const EDID_DT_CFGBYTE_H_BLANKING_H_8K =48
+    const EDID_DT_CFGBYTE_H_SYNC_OFFSET_L_8K=49// 48 - 1 = h frontporch and + hsync - 1
+    const EDID_DT_CFGBYTE_H_SYNC_OFFSET_H_8K=50
+    const EDID_DT_CFGBYTE_H_SYNC_WIDTH_L_8K=51// 32 - 1 = h synctime - 1
+    const EDID_DT_CFGBYTE_H_SYNC_WIDTH_H_8K=52
+    const EDID_DT_CFGBYTE_ACTIVE_LINE_L_8K =53// 1080 - 1 = active line - 1
+    const EDID_DT_CFGBYTE_ACTIVE_LINE_H_8K =54
+    const EDID_DT_CFGBYTE_V_BLANKING_L_8K =55// 31 - 1 = v blank - 1
+    const EDID_DT_CFGBYTE_V_BLANKING_H_8K =56
+    const EDID_DT_CFGBYTE_V_SYNC_OFFSET_L_8K =57// 3 - 1 = v frontporch and -vsync - 1
+    const EDID_DT_CFGBYTE_V_SYNC_OFFSET_H_8K =58
+    const EDID_DT_CFGBYTE_V_SYNC_WIDTH_L_8K =59// 10 - 1 = v synctime - 1
+    const EDID_DT_CFGBYTE_V_SYNC_WIDTH_H_8K =60
 
-const EDID_DETAILED_TIMING_OFFSET  =0x36
-// const EDID_PER_DETAILED_TIMING_LEN =18
+    const EDID_DETAILED_TIMING_OFFSET  =0x36
+    // const EDID_PER_DETAILED_TIMING_LEN =18
 
-const EDID_DT_CFGBYTE_PIXELCLOCK_L =0x00
-const EDID_DT_CFGBYTE_PIXELCLOCK_H =0x01
-const EDID_DT_CFGBYTE_H_ACTIVE_L  =0x02
-const EDID_DT_CFGBYTE_H_BLANKING_L = 0x03
-const EDID_DT_CFGBYTE_H_ACTIVE_H = 0x04  // valid bit: (bit7~bit4)
-const EDID_DT_CFGBYTE_H_BLANKING_H = 0x04  // valid bit: (bit3~bit0)
-const EDID_DT_CFGBYTE_V_ACTIVE_L = 0x05
-const EDID_DT_CFGBYTE_V_BLANKING_L = 0x06
-const EDID_DT_CFGBYTE_V_ACTIVE_H =0x07  // valid bit: (bit7~bit4)
-const EDID_DT_CFGBYTE_V_BLANKING_H = 0x07  // valid bit: (bit3~bit0)
-const EDID_DT_CFGBYTE_H_SYNC_OFFSET_L =0x08
-const EDID_DT_CFGBYTE_H_SYNC_WIDTH_L =0x09
-const EDID_DT_CFGBYTE_V_SYNC_OFFSET_L =0x0A  // valid bit: (bit7~bit4)
-const EDID_DT_CFGBYTE_V_SYNC_WIDTH_L  =0x0A  // valid bit: (bit3~bit0)
-const EDID_DT_CFGBYTE_H_SYNC_OFFSET_H = 0x0B  // valid bit: (bit7~bit6)
-const EDID_DT_CFGBYTE_H_SYNC_WIDTH_H = 0x0B  // valid bit: (bit5~bit4)
-const EDID_DT_CFGBYTE_V_SYNC_OFFSET_H =0x0B  // valid bit: (bit3~bit2)
-const EDID_DT_CFGBYTE_V_SYNC_WIDTH_H = 0x0B  // valid bit: (bit1~bit0)
-
-
-export default {
-  name: "Home",
-    created(){
-      this.loadVersion();
-      this.globalEvent.$on('sync',()=>{
-          this.preinstall('sync');
-      });
-      this.maxHeight=window.innerHeight-200;
-      window.addEventListener("resize",()=>{
-          this.maxHeight=window.innerHeight-200;
-          // this.$nextTick(()=>{
-          //     setTimeout(()=>{
-          //         this.getPanelSize();
-          //     },500);
-          //
-          // })
-      });
-        // this.$nextTick(()=>{
-        //     setTimeout(()=>{
-        //         this.getPanelSize();
-        //     },500);
-        //
-        // })
-      this.globalEvent.$on('language',()=>{
-          this.LANG=this.LANGUAGE[this.globalEvent.language];
-          this.curLang=this.globalEvent.language;
-      });
-
-      this.globalEvent.$on("load_name_complete",()=>{
-
-          if(loading != ''){
-              setTimeout(()=>{
-                  loading.close();
-                  loading='';
-              },2000);
-              this.$refs.signal.getCommonInfo();
-              this.$refs.signal.getSysInputInfo();
-              this.$refs.vdr.loadData();
-          }
-
-      });
-
-      let user=sessionStorage.getItem('login_user');
-      if(user!==null){
-          user=JSON.parse(user);
-          this.globalEvent.userInfo=user;
-          this.isLogin=1;
-      }
-      // setTimeout(()=>{this.isLogin=1;},5000);
-
-        this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
-            this.globalEvent.outPutInfo=ret.data;//configScreen
-        });
-    },
-  watch:{
-      isLogin(v,ov){
-          if(v==1){
-              this.userType=this.globalEvent.userInfo.type;
-              if(this.userType==2){
-                  this.allowUser=0;
-                  this.allowScreen=0;
-                  this.allowSaveMode=0;
-                  this.allowFactory=0;
-              }
-              else if(this.userType==1){
-                  this.allowUser=0;
-                  this.allowFactory=0;
-                  this.allowSaveMode=0;
-              }
-              else if(this.userType==0){
-                  this.allowUser=1;
-                  this.allowScreen=1;
-                  this.allowSaveMode=1;
-                  this.allowFactory=1;
-              }
-          }
-          else{
-              sessionStorage.removeItem('login_user');
-              window.location.reload(true);
-          }
-      },
-      curLang(v,ov){
-          this.globalEvent.language=v;
-          this.globalEvent.$emit("language");
-          this.$http.post("languageWr.cgi",{lang:v=='zh'?0:1},()=>{
-              localStorage.setItem('language',v);
-          });
-      }
-  },
-  data() {
-      let lang=localStorage.getItem('language');
-      if(lang===null || lang===undefined){
-          lang=this.globalEvent.language;
-      }
-      else if(lang!=this.globalEvent.language){
-          this.globalEvent.language=lang;
-          this.globalEvent.$emit('language');
-      }
-
-    return {
-        isLogin:0,
-        curLang:lang,
-        mleft:0,
-        mtop:0,
-        panelW:0,
-        panelH:0,
+    const EDID_DT_CFGBYTE_PIXELCLOCK_L =0x00
+    const EDID_DT_CFGBYTE_PIXELCLOCK_H =0x01
+    const EDID_DT_CFGBYTE_H_ACTIVE_L  =0x02
+    const EDID_DT_CFGBYTE_H_BLANKING_L = 0x03
+    const EDID_DT_CFGBYTE_H_ACTIVE_H = 0x04  // valid bit: (bit7~bit4)
+    const EDID_DT_CFGBYTE_H_BLANKING_H = 0x04  // valid bit: (bit3~bit0)
+    const EDID_DT_CFGBYTE_V_ACTIVE_L = 0x05
+    const EDID_DT_CFGBYTE_V_BLANKING_L = 0x06
+    const EDID_DT_CFGBYTE_V_ACTIVE_H =0x07  // valid bit: (bit7~bit4)
+    const EDID_DT_CFGBYTE_V_BLANKING_H = 0x07  // valid bit: (bit3~bit0)
+    const EDID_DT_CFGBYTE_H_SYNC_OFFSET_L =0x08
+    const EDID_DT_CFGBYTE_H_SYNC_WIDTH_L =0x09
+    const EDID_DT_CFGBYTE_V_SYNC_OFFSET_L =0x0A  // valid bit: (bit7~bit4)
+    const EDID_DT_CFGBYTE_V_SYNC_WIDTH_L  =0x0A  // valid bit: (bit3~bit0)
+    const EDID_DT_CFGBYTE_H_SYNC_OFFSET_H = 0x0B  // valid bit: (bit7~bit6)
+    const EDID_DT_CFGBYTE_H_SYNC_WIDTH_H = 0x0B  // valid bit: (bit5~bit4)
+    const EDID_DT_CFGBYTE_V_SYNC_OFFSET_H =0x0B  // valid bit: (bit3~bit2)
+    const EDID_DT_CFGBYTE_V_SYNC_WIDTH_H = 0x0B  // valid bit: (bit1~bit0)
 
 
-        calMleft:0,
-        calMtop:0,
-        // mouseX:0,
-        // mouseY:0,
-        scrollW:0,
-        scrollL:0,
-        scrollH:0,
-        scrollT:0,
+    export default {
+        name: "Home",
+        created(){
+            this.loadVersion();
+            this.globalEvent.$on('sync',()=>{
+                this.preinstall('sync');
+            });
+            this.maxHeight=window.innerHeight-200;
+            window.addEventListener("resize",()=>{
+                this.maxHeight=window.innerHeight-200;
+            });
+            this.globalEvent.$on('language',()=>{
+                this.LANG=this.LANGUAGE[this.globalEvent.language];
+                this.curLang=this.globalEvent.language;
+            });
 
-        langList:[{value:'en',label:'English'},{value:'zh',label:'中文'}],
-        // activeName: "0", // 侧边栏选项
-        // activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
-        isEcho: false, // 是否回传
-        dialogVisible: false, // 弹出对话框
-        dialogTitle: "",
-        drawCenter: true,
-        showDialog:'',
-        showUploadDialog:'',
-        showEdidAdvancedDialog:'',
-        showEdidDialog:false,
-        devType:'',
-        updateFlip:true,
-        edidData:[],
-        edidParam:{},//高级edid设置使用
-        maxHeight:500,
-        EDID:[],
-        curScreen:{},
-        advanceScreen:{},
-        LANG:this.LANGUAGE[lang],
+            this.globalEvent.$on("load_name_complete",()=>{
 
-        userType: 0,
-        allowUser:1,
-        allowScreen:1,
-        allowSaveMode:1,
-        allowFactory:1,
-        // scale:1,
-    };
-  },
-  methods: {
-    // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
-      preinstall(setFn) {
+                this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+                    this.globalEvent.outPutInfo=ret.data;//configScreen
+                });
 
-      if (setFn === "5") {
-        this.isEcho = true;
-      }
-      if (setFn === "6") {
-        this.isEcho = false;
-      }
-      if( setFn==='3'){
-           this.showDialog='reset';
-      }
-      else if(setFn=='8'){
-          //输出关闭
-          // this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
-          //
-          // });
-          this.showDialog='shut';
-      }
-      else if(setFn=='9'){
-          this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
+                if(loading != ''){
+                    setTimeout(()=>{
+                        loading.close();
+                        loading='';
+                    },2000);
+                }
 
-          });
-      } else if(setFn=='10'){
-          //开屏
-          this.$http.post("extCtrlOprWr.cgi",{funcOpr:1},(ret)=>{
-              alert("已发送开屏命令");
-          });
-      }
-      else if(setFn=='11'){
-          //关屏
-          this.$http.post("extCtrlOprWr.cgi",{funcOpr:0},(ret)=>{
-              alert("已发送关屏命令")
-          });
-      }
-      else if(setFn=='sync'){
+                this.$refs.signal.getCommonInfo();//getCommonInfo ---> getSysInputnfo
+                // this.$refs.signal.getSysInputInfo();
+                this.$refs.vdr.loadData();
+            });
 
-          this.globalEvent.gMode=0;
-          loading=this.$loading({
-              lock: true,
-              text: this.LANG.HOME_SYNC,
-              spinner: 'el-icon-loading',
-              background: 'rgba(255, 255, 255, 0.5)'
-          });
-          this.globalEvent.loadName();
+            let user=sessionStorage.getItem('login_user');
+            if(user!==null){
+                user=JSON.parse(user);
+                this.globalEvent.userInfo=user;
+                this.isLogin=1;
+            }
 
-      }
-    },
-    // 设置:2-屏幕配置
-      setting(setFn) {
-
-        if (setFn === "2") {
-          this.dialogTitle = "ConfigureScreen";
-          this.dialogVisible = true;
-        }
-      }, // 屏幕配置回调函数
-      isDialogVisible(bool) {
-        this.dialogVisible = bool;
-      }, // 屏幕编辑面板超出范围取消居中回调函数
-      alignCenter(bool) {
-        this.drawCenter = bool;
-      },
-      addScreen(){
-          this.globalEvent.$emit("add_window_item",{act:'btn'});//vdr/index.vue
-      },
-      loadScreen(seq){
-          if(seq>=this.globalEvent.screenInfo.scrGroupArr.length){
-              alert("屏幕墙不存在");
-              return ;
-          }
-          this.globalEvent.$emit('load_screen',{seq});
-      },
-      loadVersion(){
-          this.$http.get("verInfoRd.cgi",{},(ret)=>{
-              this.devType=ret.data.devType;
-              this.globalEvent.versionInfo=ret.data;
-          });
-      },
-      opConfig(act){
-          if(act=='export'){
-              // let aEle = document.createElement("a");// 创建a标签
-              // let blob = new Blob(['hhhhhhhh']);
-              // aEle.download = "配置文件.bin";// 设置下载文件的文件名
-              // aEle.href = window.URL.createObjectURL(blob);
-              // aEle.click();// 设置点击事件 aEle.remove()
-
-             this.showDialog='export';
-
-          }
-          else{
-              this.showDialog='import';
-          }
-      },
-      upgrade(act){
-          let pass=prompt(this.LANG.TIP_INPUT_PASSWD,"");
-          if(pass===null || pass==''){
-              return ;
-          }
-          if(pass!='666888' &&  pass!=this.globalEvent.userInfo.password){
-              alert(this.LANG.TIP_WRONG_PASSWD);
-              return ;
-          }
-
-          if('arm'==act){
-              let param={
-                  chip:0,
-                  board:0,
-                  opr:1
-              }
-              this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
-                  alert(this.LANG.TIP_ARM_UPGRADE)
-              });
-          }
-          else if('fpga'==act){
-              this.showUploadDialog='fpga'
-          }
-      },
-
-        getPanelSize(){
-            this.panelW=this.$refs.draw_panel.clientWidth;
-            this.panelH=this.$refs.draw_panel.clientHeight;
+            // this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
+            //     this.globalEvent.outPutInfo=ret.data;//configScreen
+            // });
         },
-      calScrollPos(param){
-          this.getPanelSize();
+        watch:{
+            isLogin(v,ov){
+                if(v==1){
+                    this.userType=this.globalEvent.userInfo.type;
+                    if(this.userType==2){
+                        this.allowUser=0;
+                        this.allowScreen=0;
+                        this.allowSaveMode=0;
+                        this.allowFactory=0;
+                    }
+                    else if(this.userType==1){
+                        this.allowUser=0;
+                        this.allowFactory=0;
+                        this.allowSaveMode=0;
+                    }
+                    else if(this.userType==0){
+                        this.allowUser=1;
+                        this.allowScreen=1;
+                        this.allowSaveMode=1;
+                        this.allowFactory=1;
+                    }
 
-          this.ratioWidth=param.ratioW;
-          this.ratioHeight=param.ratioH;
+                    this.globalEvent.loadName();
+                }
+                else{
+                    sessionStorage.removeItem('login_user');
+                    window.location.reload(true);
+                }
+            },
+            curLang(v,ov){
+                this.globalEvent.language=v;
+                this.globalEvent.$emit("language");
+                this.$http.post("languageWr.cgi",{lang:v=='zh'?0:1},()=>{
+                    localStorage.setItem('language',v);
+                });
+            }
+        },
+        data() {
+            let lang=localStorage.getItem('language');
+            if(lang===null || lang===undefined){
+                lang=this.globalEvent.language;
+            }
+            else if(lang!=this.globalEvent.language){
+                this.globalEvent.language=lang;
+                this.globalEvent.$emit('language');
+            }
 
-          this.calMleft=param.deltax;
-          this.calMtop=param.deltay;
-
-          let wr=this.panelW/this.ratioWidth;
-          let hr=this.panelH/this.ratioHeight;
-
-          if(this.calMleft<0){
-              this.scrollL=(0-this.calMleft)*wr;
-              let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
-              if(leftL>=0){
-                  this.scrollW=this.panelW-this.scrollL;
-              }
-              else{
-                  this.scrollW=this.panelW-this.scrollL+leftL*wr;
-              }
-          }
-          else{
-              this.scrollL=0;
-              let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
-              if(leftL>=0){
-                  // this.scrollW=this.panelW;
-                  this.scrollW=0;//全长置0
-              }
-              else{
-                  this.scrollW=this.panelW+leftL*wr;
-              }
-          }
-
-          if(this.calMtop<0){
-              this.scrollT=(0-this.calMtop)*hr;
-              let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
-              if(bottomL>=0){
-                  this.scrollH=this.panelH-this.scrollT;
-              }
-              else{
-                  this.scrollH=this.panelH-this.scrollT+bottomL*hr;
-              }
-          }
-          else{
-              this.scrollT=0;
-              let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
-              if(bottomL>=0){
-                  // this.scrollH=this.panelH;
-                  this.scrollH=0;//全长置0
-              }
-              else{
-                  this.scrollH=this.panelH+bottomL*hr;
-              }
-          }
-
-      },
-      // calScrollPos(param){
-      //     this.getPanelSize();
-      //
-      //     this.ratioWidth=param.ratioW;
-      //     this.ratioHeight=param.ratioH;
-      //
-      //     this.calMleft=param.deltax;
-      //     this.calMtop=param.deltay;
-      //
-      //     let calWidth=param.ratioW+this.calMleft;
-      //     if(this.calMleft<0){
-      //         calWidth=param.ratioW-this.calMleft;
-      //     }
-      //
-      //     let calHeight=param.ratioH+this.calMtop;
-      //     if(this.calMtop<0){
-      //         calHeight=param.ratioH-this.calMtop;
-      //     }
-      //
-      //     let wr=this.panelW/calWidth;
-      //     let hr=this.panelH/calHeight;
-      //     //宽度
-      //     if(calWidth>this.panelW){
-      //         this.scrollW=this.panelW*wr;
-      //         if(this.calMleft>0)
-      //             this.scrollL=0;
-      //         else{
-      //             this.scrollL=(0-this.calMleft)*wr
-      //         }
-      //     }
-      //     else{
-      //         this.scrollW=0;
-      //         this.scrollL=0;
-      //
-      //     }
-      //
-      //     //高度
-      //     if(calHeight>this.panelH){
-      //         this.scrollH=this.panelH*hr;
-      //         if(this.calMtop>0){
-      //             this.scrollT=0;
-      //         }
-      //         else{
-      //             this.scrollT=(0-this.calMtop)*hr;
-      //         }
-      //
-      //     }
-      //     else{
-      //         this.scrollH=0;
-      //         this.scrollT=0;
-      //     }
-      //
-      //
-      // },
-      scroll(e,act){
-          e.stopPropagation();
-          e.preventDefault();
-          let originPos={
-              x:e.pageX,
-              y:e.pageY,
-              oldCalMtop:this.calMtop,
-              oldCalMleft:this.calMleft,
-              scrollL:this.scrollL,
-              scrollT:this.scrollT
-          };
-          let deltax=0;
-          let deltay=0;
-          let that=this;
-          let mm=function (e) {
-              deltax=e.pageX-originPos.x;
-              deltay=e.pageY-originPos.y;
-              let newT=0;
-              let newL=0;
-              let end=-1;
-              if(act=='w'){
-                  newL=originPos.scrollL+deltax;
-                  if(newL<0){
-                      newL=0;
-                      end=0;
-                  }
-                  else if(newL+that.scrollW>=that.panelW){
-                      newL=that.panelW-that.scrollW;
-                      end=1;
-                  }
-              }
-              else{
-                  newT=originPos.scrollT+deltay;
-                  if(newT<0){
-                      newT=0;
-                      end=0;
-                  }
-                  else if(newT+that.scrollH>=that.panelH){
-                      newT=that.panelH-that.scrollH;
-                      end=1;
-                  }
-
-              }
-
-              that.calMargin({
-                  act,
-                  newT,newL,end,
-                  oldScrollL:originPos.scrollL,
-                  oldScrollT:originPos.scrollT,
-                  oldMtop:originPos.oldCalMtop,
-                  oldMleft:originPos.oldCalMleft
-              });
-          }
-          let mu=function(){
-              document.removeEventListener("mousemove",mm);
-              document.removeEventListener('mouseup',mu);
-          };
-          document.addEventListener('mousemove',mm);
-          document.addEventListener('mouseup',mu);
-      },
-      calMargin(param){
-          // console.log(param);
-          if(param.act=='h'){
-              this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight;
-              this.scrollT=param.newT;
-              if(param.end==1){
-                  this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight-5;
-              }
-              else if(param.end==0){
-                  this.calMtop=5;
-              }
-
-          }
-          else{
-
-              this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth;
-              this.scrollL=param.newL;
-              if(param.end==1){
-                  this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth-5;
-              }
-              else if(param.end==0){
-                  this.calMleft=5;
-              }
-          }
-
-      },
-      // calMargin(param){
-      //     if(param.act=='h'){
-      //         this.scrollT=param.newT;
-      //         this.calMtop=0-this.scrollT/this.panelH*this.ratioHeight;
-      //
-      //         if(param.end==1){
-      //             this.calMtop=this.calMtop-3;
-      //         }
-      //
-      //     }
-      //     else{
-      //         this.scrollL=param.newL;
-      //         this.calMleft=0-this.scrollL/this.panelW*this.ratioWidth;
-      //         if(param.end==1){
-      //             this.calMleft=this.calMleft-3;
-      //         }
-      //     }
-      //
-      // },
-      calClock(){
-
-          for(let k in this.curScreen){
-              this.curScreen[k]=parseInt(this.curScreen[k]);
-          }
-          let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
-          let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
-          // this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal
-          this.curScreen.ClkFreq=this.curScreen.FrameRate*hTotal*vTotal/1000;
-
-      },
-      subEvent(param){
-          if('login'==param.act){
-              this.isLogin=1;
-          }
-          else if('close_kfs'==param.act){
-              this.showDialog='';
-          }
-          else if("sure_kfs"==param.act){
-              this.showDialog='';
-              if(this.globalEvent.gMode==0){
-                  this.$refs.signal.syscInputInfo({inCardArr:this.globalEvent.inputCardList});
-              }
-              else{
-                  this.$refs.signal.syscInputInfoSm();
-              }
-
-          }
-          else if('select_user_model'==param.act){
-              this.showDialog='';
-              this.$refs.signal.loadUserModel(param.v);
-          }
-          else if("update_user_model"==param.act){
-              this.$refs.signal.userSceneList[param.seq].label=param.name;
-              this.$refs.signal.userSceneList[param.seq].value=1;
-              this.globalEvent.commonInfo.presetStaArr[param.seq]=1;
-              // this.$set(this.globalEvent.commonInfo.presetStaArr,param.seq,1);
-              this.$refs.signal.syncLocalName();
-              this.showDialog='';
-          }
-          else if('show_edid_advanced'==param.act){
-              this.showEdidAdvancedDialog='edidAdvanced';
-              this.edidParam=param.info;
-          }
-          else if('sure_edid'==param.act){
-              // let info=this.info===undefined?{}:this.info;
-
-              if(Object.keys(this.advanceScreen).length>0){
-                  this.curScreen=this.advanceScreen;
-              }
-              else{
-                  this.curScreen={
-                      ClkFreq:0,
-                      FormatW:param.w,
-                      FormatH:param.h,
-                      FrameRate:param.f,
-                      HFrontPorch:48,
-                      HSyncTime:32,
-                      HBackPorch:80,
-                      VFrontPorch:12,
-                      VSyncTime:8,
-                      VBackPorch:12
-                  };
-                  this.calClock();
-              }
-
-              this.calEdid();
-              let num=this.globalEvent.sourceCardNumber();
-              let info={
-                  devId:parseInt(param.devId),
-                  srcCardId:num[0],
-                  srcId:num[1],
-                  EdidDataArr:this.EDID
-              };
-              if(this.showDialog=='edid'){
-                  info.srcCardId=0xff;
-              }
-
-              this.$http.post("srcEdidWr.cgi",info,()=>{
-                  // this.info={};
-                  this.advanceScreen={};
-                  this.showDialog='';
-              });
-          }
-          else if('sure_edid_advanced'==param.act){
-
-              this.advanceScreen=param.advanceScreen;
-              this.$refs.edid.setFrameRate(this.advanceScreen.FrameRate);
-              this.showEdidAdvancedDialog='';
-          }
-          else if('close_edid_advanced'==param.act){
-              this.showEdidAdvancedDialog='';
-              this.advanceScreen={};
-              this.$refs.edid.setFrameRate(60);
-          }
-          else if('hot_backup'==param.act){
-              this.showDialog='hotBackup'
-          }
-          else if('work_mode'==param.act){
-              this.showDialog='workMode';
-          }
-          else if('eq'==param.act){
-              this.showDialog='eq';
-          }
-          else if('vga'==param.act){
-              this.showDialog='vga';
-          }
-          else if('show_edid_single'==param.act){
-              this.showDialog='edidSingle';
-          }
-          else if('rdEdid'==param.act){
-              let num=this.globalEvent.sourceCardNumber();
-              this.$http.post("srcEdidRd.cgi",{srcCardId:num[0],srcId:num[1]},(ret)=>{
-                  this.edidData=ret.data.EdidDataArr;
-                  this.showDialog='';
+            return {
+                isLogin:0,
+                curLang:lang,
+                mleft:0,
+                mtop:0,
+                panelW:0,
+                panelH:0,
 
 
-                  let a=this.edidData;
-                  let arr=[];
-                  a.forEach((v,k)=>{
-                      arr.push('0x'+Number(v).toString(16).padStart(2,0).toUpperCase());
-                  })
-                  let s=arr.join(',');
-                  let aEle = document.createElement("a");// 创建a标签
-                  let blob = new Blob([s]);
-                  aEle.download = "EDID";// 设置下载文件的文件名
-                  aEle.href = window.URL.createObjectURL(blob);
-                  aEle.click();// 设置点击事件 aEle.remove()
-              });
-          }
-          else if('close_upload'==param.act){
-              this.showUploadDialog='';
-          }
-      },
-      calEdid(){
+                calMleft:0,
+                calMtop:0,
+                // mouseX:0,
+                // mouseY:0,
+                scrollW:0,
+                scrollL:0,
+                scrollH:0,
+                scrollT:0,
 
-          let EDID=[];
-          if(this.curScreen.FormatW>4096){
-              let offset = EDID_DETAILED_TIMING_OFFSET_8K;
-              EDID=[
-                  0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
-                  0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
-                  0x0F,0x50,0x54,0xA5,0x4B,0x00,0xD1,0xC0,0xA9,0x40,0x81,0x80,0x81,0x00,0x71,0x4F,
-                  0xE1,0x00,0x01,0x01,0x01,0x01,0x4D,0xD0,0x00,0xA0,0xF0,0x70,0x3E,0x80,0x30,0x20,
-                  0x35,0x00,0x5F,0x59,0x21,0x00,0x00,0x1A,0xA3,0x66,0x00,0xA0,0xF0,0x70,0x1F,0x80,
-                  0x30,0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1A,0x00,0x00,0x00,0xFF,0x00,0x49,
-                  0x54,0x36,0x38,0x30,0x35,0x45,0x56,0x42,0x33,0x38,0x34,0x30,0x00,0x00,0x00,0xFC,
-                  0x00,0x4B,0x59,0x53,0x2D,0x39,0x30,0x30,0x30,0x50,0x30,0x5F,0x30,0x30,0x01,0xEF,
+                langList:[{value:'en',label:'English'},{value:'zh',label:'中文'}],
+                // activeName: "0", // 侧边栏选项
+                // activeList: ["信号管理", "用户模式", "场景轮巡", "信号源分组"], // 侧边栏选项列表
+                isEcho: false, // 是否回传
+                dialogVisible: false, // 弹出对话框
+                dialogTitle: "",
+                drawCenter: true,
+                showDialog:'',
+                showUploadDialog:'',
+                showEdidAdvancedDialog:'',
+                showEdidDialog:false,
+                devType:'',
+                updateFlip:true,
+                edidData:[],
+                edidParam:{},//高级edid设置使用
+                maxHeight:500,
+                EDID:[],
+                curScreen:{},
+                advanceScreen:{},
+                LANG:this.LANGUAGE[lang],
 
-                  0x70,0x12,0x38,0x03,0x00,0x01,0x00,0x0C,0x00,0x00,0x00,0x00,0x00,0x1E,0x38,0x04,
-                  0x08,0x78,0x4E,0x77,0x09,0x00,0x0F,0x00,0x00,0x00,0x9F,0xF0,0x00,0x01,0xFF,0x01,
-                  0x00,0x01,0xFF,0x01,0x00,0x60,0x03,0x00,0x14,0x07,0xE8,0x00,0x88,0xFF,0x1D,0x5F,
-                  0x04,0x5F,0x81,0xAF,0x00,0x37,0x04,0x2C,0x00,0x03,0x00,0x04,0x00,0xF4,0x00,0x00,
-                  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-                  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-                  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-                  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x90,
-              ];
-              EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_L_8K] = ((this.curScreen.ClkFreq / 10) - 1)&0xff;//时钟要先除以10，否则会超出两个字节
-              EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_H_8K] = (((this.curScreen.ClkFreq / 10) - 1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_SYNC_WIDTH_L_8K] = this.curScreen.FormatW&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_SYNC_WIDTH_H_8K] = (this.curScreen.FormatW>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_SYNC_HIGH_L_8K] = this.curScreen.FormatH&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_SYNC_HIGH_H_8K] = (this.curScreen.FormatH>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_ACTIVE_PIXEL_L_8K] = (this.curScreen.FormatW-1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_ACTIVE_PIXEL_H_8K] = ((this.curScreen.FormatW-1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_ACTIVE_LINE_L_8K] = (this.curScreen.FormatH-1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_ACTIVE_LINE_H_8K] = ((this.curScreen.FormatH-1)>>8)&0xff;
+                userType: 0,
+                allowUser:1,
+                allowScreen:1,
+                allowSaveMode:1,
+                allowFactory:1,
+                // scale:1,
+            };
+        },
+        methods: {
+            // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
+            preinstall(setFn) {
 
-              EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_L_8K] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_H_8K] = ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch - 1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_L_8K] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_H_8K] = ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime - 1)>>8)&0xff + 0x80;
-              EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_L_8K] = (this.curScreen.HSyncTime - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_H_8K] = ((this.curScreen.HSyncTime - 1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_L_8K] = (this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.HBackPorch - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_H_8K] = ((this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.HBackPorch - 1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_L_8K] = (this.curScreen.VFrontPorch - this.curScreen.VSyncTime - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_H_8K] = ((this.curScreen.VFrontPorch - this.curScreen.VSyncTime - 1)>>8)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_L_8K] = (this.curScreen.VSyncTime - 1)&0xff;
-              EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_H_8K] = ((this.curScreen.VSyncTime - 1)>>8)&0xff;
+                if (setFn === "5") {
+                    this.isEcho = true;
+                }
+                if (setFn === "6") {
+                    this.isEcho = false;
+                }
+                if( setFn==='3'){
+                    this.showDialog='reset';
+                }
+                else if(setFn=='8'){
+                    //输出关闭
+                    // this.$http.post("outStaWr.cgi",{outSta:0},(ret)=>{
+                    //
+                    // });
+                    this.showDialog='shut';
+                }
+                else if(setFn=='9'){
+                    this.$http.post("outStaWr.cgi",{outSta:1},(ret)=>{
 
-              let sum = 0;
-              for(let i = 129; i < 60; i++)
-              {
-                  sum += EDID[i];
-              }
-              EDID[127 + 2 + 60] = (0x100 - (sum&0xff))&0xff;//checksum
+                    });
+                } else if(setFn=='10'){
+                    //开屏
+                    this.$http.post("extCtrlOprWr.cgi",{funcOpr:1},(ret)=>{
+                        alert("已发送开屏命令");
+                    });
+                }
+                else if(setFn=='11'){
+                    //关屏
+                    this.$http.post("extCtrlOprWr.cgi",{funcOpr:0},(ret)=>{
+                        alert("已发送关屏命令")
+                    });
+                }
+                else if(setFn=='sync'){
 
-          }
-          else{
-              {
-                  let offset = EDID_DETAILED_TIMING_OFFSET;
-                  EDID=[
-                      0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
-                      0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
-                      0x0F,0x50,0x54,0xA5,0x4B,0x00,0xD1,0xC0,0xA9,0x40,0x81,0x80,0x81,0x00,0x71,0x4F,
-                      0xE1,0x00,0x01,0x01,0x01,0x01,0x4D,0xD0,0x00,0xA0,0xF0,0x70,0x3E,0x80,0x30,0x20,
-                      0x35,0x00,0x5F,0x59,0x21,0x00,0x00,0x1A,0xA3,0x66,0x00,0xA0,0xF0,0x70,0x1F,0x80,
-                      0x30,0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1A,0x00,0x00,0x00,0xFF,0x00,0x49,
-                      0x54,0x36,0x38,0x30,0x35,0x45,0x56,0x42,0x33,0x38,0x34,0x30,0x00,0x00,0x00,0xFC,
-                      0x00,0x4B,0x59,0x53,0x2D,0x39,0x30,0x30,0x30,0x50,0x30,0x5F,0x30,0x30,0x01,0xEF,
+                    this.globalEvent.gMode=0;
+                    loading=this.$loading({
+                        lock: true,
+                        text: this.LANG.HOME_SYNC,
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(255, 255, 255, 0.5)'
+                    });
+                    this.globalEvent.loadName();
 
-                      0x02,0x03,0x37,0xF1,0x51,0x61,0x00,0x5F,0x5E,0x5D,0x10,0x1F,0x20,0x05,0x14,0x04,
-                      0x13,0x12,0x11,0x03,0x02,0x01,0x23,0x09,0x07,0x07,0x83,0x01,0x00,0x00,0x6D,0x03,
-                      0x0C,0x00,0x10,0x00,0x00,0x3C,0x20,0x00,0x60,0x01,0x02,0x03,0x67,0xD8,0x5D,0xC4,
-                      0x01,0x78,0x80,0x03,0x02,0x0F,0x03,0x56,0x5E,0x00,0xA0,0xA0,0xA0,0x29,0x50,0x30,
-                      0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1E,0x02,0x3A,0x80,0x18,0x71,0x38,0x2D,
-                      0x40,0x58,0x2C,0x45,0x00,0xE0,0x0E,0x11,0x00,0x00,0x1E,0x01,0x1D,0x00,0x72,0x51,
-                      0xD0,0x1E,0x20,0x6E,0x28,0x55,0x00,0x40,0xB4,0x10,0x00,0x00,0x1E,0x00,0x00,0x00,
-                      0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xA1,
-                  ];
-                  EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_L] = (this.curScreen.ClkFreq / 10)&0xff;//时钟要先除以10，否则会超出两个字节
-                  EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_H] = ((this.curScreen.ClkFreq / 10)>>8)&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_H_ACTIVE_L] = this.curScreen.FormatW&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_L] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch)&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_H_ACTIVE_H] = ((this.curScreen.FormatW>>8)&0x0f)<<4;
-                  EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_H] |= ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch)>>8)&0x0f;
+                }
+            },
+            // 设置:2-屏幕配置
+            setting(setFn) {
 
-                  EDID[offset + EDID_DT_CFGBYTE_V_ACTIVE_L] = this.curScreen.FormatH&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_L] = (this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.VBackPorch)&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_V_ACTIVE_H] = ((this.curScreen.FormatH>>8)&0x0f)<<4;
-                  EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_H] |= ((this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.VBackPorch)>>8)&0x0f;
-                  EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_L] = (this.curScreen.HFrontPorch)&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_L] = this.curScreen.HSyncTime&0xff;
-                  EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_L] = ((this.curScreen.VFrontPorch)&0x0f)<<4;
-                  EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_L] |= this.curScreen.VSyncTime&0x0f;
-                  EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_H] = (((this.curScreen.HFrontPorch)>>8)&0x3)<<6;
-                  EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_H] |= ((this.curScreen.HSyncTime>>8)&0x3)<<4;
-                  EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_H] |= (((this.curScreen.VFrontPorch)>>4)&0x3)<<2;
-                  EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_H] |= ((this.curScreen.VSyncTime>>4)&0x3)<<0;
+                if (setFn === "2") {
+                    this.dialogTitle = "ConfigureScreen";
+                    this.dialogVisible = true;
+                }
+            }, // 屏幕配置回调函数
+            isDialogVisible(bool) {
+                this.dialogVisible = bool;
+            }, // 屏幕编辑面板超出范围取消居中回调函数
+            alignCenter(bool) {
+                this.drawCenter = bool;
+            },
+            addScreen(){
+                this.globalEvent.$emit("add_window_item",{act:'btn'});//vdr/index.vue
+            },
+            loadScreen(seq){
+                if(seq>=this.globalEvent.screenInfo.scrGroupArr.length){
+                    alert("屏幕墙不存在");
+                    return ;
+                }
+                this.globalEvent.$emit('load_screen',{seq});
+            },
+            loadVersion(){
+                this.$http.get("verInfoRd.cgi",{},(ret)=>{
+                    this.devType=ret.data.devType;
+                    this.globalEvent.versionInfo=ret.data;
+                });
+            },
+            opConfig(act){
+                if(act=='export'){
+                    // let aEle = document.createElement("a");// 创建a标签
+                    // let blob = new Blob(['hhhhhhhh']);
+                    // aEle.download = "配置文件.bin";// 设置下载文件的文件名
+                    // aEle.href = window.URL.createObjectURL(blob);
+                    // aEle.click();// 设置点击事件 aEle.remove()
 
-                  let sum = 0;
-                  for(let i = 0; i < 127; i++)
-                  {
-                      sum += EDID[i];
-                  }
-                  EDID[127] = (0x100 - (sum&0xff))&0xff;//checksum
-              }
-          }
+                    this.showDialog='export';
 
-          this.EDID=EDID;
+                }
+                else{
+                    this.showDialog='import';
+                }
+            },
+            upgrade(act){
+                let pass=prompt(this.LANG.TIP_INPUT_PASSWD,"");
+                if(pass===null || pass==''){
+                    return ;
+                }
+                if(pass!='666888' &&  pass!=this.globalEvent.userInfo.password){
+                    alert(this.LANG.TIP_WRONG_PASSWD);
+                    return ;
+                }
 
-      },
-  },
-  components: {
-      card,
-      cardItem,
-      cardChild,
-      udialog,
-      vdr,
-      attr,
-      signal,
-      kfsDialog,
-      serialDialog,
-      multiSyncDialog,
-      userModelDialog,
-      saveUserModelDialog,
-      monIpDialog,
-      ipConfigDialog,
-      edidDialog,
-      edidAdvancedDialog,
-      screenCtrDialog,
-      screenBrightDialog,
-      tempDialog,
-      versionDialog,
-      deviceStatusDialog,
-      hotBackupDialog,
-      workModeDialog,
-      eqDialog,
-      vgaDialog,
-      resetDialog,
-      shutDialog,
-      userDialog,
-      showEdidDialog,
-      uploadDialog,
-      simulateDialog,
-      loginDialog,
-      importDialog,
-      exportDialog,
-      aboutDialog
-  },
-};
+                if('arm'==act){
+                    let param={
+                        chip:0,
+                        board:0,
+                        opr:1
+                    }
+                    this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
+                        alert(this.LANG.TIP_ARM_UPGRADE)
+                    });
+                }
+                else if('fpga'==act){
+                    this.showUploadDialog='fpga'
+                }
+            },
+
+            getPanelSize(){
+                this.panelW=this.$refs.draw_panel.clientWidth;
+                this.panelH=this.$refs.draw_panel.clientHeight;
+            },
+            calScrollPos(param){
+                this.getPanelSize();
+
+                this.ratioWidth=param.ratioW;
+                this.ratioHeight=param.ratioH;
+
+                this.calMleft=param.deltax;
+                this.calMtop=param.deltay;
+
+                let wr=this.panelW/this.ratioWidth;
+                let hr=this.panelH/this.ratioHeight;
+
+                if(this.calMleft<0){
+                    this.scrollL=(0-this.calMleft)*wr;
+                    let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
+                    if(leftL>=0){
+                        this.scrollW=this.panelW-this.scrollL;
+                    }
+                    else{
+                        this.scrollW=this.panelW-this.scrollL+leftL*wr;
+                    }
+                }
+                else{
+                    this.scrollL=0;
+                    let leftL=this.panelW-(this.ratioWidth+this.calMleft);//右边是否有空白
+                    if(leftL>=0){
+                        // this.scrollW=this.panelW;
+                        this.scrollW=0;//全长置0
+                    }
+                    else{
+                        this.scrollW=this.panelW+leftL*wr;
+                    }
+                }
+
+                if(this.calMtop<0){
+                    this.scrollT=(0-this.calMtop)*hr;
+                    let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
+                    if(bottomL>=0){
+                        this.scrollH=this.panelH-this.scrollT;
+                    }
+                    else{
+                        this.scrollH=this.panelH-this.scrollT+bottomL*hr;
+                    }
+                }
+                else{
+                    this.scrollT=0;
+                    let bottomL=this.panelH-(this.ratioHeight+this.calMtop);//下面是否有空白'
+                    if(bottomL>=0){
+                        // this.scrollH=this.panelH;
+                        this.scrollH=0;//全长置0
+                    }
+                    else{
+                        this.scrollH=this.panelH+bottomL*hr;
+                    }
+                }
+
+            },
+            // calScrollPos(param){
+            //     this.getPanelSize();
+            //
+            //     this.ratioWidth=param.ratioW;
+            //     this.ratioHeight=param.ratioH;
+            //
+            //     this.calMleft=param.deltax;
+            //     this.calMtop=param.deltay;
+            //
+            //     let calWidth=param.ratioW+this.calMleft;
+            //     if(this.calMleft<0){
+            //         calWidth=param.ratioW-this.calMleft;
+            //     }
+            //
+            //     let calHeight=param.ratioH+this.calMtop;
+            //     if(this.calMtop<0){
+            //         calHeight=param.ratioH-this.calMtop;
+            //     }
+            //
+            //     let wr=this.panelW/calWidth;
+            //     let hr=this.panelH/calHeight;
+            //     //宽度
+            //     if(calWidth>this.panelW){
+            //         this.scrollW=this.panelW*wr;
+            //         if(this.calMleft>0)
+            //             this.scrollL=0;
+            //         else{
+            //             this.scrollL=(0-this.calMleft)*wr
+            //         }
+            //     }
+            //     else{
+            //         this.scrollW=0;
+            //         this.scrollL=0;
+            //
+            //     }
+            //
+            //     //高度
+            //     if(calHeight>this.panelH){
+            //         this.scrollH=this.panelH*hr;
+            //         if(this.calMtop>0){
+            //             this.scrollT=0;
+            //         }
+            //         else{
+            //             this.scrollT=(0-this.calMtop)*hr;
+            //         }
+            //
+            //     }
+            //     else{
+            //         this.scrollH=0;
+            //         this.scrollT=0;
+            //     }
+            //
+            //
+            // },
+            scroll(e,act){
+                e.stopPropagation();
+                e.preventDefault();
+                let originPos={
+                    x:e.pageX,
+                    y:e.pageY,
+                    oldCalMtop:this.calMtop,
+                    oldCalMleft:this.calMleft,
+                    scrollL:this.scrollL,
+                    scrollT:this.scrollT
+                };
+                let deltax=0;
+                let deltay=0;
+                let that=this;
+                let mm=function (e) {
+                    deltax=e.pageX-originPos.x;
+                    deltay=e.pageY-originPos.y;
+                    let newT=0;
+                    let newL=0;
+                    let end=-1;
+                    if(act=='w'){
+                        newL=originPos.scrollL+deltax;
+                        if(newL<0){
+                            newL=0;
+                            end=0;
+                        }
+                        else if(newL+that.scrollW>=that.panelW){
+                            newL=that.panelW-that.scrollW;
+                            end=1;
+                        }
+                    }
+                    else{
+                        newT=originPos.scrollT+deltay;
+                        if(newT<0){
+                            newT=0;
+                            end=0;
+                        }
+                        else if(newT+that.scrollH>=that.panelH){
+                            newT=that.panelH-that.scrollH;
+                            end=1;
+                        }
+
+                    }
+
+                    that.calMargin({
+                        act,
+                        newT,newL,end,
+                        oldScrollL:originPos.scrollL,
+                        oldScrollT:originPos.scrollT,
+                        oldMtop:originPos.oldCalMtop,
+                        oldMleft:originPos.oldCalMleft
+                    });
+                }
+                let mu=function(){
+                    document.removeEventListener("mousemove",mm);
+                    document.removeEventListener('mouseup',mu);
+                };
+                document.addEventListener('mousemove',mm);
+                document.addEventListener('mouseup',mu);
+            },
+            calMargin(param){
+                // console.log(param);
+                if(param.act=='h'){
+                    this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight;
+                    this.scrollT=param.newT;
+                    if(param.end==1){
+                        this.calMtop=param.oldMtop-(param.newT-param.oldScrollT)/this.panelH*this.ratioHeight-5;
+                    }
+                    else if(param.end==0){
+                        this.calMtop=5;
+                    }
+
+                }
+                else{
+
+                    this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth;
+                    this.scrollL=param.newL;
+                    if(param.end==1){
+                        this.calMleft=param.oldMleft-(param.newL-param.oldScrollL)/this.panelW*this.ratioWidth-5;
+                    }
+                    else if(param.end==0){
+                        this.calMleft=5;
+                    }
+                }
+
+            },
+            // calMargin(param){
+            //     if(param.act=='h'){
+            //         this.scrollT=param.newT;
+            //         this.calMtop=0-this.scrollT/this.panelH*this.ratioHeight;
+            //
+            //         if(param.end==1){
+            //             this.calMtop=this.calMtop-3;
+            //         }
+            //
+            //     }
+            //     else{
+            //         this.scrollL=param.newL;
+            //         this.calMleft=0-this.scrollL/this.panelW*this.ratioWidth;
+            //         if(param.end==1){
+            //             this.calMleft=this.calMleft-3;
+            //         }
+            //     }
+            //
+            // },
+            calClock(){
+
+                for(let k in this.curScreen){
+                    this.curScreen[k]=parseInt(this.curScreen[k]);
+                }
+                let hTotal=this.curScreen.FormatW+this.curScreen.HFrontPorch+this.curScreen.HSyncTime+this.curScreen.HBackPorch;
+                let vTotal=this.curScreen.FormatH+this.curScreen.VFrontPorch+this.curScreen.VSyncTime+this.curScreen.VBackPorch;
+                // this.curScreen.FrameRate=this.curScreen.ClkFreq*1000/hTotal/vTotal
+                this.curScreen.ClkFreq=this.curScreen.FrameRate*hTotal*vTotal/1000;
+
+            },
+            subEvent(param){
+                if('login'==param.act){
+                    this.isLogin=1;
+                }
+                else if('close_kfs'==param.act){
+                    this.showDialog='';
+                }
+                else if("sure_kfs"==param.act){
+                    this.showDialog='';
+                    if(this.globalEvent.gMode==0){
+                        this.$refs.signal.syscInputInfo({inCardArr:this.globalEvent.inputCardList});
+                    }
+                    else{
+                        this.$refs.signal.syscInputInfoSm();
+                    }
+
+                }
+                else if('select_user_model'==param.act){
+                    this.showDialog='';
+                    this.$refs.signal.loadUserModel(param.v);
+                }
+                else if("update_user_model"==param.act){
+                    this.$refs.signal.userSceneList[param.seq].label=param.name;
+                    this.$refs.signal.userSceneList[param.seq].value=1;
+                    this.globalEvent.commonInfo.presetStaArr[param.seq]=1;
+                    // this.$set(this.globalEvent.commonInfo.presetStaArr,param.seq,1);
+                    this.$refs.signal.syncLocalName();
+                    this.showDialog='';
+                }
+                else if('show_edid_advanced'==param.act){
+                    this.showEdidAdvancedDialog='edidAdvanced';
+                    this.edidParam=param.info;
+                }
+                else if('sure_edid'==param.act){
+                    // let info=this.info===undefined?{}:this.info;
+
+                    if(Object.keys(this.advanceScreen).length>0){
+                        this.curScreen=this.advanceScreen;
+                    }
+                    else{
+                        this.curScreen={
+                            ClkFreq:0,
+                            FormatW:param.w,
+                            FormatH:param.h,
+                            FrameRate:param.f,
+                            HFrontPorch:48,
+                            HSyncTime:32,
+                            HBackPorch:80,
+                            VFrontPorch:12,
+                            VSyncTime:8,
+                            VBackPorch:12
+                        };
+                        this.calClock();
+                    }
+
+                    this.calEdid();
+                    let num=this.globalEvent.sourceCardNumber();
+                    let info={
+                        devId:parseInt(param.devId),
+                        srcCardId:num[0],
+                        srcId:num[1],
+                        EdidDataArr:this.EDID
+                    };
+                    if(this.showDialog=='edid'){
+                        info.srcCardId=0xff;
+                    }
+
+                    this.$http.post("srcEdidWr.cgi",info,()=>{
+                        // this.info={};
+                        this.advanceScreen={};
+                        this.showDialog='';
+                    });
+                }
+                else if('sure_edid_advanced'==param.act){
+
+                    this.advanceScreen=param.advanceScreen;
+                    this.$refs.edid.setFrameRate(this.advanceScreen.FrameRate);
+                    this.showEdidAdvancedDialog='';
+                }
+                else if('close_edid_advanced'==param.act){
+                    this.showEdidAdvancedDialog='';
+                    this.advanceScreen={};
+                    this.$refs.edid.setFrameRate(60);
+                }
+                else if('hot_backup'==param.act){
+                    this.showDialog='hotBackup'
+                }
+                else if('work_mode'==param.act){
+                    this.showDialog='workMode';
+                }
+                else if('eq'==param.act){
+                    this.showDialog='eq';
+                }
+                else if('vga'==param.act){
+                    this.showDialog='vga';
+                }
+                else if('show_edid_single'==param.act){
+                    this.showDialog='edidSingle';
+                }
+                else if('rdEdid'==param.act){
+                    let num=this.globalEvent.sourceCardNumber();
+                    this.$http.post("srcEdidRd.cgi",{srcCardId:num[0],srcId:num[1]},(ret)=>{
+                        this.edidData=ret.data.EdidDataArr;
+                        this.showDialog='';
+
+
+                        let a=this.edidData;
+                        let arr=[];
+                        a.forEach((v,k)=>{
+                            arr.push('0x'+Number(v).toString(16).padStart(2,0).toUpperCase());
+                        })
+                        let s=arr.join(',');
+                        let aEle = document.createElement("a");// 创建a标签
+                        let blob = new Blob([s]);
+                        aEle.download = "EDID";// 设置下载文件的文件名
+                        aEle.href = window.URL.createObjectURL(blob);
+                        aEle.click();// 设置点击事件 aEle.remove()
+                    });
+                }
+                else if('close_upload'==param.act){
+                    this.showUploadDialog='';
+                }
+            },
+            calEdid(){
+
+                let EDID=[];
+                if(this.curScreen.FormatW>4096){
+                    let offset = EDID_DETAILED_TIMING_OFFSET_8K;
+                    EDID=[
+                        0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
+                        0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
+                        0x0F,0x50,0x54,0xA5,0x4B,0x00,0xD1,0xC0,0xA9,0x40,0x81,0x80,0x81,0x00,0x71,0x4F,
+                        0xE1,0x00,0x01,0x01,0x01,0x01,0x4D,0xD0,0x00,0xA0,0xF0,0x70,0x3E,0x80,0x30,0x20,
+                        0x35,0x00,0x5F,0x59,0x21,0x00,0x00,0x1A,0xA3,0x66,0x00,0xA0,0xF0,0x70,0x1F,0x80,
+                        0x30,0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1A,0x00,0x00,0x00,0xFF,0x00,0x49,
+                        0x54,0x36,0x38,0x30,0x35,0x45,0x56,0x42,0x33,0x38,0x34,0x30,0x00,0x00,0x00,0xFC,
+                        0x00,0x4B,0x59,0x53,0x2D,0x39,0x30,0x30,0x30,0x50,0x30,0x5F,0x30,0x30,0x01,0xEF,
+
+                        0x70,0x12,0x38,0x03,0x00,0x01,0x00,0x0C,0x00,0x00,0x00,0x00,0x00,0x1E,0x38,0x04,
+                        0x08,0x78,0x4E,0x77,0x09,0x00,0x0F,0x00,0x00,0x00,0x9F,0xF0,0x00,0x01,0xFF,0x01,
+                        0x00,0x01,0xFF,0x01,0x00,0x60,0x03,0x00,0x14,0x07,0xE8,0x00,0x88,0xFF,0x1D,0x5F,
+                        0x04,0x5F,0x81,0xAF,0x00,0x37,0x04,0x2C,0x00,0x03,0x00,0x04,0x00,0xF4,0x00,0x00,
+                        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+                        0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x90,
+                    ];
+                    EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_L_8K] = ((this.curScreen.ClkFreq / 10) - 1)&0xff;//时钟要先除以10，否则会超出两个字节
+                    EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_H_8K] = (((this.curScreen.ClkFreq / 10) - 1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_SYNC_WIDTH_L_8K] = this.curScreen.FormatW&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_SYNC_WIDTH_H_8K] = (this.curScreen.FormatW>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_SYNC_HIGH_L_8K] = this.curScreen.FormatH&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_SYNC_HIGH_H_8K] = (this.curScreen.FormatH>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_ACTIVE_PIXEL_L_8K] = (this.curScreen.FormatW-1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_ACTIVE_PIXEL_H_8K] = ((this.curScreen.FormatW-1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_ACTIVE_LINE_L_8K] = (this.curScreen.FormatH-1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_ACTIVE_LINE_H_8K] = ((this.curScreen.FormatH-1)>>8)&0xff;
+
+                    EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_L_8K] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_H_8K] = ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch - 1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_L_8K] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_H_8K] = ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime - 1)>>8)&0xff + 0x80;
+                    EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_L_8K] = (this.curScreen.HSyncTime - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_H_8K] = ((this.curScreen.HSyncTime - 1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_L_8K] = (this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.HBackPorch - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_H_8K] = ((this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.HBackPorch - 1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_L_8K] = (this.curScreen.VFrontPorch - this.curScreen.VSyncTime - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_H_8K] = ((this.curScreen.VFrontPorch - this.curScreen.VSyncTime - 1)>>8)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_L_8K] = (this.curScreen.VSyncTime - 1)&0xff;
+                    EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_H_8K] = ((this.curScreen.VSyncTime - 1)>>8)&0xff;
+
+                    let sum = 0;
+                    for(let i = 129; i < 60; i++)
+                    {
+                        sum += EDID[i];
+                    }
+                    EDID[127 + 2 + 60] = (0x100 - (sum&0xff))&0xff;//checksum
+
+                }
+                else{
+                    {
+                        let offset = EDID_DETAILED_TIMING_OFFSET;
+                        EDID=[
+                            0x00,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x00,0x2F,0x33,0x05,0x68,0x78,0x56,0x34,0x12,
+                            0x2E,0x19,0x01,0x03,0x80,0x3E,0x22,0x78,0xEA,0x08,0xA5,0xA2,0x57,0x4F,0xA2,0x28,
+                            0x0F,0x50,0x54,0xA5,0x4B,0x00,0xD1,0xC0,0xA9,0x40,0x81,0x80,0x81,0x00,0x71,0x4F,
+                            0xE1,0x00,0x01,0x01,0x01,0x01,0x4D,0xD0,0x00,0xA0,0xF0,0x70,0x3E,0x80,0x30,0x20,
+                            0x35,0x00,0x5F,0x59,0x21,0x00,0x00,0x1A,0xA3,0x66,0x00,0xA0,0xF0,0x70,0x1F,0x80,
+                            0x30,0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1A,0x00,0x00,0x00,0xFF,0x00,0x49,
+                            0x54,0x36,0x38,0x30,0x35,0x45,0x56,0x42,0x33,0x38,0x34,0x30,0x00,0x00,0x00,0xFC,
+                            0x00,0x4B,0x59,0x53,0x2D,0x39,0x30,0x30,0x30,0x50,0x30,0x5F,0x30,0x30,0x01,0xEF,
+
+                            0x02,0x03,0x37,0xF1,0x51,0x61,0x00,0x5F,0x5E,0x5D,0x10,0x1F,0x20,0x05,0x14,0x04,
+                            0x13,0x12,0x11,0x03,0x02,0x01,0x23,0x09,0x07,0x07,0x83,0x01,0x00,0x00,0x6D,0x03,
+                            0x0C,0x00,0x10,0x00,0x00,0x3C,0x20,0x00,0x60,0x01,0x02,0x03,0x67,0xD8,0x5D,0xC4,
+                            0x01,0x78,0x80,0x03,0x02,0x0F,0x03,0x56,0x5E,0x00,0xA0,0xA0,0xA0,0x29,0x50,0x30,
+                            0x20,0x35,0x00,0x55,0x50,0x21,0x00,0x00,0x1E,0x02,0x3A,0x80,0x18,0x71,0x38,0x2D,
+                            0x40,0x58,0x2C,0x45,0x00,0xE0,0x0E,0x11,0x00,0x00,0x1E,0x01,0x1D,0x00,0x72,0x51,
+                            0xD0,0x1E,0x20,0x6E,0x28,0x55,0x00,0x40,0xB4,0x10,0x00,0x00,0x1E,0x00,0x00,0x00,
+                            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xA1,
+                        ];
+                        EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_L] = (this.curScreen.ClkFreq / 10)&0xff;//时钟要先除以10，否则会超出两个字节
+                        EDID[offset + EDID_DT_CFGBYTE_PIXELCLOCK_H] = ((this.curScreen.ClkFreq / 10)>>8)&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_H_ACTIVE_L] = this.curScreen.FormatW&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_L] = (this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch)&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_H_ACTIVE_H] = ((this.curScreen.FormatW>>8)&0x0f)<<4;
+                        EDID[offset + EDID_DT_CFGBYTE_H_BLANKING_H] |= ((this.curScreen.HFrontPorch + this.curScreen.HSyncTime + this.curScreen.HBackPorch)>>8)&0x0f;
+
+                        EDID[offset + EDID_DT_CFGBYTE_V_ACTIVE_L] = this.curScreen.FormatH&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_L] = (this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.VBackPorch)&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_V_ACTIVE_H] = ((this.curScreen.FormatH>>8)&0x0f)<<4;
+                        EDID[offset + EDID_DT_CFGBYTE_V_BLANKING_H] |= ((this.curScreen.VFrontPorch + this.curScreen.VSyncTime + this.curScreen.VBackPorch)>>8)&0x0f;
+                        EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_L] = (this.curScreen.HFrontPorch)&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_L] = this.curScreen.HSyncTime&0xff;
+                        EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_L] = ((this.curScreen.VFrontPorch)&0x0f)<<4;
+                        EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_L] |= this.curScreen.VSyncTime&0x0f;
+                        EDID[offset + EDID_DT_CFGBYTE_H_SYNC_OFFSET_H] = (((this.curScreen.HFrontPorch)>>8)&0x3)<<6;
+                        EDID[offset + EDID_DT_CFGBYTE_H_SYNC_WIDTH_H] |= ((this.curScreen.HSyncTime>>8)&0x3)<<4;
+                        EDID[offset + EDID_DT_CFGBYTE_V_SYNC_OFFSET_H] |= (((this.curScreen.VFrontPorch)>>4)&0x3)<<2;
+                        EDID[offset + EDID_DT_CFGBYTE_V_SYNC_WIDTH_H] |= ((this.curScreen.VSyncTime>>4)&0x3)<<0;
+
+                        let sum = 0;
+                        for(let i = 0; i < 127; i++)
+                        {
+                            sum += EDID[i];
+                        }
+                        EDID[127] = (0x100 - (sum&0xff))&0xff;//checksum
+                    }
+                }
+
+                this.EDID=EDID;
+
+            },
+        },
+        components: {
+            card,
+            cardItem,
+            cardChild,
+            udialog,
+            vdr,
+            attr,
+            signal,
+            kfsDialog,
+            serialDialog,
+            multiSyncDialog,
+            userModelDialog,
+            saveUserModelDialog,
+            monIpDialog,
+            ipConfigDialog,
+            edidDialog,
+            edidAdvancedDialog,
+            screenCtrDialog,
+            screenBrightDialog,
+            tempDialog,
+            versionDialog,
+            deviceStatusDialog,
+            hotBackupDialog,
+            workModeDialog,
+            eqDialog,
+            vgaDialog,
+            resetDialog,
+            shutDialog,
+            userDialog,
+            showEdidDialog,
+            uploadDialog,
+            simulateDialog,
+            loginDialog,
+            importDialog,
+            exportDialog,
+            aboutDialog
+        },
+    };
 </script>
 
 <style lang="scss">
-.home {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  header {
-    flex: 0 0 100px;
-      flex-grow: 1;
-    /deep/ .el-tabs__content {
-      padding: 6px;
-    }
-    /deep/ .el-tabs__item {
-      height: 30px;
-      line-height: 30px;
-    }
-    /deep/ .el-tabs--border-card {
-      box-shadow: none;
-        border:none;
-        border-bottom: 5px solid #f3f3fb;
-    }
-    .card-s {
-      display: flex;
-      .card-item {
-        height: 52px;
+    .home {
+        height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-      }
-        .card-item-disabled{
-            opacity:0.6;
-            cursor:not-allowed;
-        }
-    }
-  }
-    .card-external{
-        .card-child{
-            width:70px;
-        }
-    }
-  center {
-    flex: 1;
-    display: flex;
-    .content-title {
-      height: 30px;
-      line-height: 30px;
-      border-bottom: 1px solid #dcdfe6;
-      color:#3078ff;;
-      font-size: 14px;
-        position:relative;
-        .title-bg{position:absolute;top:14px;left:10px;right:10px;height:1px;background-color:#3078ff}
-        .title-txt{background-color:#fff;padding:0 10px;position:relative;display:inline-block;}
-        .title-txt:after{content:url("../assets/images/dot.png");position:absolute;left:-1px;}
-        .title-txt:before{content:url("../assets/images/dot.png");position:absolute;right:-1px;}
-    }
-      .win_op_area{
-          border:5px solid #f3f3fb;border-top:none;
-      }
-    .content {
-      flex: 1;
-      .content-draw {
-        height: calc(100% - 30px);
-        display: flex;
-        flex-direction: column;
-        .draw-panel {
-            height:100%;
-          min-height: 418px;
-          position: relative;
-          overflow: hidden;
-            .scroll_bar_h{
-                position:absolute;
-                cursor:pointer;
-                z-index:1;
-                width: 8px;
-                right:2px;
-                border-radius: 8px;
-                background-color: rgba(199,199,199,0.4);
+        header {
+            flex: 0 0 100px;
+            flex-grow: 1;
+            /deep/ .el-tabs__content {
+                padding: 6px;
             }
-            .scroll_bar_w{
-                position: absolute;
-                cursor:pointer;
-                z-index:1;
-                bottom:2px;
-                height: 8px;
-                border-radius: 8px;
-                background-color:  rgba(199,199,199,0.4);
+            /deep/ .el-tabs__item {
+                height: 30px;
+                line-height: 30px;
             }
-            /*.draw-center {
-               top: 50%;
-               left: 50%;
-          }*/
-          .draw-content {
+            /deep/ .el-tabs--border-card {
+                box-shadow: none;
+                border:none;
+                border-bottom: 5px solid #f3f3fb;
+            }
+            .card-s {
+                display: flex;
+                .card-item {
+                    height: 52px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+                .card-item-disabled{
+                    opacity:0.6;
+                    cursor:not-allowed;
+                }
+            }
+        }
+        .card-external{
+            .card-child{
+                width:70px;
+            }
+        }
+        center {
+            flex: 1;
+            display: flex;
+            .content-title {
+                height: 30px;
+                line-height: 30px;
+                border-bottom: 1px solid #dcdfe6;
+                color:#3078ff;;
+                font-size: 14px;
+                position:relative;
+                .title-bg{position:absolute;top:14px;left:10px;right:10px;height:1px;background-color:#3078ff}
+                .title-txt{background-color:#fff;padding:0 10px;position:relative;display:inline-block;}
+                .title-txt:after{content:url("../assets/images/dot.png");position:absolute;left:-1px;}
+                .title-txt:before{content:url("../assets/images/dot.png");position:absolute;right:-1px;}
+            }
+            .win_op_area{
+                border:5px solid #f3f3fb;border-top:none;
+            }
+            .content {
+                flex: 1;
+                .content-draw {
+                    height: calc(100% - 30px);
+                    display: flex;
+                    flex-direction: column;
+                    .draw-panel {
+                        height:100%;
+                        min-height: 418px;
+                        position: relative;
+                        overflow: hidden;
+                        .scroll_bar_h{
+                            position:absolute;
+                            cursor:pointer;
+                            z-index:1;
+                            width: 8px;
+                            right:2px;
+                            border-radius: 8px;
+                            background-color: rgba(199,199,199,0.4);
+                        }
+                        .scroll_bar_w{
+                            position: absolute;
+                            cursor:pointer;
+                            z-index:1;
+                            bottom:2px;
+                            height: 8px;
+                            border-radius: 8px;
+                            background-color:  rgba(199,199,199,0.4);
+                        }
+                        /*.draw-center {
+                           top: 50%;
+                           left: 50%;
+                      }*/
+                        .draw-content {
+                            background-color: #f5f7fa;
+                            border: 1px solid #dcdfe6;
+                            position: absolute;
+                        }
+                    }
+                    /*.display-list {*/
+                    /*flex: 0 0 140px;*/
+                    /*border-top: 1px solid #dcdfe6;*/
+                    /*}*/
+                }
+            }
+            .el-collapse-item__header {
+                height: 35px;
+                line-height: 35px;
+            }
+            .content-compile {
+                flex: 0 0 210px;
+                /**border-left: 1px solid #dcdfe6;    border-top: 1px solid #dcdfe6;
+                  margin-top: -1px;**/
+            }
+        }
+        footer {
+            flex: 0 0 30px;
+            border-top: 1px solid #dcdfe6;
+            padding-left: 6px;
             background-color: #f5f7fa;
-              border: 1px solid #dcdfe6;
-            position: absolute;
-          }
+            .status-bar {
+                width: 204px;
+                height: 100%;
+                border-right: 1px solid #dcdfe6;
+                color: #909399;
+                font-size: 14px;
+                display: flex;
+                justify-content: left;
+                // align-items: center;
+                div {
+                    line-height: 28px;
+                }
+                div:nth-child(2) {
+                    width: 20px;
+                    line-height: 30px;
+                    padding: 0px 2px;
+                    display: flex;
+                    align-items: center;
+                    .header-icon {
+                        width: 15px;
+                        height: auto;
+                    }
+                }
+                div:nth-child(4) {
+                    width: 60px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
         }
-        /*.display-list {*/
-          /*flex: 0 0 140px;*/
-          /*border-top: 1px solid #dcdfe6;*/
-        /*}*/
-      }
-    }
-    .el-collapse-item__header {
-      height: 35px;
-      line-height: 35px;
-    }
-    .content-compile {
-      flex: 0 0 210px;
-      /**border-left: 1px solid #dcdfe6;    border-top: 1px solid #dcdfe6;
-        margin-top: -1px;**/
-    }
-  }
-  footer {
-    flex: 0 0 30px;
-    border-top: 1px solid #dcdfe6;
-    padding-left: 6px;
-    background-color: #f5f7fa;
-    .status-bar {
-      width: 204px;
-      height: 100%;
-      border-right: 1px solid #dcdfe6;
-      color: #909399;
-      font-size: 14px;
-      display: flex;
-      justify-content: left;
-      // align-items: center;
-      div {
-        line-height: 28px;
-      }
-      div:nth-child(2) {
-        width: 20px;
-        line-height: 30px;
-        padding: 0px 2px;
-        display: flex;
-        align-items: center;
-        .header-icon {
-          width: 15px;
-          height: auto;
-        }
-      }
-      div:nth-child(4) {
-        width: 60px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-  }
 
-}
+    }
 </style>

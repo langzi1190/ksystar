@@ -246,7 +246,10 @@
                 }
             });
 
-            this.loadData();
+            // this.globalEvent.$on("load_name_complete",()=>{
+            //     this.loadData();
+            // });
+
 
             window.addEventListener('resize',(e)=>{
                 // let curW=document.body.clientWidth;

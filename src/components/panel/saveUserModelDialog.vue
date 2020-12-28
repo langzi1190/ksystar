@@ -39,7 +39,7 @@
 
                     this.globalEvent.editName(this.userModelName,this.globalEvent.keys['sceneUserName']);
                     this.globalEvent.userModel=this.userModel;
-
+                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
                     window.loading=this.$loading({
                         lock: true,
                         text: this.LANG.EXPORT_IN_PROGRESS,
@@ -62,7 +62,6 @@
                 this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
                     this.globalEvent.userModel=this.userModel+1;
                     window.loading.close();
-                    this.$emit('sub_event',{act:'update_user_model',seq:this.userModel-1,name:this.userModelName});
                     alert(this.LANG.TIP_ALREADY_SAVE);
                 });
             });

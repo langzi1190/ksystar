@@ -71,7 +71,6 @@
   import userModel from "@/components/panel/userModel";
 export default {
     created(){
-        this.getCommonInfo();
         this.globalEvent.$on("simulate",()=>{
             this.syscInputInfoSm();
         })
@@ -135,6 +134,9 @@ export default {
                 }
             }
         });
+        // this.globalEvent.$on("load_name_complete",()=>{
+        //     this.getCommonInfo();
+        // })
 
     },
     methods:{
@@ -178,6 +180,12 @@ export default {
                         label:this.globalEvent.userSceneName(i),//'用户模式 '+(parseInt(i)+1),
                         value:ret.data.presetStaArr[i]
                     });
+                }
+                //加载用户模式窗口名
+                let userModelWindowNameKey='userModel'+ret.data.curPreset;
+                let nameInfo=this.globalEvent.nameInfo;
+                for(let key in nameInfo[userModelWindowNameKey]){
+                    localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey]));
                 }
                 this.syncLocalName();
 
@@ -398,6 +406,7 @@ export default {
                 return ;
             }
             this.userSceneList[this.selectedSceneIndex].label=s;
+            this.globalEvent.editName(s,this.globalEvent.keys['sceneUserName']);
             this.syncLocalName();
 
         },
@@ -414,15 +423,7 @@ export default {
         },
         loadUserModel(v){
             this.$http.post("loadPreset.cgi",{presetId:parseInt(v)+1},(ret)=>{
-                // syncScrInfoRd.cgi
 
-                // this.getCommonInfo();
-                // this.getSysInputInfo();
-                // this.$nextTick(()=>{
-                //     this.$parent.$refs.vdr.loadData();
-                // })
-
-                // this.$emit('sub_event',{act:'sync'});//--home.vue
                 this.globalEvent.$emit('sync');
                 console.log("signal/index.vue 载入用户模式，重载接口");
                 // console.log(ret.data);

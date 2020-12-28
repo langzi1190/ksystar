@@ -82,10 +82,10 @@ let gobalEvent =new Vue({
         sourceCardLocalName:{},//输入卡 名称
         windowItemLocalName:{},//窗口名
     },
-    created(){
-        this.loadName();
-
-    },
+    // created(){
+    //     this.loadName();
+    //
+    // },
     methods:{
         sourceCardNumber(){
             let label_info=this.selectedCard.label_info;
@@ -293,36 +293,28 @@ let gobalEvent =new Vue({
                                 else
                                     localStorage.setItem(key,JSON.stringify(nameInfo[key]))
 
-                                if(key==this.keys['sceneUserName']){
+                                if(key==that.keys['sceneUserName']){
                                     //记录文件 已命名文件
                                     for(let existKey in nameInfo[key]){
-                                        this.editName(nameInfo[key][existKey],this.keys['sceneUserName'])
+                                        that.editName(nameInfo[key][existKey],that.keys['sceneUserName'])
                                     }
                                 }
-                                else if(key==this.keys['sceneUserName']){
+                                else if(key==that.keys['sceneUserName']){
                                     for(let existKey in nameInfo[key]){
-                                        this.editName(nameInfo[key][existKey],this.keys['sourceCardName'])
+                                        that.editName(nameInfo[key][existKey],that.keys['sourceCardName'])
                                     }
                                 }
-                                else if(key==this.keys['sceneCarouse']){
+                                else if(key==that.keys['sceneCarouse']){
                                     for(let existKey in nameInfo[key]){
-                                        this.editName(nameInfo[key][existKey],this.keys['sceneCarouse'])
+                                        that.editName(nameInfo[key][existKey],that.keys['sceneCarouse'])
                                     }
                                 }
-                                else if(key==this.keys['srcGroup']){
+                                else if(key==that.keys['srcGroup']){
                                     for(let existKey in nameInfo[key]){
-                                        this.editName(nameInfo[key][existKey],this.keys['srcGroup'])
+                                        that.editName(nameInfo[key][existKey],that.keys['srcGroup'])
                                     }
                                 }
                             }
-
-
-                            //加载用户模式窗口名
-                            let userModelWindowNameKey='userModel'+that.globalEvent.commonInfo.curPreset;
-                            for(let key in nameInfo[userModelWindowNameKey]){
-                                localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey]));
-                            }
-
                             that.loadLocalName();
                             that.$emit('load_name_complete');
                         }
@@ -342,6 +334,7 @@ let gobalEvent =new Vue({
             loadFile();
         },
         loadName(){
+
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
                 let data=ret.data;
@@ -372,14 +365,14 @@ let gobalEvent =new Vue({
                     info=JSON.parse(info);
                     if(k=='sceneUserName'){
                         for(let existKey in info){
-                            if(!this.isSavedName(info[existKey],this.keys[k])){
+                            if(!that.isSavedName(info[existKey],this.keys[k])){
                                 delete info[existKey];
                             }
                         }
                     }
                     else if(k=='sourceCardName'){
                         for(let existKey in info){
-                            if(!this.isSavedName(info[existKey],this.keys[k])){
+                            if(!that.isSavedName(info[existKey],this.keys[k])){
                                 delete info[existKey];
                             }
                         }
@@ -387,7 +380,7 @@ let gobalEvent =new Vue({
                     else if(k=='sceneCarouse'){
                         let newInfo={};
                         for(let i in info){
-                            if(!this.isSavedName(info[i],this.keys[k])){
+                            if(that.isSavedName(info[i],this.keys[k])){
                                 newInfo[i]=info[i];
                             }
                         }
@@ -396,13 +389,13 @@ let gobalEvent =new Vue({
                     else if(k=='srcGroup'){
                         let newInfo={};
                         for(let i in info){
-                            if(!this.isSavedName(info[i],this.keys[k])){
+                            if(that.isSavedName(info[i],this.keys[k])){
                                 newInfo[i]=info[i];
                             }
                         }
                         info=newInfo;
                     }
-                    nameInfo[this.keys[k]]=info;
+                    nameInfo[that.keys[k]]=info;
                 }
             }
 

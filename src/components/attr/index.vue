@@ -197,7 +197,9 @@ export default {
                 this.resetValue('cwidth',this.srcWidth-this.cleft);
                 return ;
             }
-
+            // if(act=='label'){
+            //     this.globalEvent.editName(this.selectedCardLabel,this.globalEvent.keys['windowItem']+'_'+this.globalEvent.curScreenIndex);
+            // }
             this.sendEvent('update_window_pos_by_side',act,this[act])
         },
         resetValue(prop,v){
