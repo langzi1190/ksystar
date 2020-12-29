@@ -185,7 +185,7 @@ export default {
                 let userModelWindowNameKey='userModel'+ret.data.curPreset;
                 let nameInfo=this.globalEvent.nameInfo;
                 for(let key in nameInfo[userModelWindowNameKey]){
-                    localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey]));
+                    localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey][key]));
                 }
                 this.syncLocalName();
 

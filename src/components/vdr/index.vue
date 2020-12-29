@@ -105,6 +105,7 @@
                 };
                 if(param.act=='all'){
                     this.windowItems=[];
+
                     this.$http.post("closeAllWin.cgi",data,(ret)=>{
 
                     });

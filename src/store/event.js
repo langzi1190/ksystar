@@ -400,11 +400,11 @@ let gobalEvent =new Vue({
             }
 
             let windowNameInfo={};
-            for(let key in this.globalEvent.nameInfo){
-                if(key.indexOf('userModel')>-1){
-                    windowNameInfo=this.globalEvent.nameInfo[key];
-                }
-            }
+            // for(let key in this.globalEvent.nameInfo){
+            //     if(key.indexOf('userModel')>-1){
+            //         windowNameInfo=this.globalEvent.nameInfo[key];
+            //     }
+            // }
 
             for(let k in this.screenInfo.scrGroupArr){
                 let key=this.keys.windowItem+'_'+k;
@@ -426,8 +426,11 @@ let gobalEvent =new Vue({
             if(Object.keys(windowNameInfo).length>0){
                 nameInfo['userModel'+this.globalEvent.userModel]=windowNameInfo;
             }
+            else{
+                delete nameInfo['userModel'+this.globalEvent.userModel];
+            }
 
-            console.log(nameInfo);
+
             let nameInfoStr=JSON.stringify(nameInfo);
 
             let blob = new Blob([nameInfoStr]);
