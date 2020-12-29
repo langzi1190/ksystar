@@ -34,6 +34,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 自定义名称 格式
 
 {
+
     "src_group_name": {
         "0": "信号源组1名称",
         "1": "信号源组2名称"
