@@ -31,10 +31,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ###Q&A
 
 
-###自定义名称 格式
+### 自定义名称 格式
 
 {
-
     "src_group_name": {
         "0": "信号源组1名称",
         "1": "信号源组2名称"
@@ -56,5 +55,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
             "window_item_1": "视频墙1窗口2名称"
         }
     }
-    
 }
+
+
+
