@@ -334,9 +334,10 @@ let gobalEvent =new Vue({
             loadFile();
         },
         loadName(){
-
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
+                localStorage.clear();
+                sessionStorage.clear();
                 let data=ret.data;
                 totalNum=data.packetNum;
                 if(totalNum>0){
