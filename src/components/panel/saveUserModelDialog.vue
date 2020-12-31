@@ -35,6 +35,7 @@
         },
         methods:{
             op(act){
+
                 if(act){
 
                     this.globalEvent.editName(this.userModelName,this.globalEvent.keys['sceneUserName']);
@@ -63,6 +64,11 @@
                     this.globalEvent.userModel=this.userModel+1;
                     window.loading.close();
                     // alert(this.LANG.TIP_ALREADY_SAVE);
+                    this.$message({
+                        showClose: true,
+                        message: this.LANG.TIP_ALREADY_SAVE,
+                        type: 'success'
+                    });
                 });
             });
         }
