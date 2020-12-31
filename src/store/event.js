@@ -575,7 +575,6 @@ let gobalEvent =new Vue({
                     }
                 }
 
-                console.log(newNameInfo);
                 return JSON.stringify(newNameInfo)
             }
             else{
