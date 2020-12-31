@@ -76,6 +76,7 @@ font-weight: bold;">凯视达拼接器</div>
         mounted(){
             this.getLoginHistory();
             this.getLanguage();
+            // this.test();
         },
         watch:{
             "user.password":function (v,o) {
@@ -86,6 +87,161 @@ font-weight: bold;">凯视达拼接器</div>
             }
         },
         methods:{
+            // test(){
+            //     let t=
+            //         {
+            //             "srcGroupInfo": [
+            //                 {
+            //                     "id": 0,
+            //                     "name": "信号源分组1"
+            //                 },
+            //                 {
+            //                     "id": 1,
+            //                     "name": "信号源分组2"
+            //                 },
+            //                 {
+            //                     "id": 2,
+            //                     "name": "信号源分组3"
+            //                 }
+            //             ],
+            //             "sceneLoopInfo": [
+            //                 {
+            //                     "id": 0,
+            //                     "name": "场景1"
+            //                 },
+            //                 {
+            //                     "id": 1,
+            //                     "name": "场景2"
+            //                 }
+            //             ],
+            //             "userModeInfo": [
+            //                 {
+            //                     "id": 0,
+            //                     "name": "user1"
+            //                 },
+            //                 {
+            //                     "id": 1,
+            //                     "name": "user2"
+            //                 },
+            //                 {
+            //                     "id": 2,
+            //                     "name": "user3"
+            //                 },
+            //                 {
+            //                     "id": 3,
+            //                     "name": "user4"
+            //                 },
+            //                 {
+            //                     "id": 4,
+            //                     "name": "user5"
+            //                 },
+            //                 {
+            //                     "id": 5,
+            //                     "name": "用户模式6"
+            //                 }
+            //             ],
+            //             "sourceInfo": [
+            //                 {
+            //                     "cardId": 0,
+            //                     "chnArr": [
+            //                         {
+            //                             "id": 1,
+            //                             "name": "S1_1信号源1"
+            //                         },
+            //                         {
+            //                             "id": 2,
+            //                             "name": "S1_2信号源2"
+            //                         },
+            //                         {
+            //                             "id": 3,
+            //                             "name": "S1_3信号源3"
+            //                         },
+            //                         {
+            //                             "id": 4,
+            //                             "name": "S1_4信号源4"
+            //                         }
+            //                     ]
+            //                 }
+            //             ],
+            //             "winInfo": [
+            //                 {
+            //                     "usermode": 0,
+            //                     "scrGroupArr": [
+            //                         {
+            //                             "scrGroup": 0,
+            //                             "winArr": [
+            //                                 {
+            //                                     "id": 0,
+            //                                     "name": 1111
+            //                                 },
+            //                                 {
+            //                                     "id": 1,
+            //                                     "name": 2222
+            //                                 },
+            //                                 {
+            //                                     "id": 2,
+            //                                     "name": 3333
+            //                                 },
+            //                                 {
+            //                                     "id": 3,
+            //                                     "name": 4444
+            //                                 }
+            //                             ]
+            //                         }
+            //                     ]
+            //                 },
+            //                 {
+            //                     "usermode": 1,
+            //                     "scrGroupArr": [
+            //                         {
+            //                             "scrGroup": 0,
+            //                             "winArr": [
+            //                                 {
+            //                                     "id": 0,
+            //                                     "name": 1111
+            //                                 },
+            //                                 {
+            //                                     "id": 1,
+            //                                     "name": 2222
+            //                                 },
+            //                                 {
+            //                                     "id": 2,
+            //                                     "name": 3333
+            //                                 },
+            //                                 {
+            //                                     "id": 3,
+            //                                     "name": 4444
+            //                                 }
+            //                             ]
+            //                         },
+            //                         {
+            //                             "scrGroup": 1,
+            //                             "winArr": [
+            //                                 {
+            //                                     "id": 0,
+            //                                     "name": 21111
+            //                                 },
+            //                                 {
+            //                                     "id": 1,
+            //                                     "name": 22222
+            //                                 },
+            //                                 {
+            //                                     "id": 2,
+            //                                     "name": 23333
+            //                                 },
+            //                                 {
+            //                                     "id": 3,
+            //                                     "name": 24444
+            //                                 }
+            //                             ]
+            //                         }
+            //                     ]
+            //                 }
+            //             ]
+            //         }
+            //
+            //     this.globalEvent.transFormatStr(t,'web')
+            // },
             filterMethod(v){
                 this.userIndex=v;
             },
@@ -95,14 +251,6 @@ font-weight: bold;">凯视达拼接器</div>
                     userHistory=JSON.parse(userHistory);
                     this.userList=userHistory;
                 }
-                // this.$http.post("userAdminRd.cgi",{},(ret)=>{
-                //     let info=ret.data;
-                //     for(let i in info.userInfoArr){
-                //         if(!this.userList.includes(info.userInfoArr[i][0]))
-                //                 this.userList.push(info.userInfoArr[i][0]);
-                //
-                //     }
-                // });
             },
             getLanguage(){
                 this.$http.post("languageRd.cgi",{},(ret)=>{

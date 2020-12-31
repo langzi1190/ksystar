@@ -281,7 +281,7 @@ let gobalEvent =new Vue({
                         reader.onload = function (e) {
                             let nameInfo={};
                             try{
-                                nameInfo=JSON.parse(reader.result);
+                                nameInfo=that.transFormatStr(JSON.parse(reader.result),'web');
                             }
                             catch(err){
                                 return ;
@@ -336,8 +336,10 @@ let gobalEvent =new Vue({
         loadName(){
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
+                this.globalEvent.userInfo=JSON.parse(sessionStorage.getItem("login_user"));
                 localStorage.clear();
                 sessionStorage.clear();
+                sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));//恢复当前用户信息
                 let data=ret.data;
                 totalNum=data.packetNum;
                 if(totalNum>0){
@@ -401,11 +403,6 @@ let gobalEvent =new Vue({
             }
 
             let windowNameInfo={};
-            // for(let key in this.globalEvent.nameInfo){
-            //     if(key.indexOf('userModel')>-1){
-            //         windowNameInfo=this.globalEvent.nameInfo[key];
-            //     }
-            // }
 
             for(let k in this.screenInfo.scrGroupArr){
                 let key=this.keys.windowItem+'_'+k;
@@ -432,11 +429,12 @@ let gobalEvent =new Vue({
             }
 
 
-            let nameInfoStr=JSON.stringify(nameInfo);
+
+            let nameInfoStr=this.transFormatStr(nameInfo,'pc');//JSON.stringify(nameInfo);
 
             let blob = new Blob([nameInfoStr]);
             let reader=new FileReader(blob);
-                reader.readAsArrayBuffer(blob)
+                reader.readAsArrayBuffer(blob);
                 reader.onload=function () {
                     let buffer=reader.result;
                     let hexBuffer=Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2));
@@ -496,6 +494,160 @@ let gobalEvent =new Vue({
 
             uploadFile();
 
+        },
+        transFormatStr(nameInfo,act='pc'){
+            if(act=='pc'){
+                let newNameInfo={
+                    'srcGroupInfo':[],
+                    'sceneLoopInfo':[],
+                    'userModeInfo':[],
+                    'sourceInfo':[],
+                    'winInfo':[]
+                };
+                for(let k in nameInfo[this.keys['srcGroup']]){
+                    let item={};
+                    item['id']=parseInt(k);
+                    item['name']=nameInfo[this.keys['srcGroup']][k];
+                    newNameInfo.srcGroupInfo.push(item);
+                }
+                for(let k in nameInfo[this.keys['sceneCarouse']]){
+                    let item={};
+                    item['id']=parseInt(k);
+                    item['name']=nameInfo[this.keys['sceneCarouse']][k];
+                    newNameInfo.sceneLoopInfo.push(item);
+                }
+                for(let k in nameInfo[this.keys['sceneUserName']]){
+                    let item={};
+                    item['id']=parseInt(k.replace('user_scene_',''));
+                    item['name']=nameInfo[this.keys['sceneUserName']][k];
+                    newNameInfo.userModeInfo.push(item);
+                }
+
+                let tempCard={};
+                for(let k in nameInfo[this.keys['sourceCardName']]){
+                    let mid=k.split("_");
+                    if(typeof tempCard[mid[2]] == 'undefined'){
+                        tempCard[mid[2]]=[]
+                    }
+
+                    let item={};
+                    item['id']=parseInt(mid[3]);
+                    item['name']=nameInfo[this.keys['sourceCardName']][k];
+                    tempCard[mid[2]].push(item);
+                }
+                for(let k in tempCard){
+                    newNameInfo.sourceInfo.push(
+                        {
+                            cardId:parseInt(k),
+                            chnArr:tempCard[k]
+                        }
+                    );
+
+                }
+
+                for(let k in nameInfo){
+                    if(k.indexOf('userModel')>-1){
+                        // let mode=parseInt(k.replace('userModel',''));
+                        let modeInfo={
+                            usermode:parseInt(k.replace('userModel','')),
+                            scrGroupArr:[]
+                        };
+
+                        for(let j in nameInfo[k]){
+                            let srcGroup={
+                                scrGroup:parseInt(j.replace('window_item_name_','')),
+                                winArr:[]
+                            };
+
+                            for(let i in nameInfo[k][j]){
+                                srcGroup.winArr.push(
+                                    {
+                                        id:parseInt(i.replace('window_item_','')),
+                                        name:nameInfo[k][j][i]
+                                    }
+                                );
+                            }
+
+                            modeInfo.scrGroupArr.push(srcGroup);
+                        }
+
+                        newNameInfo.winInfo.push(modeInfo);
+                    }
+                }
+
+                return JSON.stringify(newNameInfo)
+            }
+            else{
+                let newNameInfo={};
+                for(let key in nameInfo){
+                    if(key=='srcGroupInfo'){
+                        // newNameInfo[this.keys['srcGroup']]={};
+                        let srcGroup={};
+                        for(let i in nameInfo['srcGroupInfo']){
+                            let info=nameInfo['srcGroupInfo'][i];
+                            srcGroup[info.id]=info.name;
+                        }
+                        if(Object.keys(srcGroup).length>0){
+                            newNameInfo[this.keys['srcGroup']]=srcGroup;
+                        }
+                    }
+                    else if(key=='sceneLoopInfo'){
+                        let srcGroup={};
+                        for(let i in nameInfo['sceneLoopInfo']){
+                            let info=nameInfo['sceneLoopInfo'][i];
+                            srcGroup[info.id]=info.name;
+                        }
+                        if(Object.keys(srcGroup).length>0){
+                            newNameInfo[this.keys['sceneCarouse']]=srcGroup;
+                        }
+                    }
+                    else if(key=='userModeInfo'){
+                        let srcGroup={};
+                        for(let i in nameInfo['userModeInfo']){
+                            let info=nameInfo['userModeInfo'][i];
+                            srcGroup['user_scene_'+info.id]=info.name;
+                        }
+                        if(Object.keys(srcGroup).length>0){
+                            newNameInfo[this.keys['sceneUserName']]=srcGroup;
+                        }
+                    }
+                    else if(key=='sourceInfo'){
+                        let card={};
+                        for(let i in nameInfo['sourceInfo']){
+                            let cardId=nameInfo['sourceInfo'][i].cardId;
+
+                            for(let j in nameInfo['sourceInfo'][i].chnArr){
+                                let chn=nameInfo['sourceInfo'][i].chnArr[j];
+                                card['source_name_'+cardId+'_'+chn.id]=chn.name;
+                            }
+                        }
+                        if(Object.keys(card).length>0){
+                            newNameInfo[this.keys['sourceCardName']]=card;
+                        }
+                    }
+                    else if(key=='winInfo'){
+                        //model
+                        for(let i in nameInfo['winInfo']){
+                            let mode=nameInfo['winInfo'][i];
+                            let newScrGroup={};
+                            for(let j in mode.scrGroupArr){
+                                let scrGroup=mode.scrGroupArr[j];
+                                let scr='window_item_name_'+scrGroup.scrGroup;
+
+                                newScrGroup[scr]={};
+                                for(let k in scrGroup.winArr){
+                                    let win='window_item_'+scrGroup.winArr[k].id;
+                                    newScrGroup[scr][win]=scrGroup.winArr[k].name;
+                                }
+
+                            }
+                            newNameInfo['userModel'+mode.usermode]=newScrGroup;
+
+                        }
+                    }
+                }
+                return newNameInfo;
+            }
         }
     }
 });
