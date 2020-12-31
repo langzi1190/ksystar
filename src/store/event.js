@@ -518,7 +518,7 @@ let gobalEvent =new Vue({
                 }
                 for(let k in nameInfo[this.keys['sceneUserName']]){
                     let item={};
-                    item['id']=parseInt(k.replace('user_scene_',''));
+                    item['id']=parseInt(k.replace('user_scene_',''))+1;
                     item['name']=nameInfo[this.keys['sceneUserName']][k];
                     newNameInfo.userModeInfo.push(item);
                 }
@@ -575,6 +575,7 @@ let gobalEvent =new Vue({
                     }
                 }
 
+                console.log(newNameInfo);
                 return JSON.stringify(newNameInfo)
             }
             else{
@@ -605,7 +606,7 @@ let gobalEvent =new Vue({
                         let srcGroup={};
                         for(let i in nameInfo['userModeInfo']){
                             let info=nameInfo['userModeInfo'][i];
-                            srcGroup['user_scene_'+info.id]=info.name;
+                            srcGroup['user_scene_'+(info.id-1)]=info.name;
                         }
                         if(Object.keys(srcGroup).length>0){
                             newNameInfo[this.keys['sceneUserName']]=srcGroup;

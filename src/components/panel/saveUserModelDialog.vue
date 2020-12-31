@@ -62,7 +62,7 @@
                 this.$http.post("savePreset.cgi",{presetId:this.userModel},(ret)=>{
                     this.globalEvent.userModel=this.userModel+1;
                     window.loading.close();
-                    alert(this.LANG.TIP_ALREADY_SAVE);
+                    // alert(this.LANG.TIP_ALREADY_SAVE);
                 });
             });
         }
