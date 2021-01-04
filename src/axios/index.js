@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = '/';//'http://192.168.0.100/';
+const baseURL = '';//'http://192.168.0.100/';
 
 let http = axios.create({
   baseURL: baseURL,
@@ -55,6 +55,7 @@ function apiAxios(method, url, params, response) {
         "firmwareUpdate.cgi":"upload_result.json",
         "KfsRd.cgi":"kfs.json",
         "renameCfgRd.cgi":"write_back.json",
+        "renameRd.cgi":"rename_info.json",
         "scrColorRd.cgi":"screen_bright.json",
     };
       url=urlTrans[url];
