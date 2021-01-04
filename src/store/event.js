@@ -333,7 +333,56 @@ let gobalEvent =new Vue({
 
             loadFile();
         },
+        // testLoadName(){
+        //     let that=this;
+        //     this.$http.post("renameRd.cgi",{},(ret)=>{
+        //         localStorage.clear();
+        //         sessionStorage.clear();
+        //         sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));//恢复当前用户信息
+        //         let nameInfo={};
+        //         try{
+        //             nameInfo=that.transFormatStr(ret.data,'web');
+        //             console.log(nameInfo);
+        //         }
+        //         catch(err){
+        //             return ;
+        //         }
+        //         that.globalEvent.nameInfo=nameInfo;
+        //         for(let key in nameInfo){
+        //             if(typeof nameInfo[key] =='string')
+        //                 localStorage.setItem(key,nameInfo[key]);
+        //             else
+        //                 localStorage.setItem(key,JSON.stringify(nameInfo[key]))
+        //
+        //             if(key==that.keys['sceneUserName']){
+        //                 //记录文件 已命名文件
+        //                 for(let existKey in nameInfo[key]){
+        //                     that.editName(nameInfo[key][existKey],that.keys['sceneUserName'])
+        //                 }
+        //             }
+        //             else if(key==that.keys['sceneUserName']){
+        //                 for(let existKey in nameInfo[key]){
+        //                     that.editName(nameInfo[key][existKey],that.keys['sourceCardName'])
+        //                 }
+        //             }
+        //             else if(key==that.keys['sceneCarouse']){
+        //                 for(let existKey in nameInfo[key]){
+        //                     that.editName(nameInfo[key][existKey],that.keys['sceneCarouse'])
+        //                 }
+        //             }
+        //             else if(key==that.keys['srcGroup']){
+        //                 for(let existKey in nameInfo[key]){
+        //                     that.editName(nameInfo[key][existKey],that.keys['srcGroup'])
+        //                 }
+        //             }
+        //         }
+        //         this.loadLocalName();
+        //         this.$emit('load_name_complete');
+        //     });
+        // },
         loadName(){
+            // this.testLoadName();//todo delete
+            // return ;
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
                 this.globalEvent.userInfo=JSON.parse(sessionStorage.getItem("login_user"));
