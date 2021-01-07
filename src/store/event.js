@@ -21,6 +21,7 @@ let gobalEvent =new Vue({
             password:'',
             type:0
         },
+        isSync:0,//是否是点击按钮同步，
         nameInfo:{},
         outPutInfo:{},//输出端口
         language:'zh',
@@ -82,10 +83,6 @@ let gobalEvent =new Vue({
         sourceCardLocalName:{},//输入卡 名称
         windowItemLocalName:{},//窗口名
     },
-    // created(){
-    //     this.loadName();
-    //
-    // },
     methods:{
         sourceCardNumber(){
             let label_info=this.selectedCard.label_info;
@@ -249,7 +246,6 @@ let gobalEvent =new Vue({
                     this.windowItemLocalName[k]=dataList[i].label;
                 }
 
-                // this.windowItemLocalName={'window_item_0_1':'xxx','window_item_0_0':'yyy'};
                 localStorage.setItem(key,JSON.stringify(this.windowItemLocalName));
             }
             else if(type=='sourceCardName'){
@@ -286,7 +282,7 @@ let gobalEvent =new Vue({
                             catch(err){
                                 return ;
                             }
-                            that.globalEvent.nameInfo=nameInfo;
+                            that.nameInfo=nameInfo;
                             for(let key in nameInfo){
                                 if(typeof nameInfo[key] =='string')
                                     localStorage.setItem(key,nameInfo[key]);
@@ -338,7 +334,7 @@ let gobalEvent =new Vue({
         //     this.$http.post("renameRd.cgi",{},(ret)=>{
         //         localStorage.clear();
         //         sessionStorage.clear();
-        //         sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));//恢复当前用户信息
+        //         sessionStorage.setItem("login_user",JSON.stringify(this.userInfo));//恢复当前用户信息
         //         let nameInfo={};
         //         try{
         //             nameInfo=that.transFormatStr(ret.data,'web');
@@ -347,7 +343,7 @@ let gobalEvent =new Vue({
         //         catch(err){
         //             return ;
         //         }
-        //         that.globalEvent.nameInfo=nameInfo;
+        //         that.nameInfo=nameInfo;
         //         for(let key in nameInfo){
         //             if(typeof nameInfo[key] =='string')
         //                 localStorage.setItem(key,nameInfo[key]);
@@ -385,10 +381,10 @@ let gobalEvent =new Vue({
             // return ;
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
-                this.globalEvent.userInfo=JSON.parse(sessionStorage.getItem("login_user"));
+                this.userInfo=JSON.parse(sessionStorage.getItem("login_user"));
                 localStorage.clear();
                 sessionStorage.clear();
-                sessionStorage.setItem("login_user",JSON.stringify(this.globalEvent.userInfo));//恢复当前用户信息
+                sessionStorage.setItem("login_user",JSON.stringify(this.userInfo));//恢复当前用户信息
                 let data=ret.data;
                 totalNum=data.packetNum;
                 if(totalNum>0){
@@ -408,7 +404,7 @@ let gobalEvent =new Vue({
             sessionStorage.setItem(key,name);
         },
         saveName(){
-            let nameInfo=this.globalEvent.nameInfo;
+            let nameInfo=this.nameInfo;
             let that=this;
             for(let k in this.keys){
 
@@ -471,10 +467,10 @@ let gobalEvent =new Vue({
             }
 
             if(Object.keys(windowNameInfo).length>0){
-                nameInfo['userModel'+this.globalEvent.userModel]=windowNameInfo;
+                nameInfo['userModel'+this.userModel]=windowNameInfo;
             }
             else{
-                delete nameInfo['userModel'+this.globalEvent.userModel];
+                delete nameInfo['userModel'+this.userModel];
             }
 
 

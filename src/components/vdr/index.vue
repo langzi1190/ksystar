@@ -247,10 +247,6 @@
                 }
             });
 
-            // this.globalEvent.$on("load_name_complete",()=>{
-            //     this.loadData();
-            // });
-
 
             window.addEventListener('resize',(e)=>{
                 // let curW=document.body.clientWidth;
@@ -278,7 +274,7 @@
                 if(this.globalEvent.gMode==0){
                     this.$http.get("syncScrInfoRd.cgi",{},(ret)=>{
                         for(let i in ret.data.scrGroupArr){
-                            ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000);
+                            ret.data.scrGroupArr[i].tabName='name'+parseInt(Math.random()*10000000);
                         }
 
                         // this.globalEvent.screenInfo=ret.data;

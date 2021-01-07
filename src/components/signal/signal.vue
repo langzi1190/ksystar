@@ -181,9 +181,26 @@ export default {
                         value:ret.data.presetStaArr[i]
                     });
                 }
+
+                //加载用户模式窗口名
+                let nameInfo=this.globalEvent.nameInfo;
+                if(ret.data.curPreset==0){
+
+                    let userModelKey='userModel'+this.globalEvent.commonInfo.curPreset;
+                    for(let i in nameInfo[userModelKey]){
+                        nameInfo[userModelKey][i]={}
+                    }
+                }
+
+
+                if(this.globalEvent.isSync==1){
+                    this.globalEvent.isSync=0;
+                    ret.data.curPreset=this.globalEvent.commonInfo.curPreset;
+                }
+
                 //加载用户模式窗口名
                 let userModelWindowNameKey='userModel'+ret.data.curPreset;
-                let nameInfo=this.globalEvent.nameInfo;
+
                 for(let key in nameInfo[userModelWindowNameKey]){
                     localStorage.setItem(key,JSON.stringify(nameInfo[userModelWindowNameKey][key]));
                 }

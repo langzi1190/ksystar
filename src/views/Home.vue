@@ -15,7 +15,7 @@
                                     <!--<card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>-->
                                     <!--<card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>-->
                                     <card-item :title="LANG.HOME_ABOUT" @click.native="showDialog='about'" iconName="about"></card-item>
-                                    <card-item :title="LANG.HOME_SYNC"  @click.native="preinstall('sync')" iconName="sync"></card-item>
+                                    <card-item :title="LANG.HOME_SYNC"  @click.native="preinstall('btn_sync')" iconName="sync"></card-item>
                                     <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0" iconName="quit"></card-item>
                                 </card>
                             </div>
@@ -30,7 +30,7 @@
                                     <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'" iconName="user_mode"></card-item>
                                     <card-item :title="LANG.HOME_SAVE_USER_MODE" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'" iconName="save_mode"></card-item>
                                     <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"  :class="{'card-item-disabled':allowFactory==0}" iconName="reset"></card-item>
-                                    <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('sync')" iconName="sync"></card-item>
+                                    <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('btn_sync')" iconName="sync"></card-item>
                                     <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')" iconName="echo_on"></card-item>
                                     <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')" iconName="echo_off"></card-item>
                                     <card-item :title="LANG.HOME_ECHO_CONFIG" @click.native="showDialog='monIp'" iconName="echo_set"></card-item>
@@ -480,6 +480,10 @@
                     this.$http.post("extCtrlOprWr.cgi",{funcOpr:0},(ret)=>{
                         alert("已发送关屏命令")
                     });
+                }
+                else if(setFn=='btn_sync'){
+                    this.globalEvent.sync=1;
+                    this.preinstall('sync');
                 }
                 else if(setFn=='sync'){
 
