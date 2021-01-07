@@ -187,9 +187,12 @@ export default {
                 if(ret.data.curPreset==0){
 
                     let userModelKey='userModel'+this.globalEvent.commonInfo.curPreset;
-                    for(let i in nameInfo[userModelKey]){
-                        nameInfo[userModelKey][i]={}
+                    if(typeof nameInfo[userModelKey] !='undefined'){
+                        for(let i in nameInfo[userModelKey]){
+                            nameInfo[userModelKey][i]={}
+                        }
                     }
+
                 }
 
 
