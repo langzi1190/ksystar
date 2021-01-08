@@ -211,6 +211,9 @@ let gobalEvent =new Vue({
             if(name!==null){
                 this.windowItemLocalName=JSON.parse(name);
             }
+            else{
+                this.windowItemLocalName={};
+            }
         },
         syncLocalName(type,dataList){
             let key=this.keys[type];
