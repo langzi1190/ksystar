@@ -298,7 +298,7 @@ let gobalEvent =new Vue({
                                         that.editName(nameInfo[key][existKey],that.keys['sceneUserName'])
                                     }
                                 }
-                                else if(key==that.keys['sceneUserName']){
+                                else if(key==that.keys['sourceCardName']){
                                     for(let existKey in nameInfo[key]){
                                         that.editName(nameInfo[key][existKey],that.keys['sourceCardName'])
                                     }
