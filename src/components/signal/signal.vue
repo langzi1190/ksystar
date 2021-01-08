@@ -188,10 +188,15 @@ export default {
 
                     let userModelKey='userModel'+this.globalEvent.commonInfo.curPreset;
                     if(typeof nameInfo[userModelKey] !='undefined'){
+
                         for(let i in nameInfo[userModelKey]){
-                            nameInfo[userModelKey][i]={}
+                            nameInfo[userModelKey][i]={};
+                            localStorage.removeItem(i);
                         }
+
                     }
+
+                    this.globalEvent.windowItemLocalName={};
 
                 }
 

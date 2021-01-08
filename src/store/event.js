@@ -9,8 +9,8 @@ Vue.prototype.LANGUAGE={
 let gobalEvent =new Vue({
     data:{
         gMode:0,//0正常，1演示
-        version:'1.0',
-        versionDate:'Dec 17 2020 15:09:30',
+        version:'1.1',
+        versionDate:'Jan 8 2021 13:41:30',
         modeInfo:{
             inCardInfo:{},
             outCardInfo:{}

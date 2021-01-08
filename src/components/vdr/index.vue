@@ -409,7 +409,7 @@
                                         }
 
                                         win.label=that.globalEvent.windowItemName(that.globalEvent.curScreenIndex,i);
-                                        win.k='k'+parseInt(Math.random()*1000);
+                                        win.k='k'+parseInt(Math.random()*100000);
                                     }
                                     that.globalEvent.windowItemsInfo=ret.data;
                                     that.windowItems=that.globalEvent.windowItemsInfo.winArr;
