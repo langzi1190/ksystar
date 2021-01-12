@@ -646,8 +646,15 @@
                 }
 
 
+                // for(let k in outCardUsedRes){
+                //     if(outCardUsedRes[k]>8){
+                //         outResource=true;
+                //         break;
+                //     }
+                // }
                 for(let k in outCardUsedRes){
-                    if(outCardUsedRes[k]>8){
+                    let cardSeq=parseInt(k.replace('card',''));
+                    if(outCardUsedRes[k]>this.globalEvent.outPutInfo.maxWinNumArr[cardSeq]){
                         outResource=true;
                         break;
                     }
