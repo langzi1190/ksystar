@@ -1,6 +1,7 @@
 <template>
     <div class="show_edid_dialog">
         <el-dialog
+                v-dialogDrag
                 title="EDID数据"
                 :visible="showDialog=='showEdid'"
                 width="500px"

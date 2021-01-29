@@ -321,6 +321,7 @@
   "ALERT_MAX_USERS":"最多支持10个用户",
   "ALERT_MAX_USERNAME_LENGTH":"用户名长度不得大于20",
   "ALERT_MAX_PASSWORD_LENGTH":"密码长度不得大于20",
+  "ALERT_SCREEN_NO_EXIST":"屏幕墙不存在",
 
   "TIP_ARM_UPGRADE":"已跳转，请重新刷新进行升级",
   "TIP_ALREADY_SAVE":"已保存",

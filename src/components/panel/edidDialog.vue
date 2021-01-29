@@ -1,6 +1,6 @@
 <template>
     <div class="edid_dialog">
-        <el-dialog :title="LANG.EDID_TITLE" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
+        <el-dialog v-dialogDrag  :title="LANG.EDID_TITLE" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
             <div>
                 <div class="item">
                     <span v-html="LANG.EDID_DEV_NO"></span>

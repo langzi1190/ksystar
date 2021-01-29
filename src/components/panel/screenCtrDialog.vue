@@ -1,6 +1,6 @@
 <template>
     <div class="screen_ctr_dialog">
-        <el-dialog :title="LANG.TUNNEL_TITLE" :visible="showDialog=='screenCtr'" @close="op('cancel')">
+        <el-dialog  v-dialogDrag :title="LANG.TUNNEL_TITLE" :visible="showDialog=='screenCtr'" @close="op('cancel')">
             <div class="dialog_body">
                 <div class="left_body">
                     <div class="item">

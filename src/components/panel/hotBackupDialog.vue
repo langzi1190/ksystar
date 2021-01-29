@@ -1,6 +1,7 @@
 <template>
     <div class="hot_backup_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.BACKUP_TITLE"
                 :visible="showDialog=='hotBackup'"
                 width="350px"

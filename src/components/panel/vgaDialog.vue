@@ -1,6 +1,7 @@
 <template>
     <div class="vga_dialog">
-        <el-dialog :title="LANG.VGA_TITLE"
+        <el-dialog
+                v-dialogDrag :title="LANG.VGA_TITLE"
                    :visible="showDialog=='vga'"
                    @close="op('cancel')"
                    width="600px"

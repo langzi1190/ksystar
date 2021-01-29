@@ -1,6 +1,6 @@
 <template>
     <div class="temp_dialog">
-        <el-dialog :title="LANG.TEMP_TITLE" :visible="showDialog=='temp'" @close="op(false)">
+        <el-dialog v-dialogDrag :title="LANG.TEMP_TITLE" :visible="showDialog=='temp'" @close="op(false)">
             <div class="top_part">
                 <template  v-for="(item,index) in tempInfo.ctrlCard">
                     <div>

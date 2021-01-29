@@ -318,6 +318,7 @@
   "ALERT_MAX_USERS":"Support no more than 10 users",
   "ALERT_MAX_USERNAME_LENGTH":"name length should be less than 20",
   "ALERT_MAX_PASSWORD_LENGTH":"password length should be less than 20",
+  "ALERT_SCREEN_NO_EXIST":"Screen wall doesn't exist",
 
   "TIP_ARM_UPGRADE":"Jump to IAP succeeded，Please refresh the current page to upgrade",
   "TIP_ALREADY_SAVE":"done",

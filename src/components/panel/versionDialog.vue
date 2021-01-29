@@ -1,6 +1,6 @@
 <template>
     <div class="version_dialog">
-        <el-dialog :title="LANG.VERSION_TITLE" :visible="showDialog=='version'" @close="op(false)">
+        <el-dialog  v-dialogDrag :title="LANG.VERSION_TITLE" :visible="showDialog=='version'" @close="op(false)">
             <table style="width:100%">
                 <tr>
                     <th colspan="2">{{LANG.VERSION_TYPE}}</th>

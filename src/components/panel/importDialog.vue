@@ -1,6 +1,7 @@
 <template>
     <div class="import_dialog">
         <el-dialog :title="LANG.IMPORT_TITLE"
+                   v-dialogDrag
                    width="350px"
                    :visible="showDialog=='import'"
                    @close="op(false)">

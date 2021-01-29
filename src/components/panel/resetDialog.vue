@@ -1,6 +1,7 @@
 <template>
     <div class="reset_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.RESTOR_TITLE"
                 :visible="showDialog=='reset' && globalEvent.userInfo.type==0"
                 width="400px"

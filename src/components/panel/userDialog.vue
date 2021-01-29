@@ -1,6 +1,7 @@
 <template>
     <div class="user_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.USER_TITLE"
                 :visible="showDialog=='user' && globalEvent.userInfo.type==0"
                 width="800px"

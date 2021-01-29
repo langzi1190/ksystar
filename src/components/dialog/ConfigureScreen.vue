@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+          v-dialogDrag
     :title="LANG.SCREEN_TITLE"
     :visible.sync="isVisible"
     v-if="isVisible"

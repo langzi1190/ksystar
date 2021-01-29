@@ -1,6 +1,6 @@
 <template>
     <div class="status_dialog">
-        <el-dialog :title="LANG.DEV_STATUS_TITLE" :visible="showDialog=='deviceStatus'" @close="op(false)">
+        <el-dialog  v-dialogDrag :title="LANG.DEV_STATUS_TITLE" :visible="showDialog=='deviceStatus'" @close="op(false)">
             <table style="width:100%">
                 <tr>
                     <th colspan="5">{{LANG.VERSION_TYPE}}</th>

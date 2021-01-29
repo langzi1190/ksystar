@@ -1,6 +1,7 @@
 <template>
     <div class="eq_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.EQ_TITLE"
                 :visible="showDialog=='eq'"
                 width="200px"

@@ -1,6 +1,7 @@
 <template>
     <div class="upload_dialog">
         <el-dialog :title="title"
+                   v-dialogDrag
                    width="750px"
                    :visible="showDialog!=''"
                    @close="op(false)">

@@ -1,6 +1,6 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog :title="LANG.MODE_TITLE" :visible="showDialog=='userModel'" @close="op(false)">
+        <el-dialog  v-dialogDrag :title="LANG.MODE_TITLE" :visible="showDialog=='userModel'" @close="op(false)">
             <div class="item">
                 <span v-html="LANG.MODE_ID"></span>
                 <el-input-number :min="1" :max="200" v-model="userModel" size="mini"></el-input-number>

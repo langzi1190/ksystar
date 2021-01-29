@@ -14,7 +14,7 @@
                                     <!--<card-item :title="LANG.HOME_DEV_SELECT"></card-item>-->
                                     <!--<card-item :title="LANG.HOME_CONNECT_DEVICE"></card-item>-->
                                     <!--<card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>-->
-                                    <card-item :title="LANG.HOME_ABOUT" @click.native="showDialog='about'" iconName="about"></card-item>
+                                    <card-item :title="LANG.HOME_ABOUT" :isChecked="showDialog=='about'" @click.native="showDialog='about'" iconName="about"></card-item>
                                     <card-item :title="LANG.HOME_SYNC"  @click.native="preinstall('btn_sync')" iconName="sync"></card-item>
                                     <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0" iconName="quit"></card-item>
                                 </card>
@@ -24,16 +24,16 @@
                             <div class="card-s">
                                 <card :title="LANG.HOME_SETTING">
                                     <card-item :title="LANG.HOME_OPEN_WINDOW" @click.native="addScreen" iconName="add_win"></card-item>
-                                    <card-item :title="LANG.HOME_SCREEN_SETTING" iconName="config" @click.native="setting('2')"  :class="{'card-item-disabled':allowScreen==0}"></card-item>
+                                    <card-item :title="LANG.HOME_SCREEN_SETTING"  :isChecked="dialogVisible" iconName="config" @click.native="setting('2')"  :class="{'card-item-disabled':allowScreen==0}"></card-item>
                                 </card>
                                 <card :title="LANG.HOME_PRESET">
-                                    <card-item :title="LANG.HOME_USER_MODE" @click.native="showDialog='userModel'" iconName="user_mode"></card-item>
-                                    <card-item :title="LANG.HOME_SAVE_USER_MODE" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'" iconName="save_mode"></card-item>
+                                    <card-item :title="LANG.HOME_USER_MODE" :isChecked="showDialog=='userModel'" @click.native="showDialog='userModel'" iconName="user_mode"></card-item>
+                                    <card-item :title="LANG.HOME_SAVE_USER_MODE"  :isChecked="showDialog=='saveUserModel'" :class="{'card-item-disabled':allowSaveMode==0}" @click.native="showDialog='saveUserModel'" iconName="save_mode"></card-item>
                                     <card-item :title="LANG.HOME_DEFAULT_FACTORY" @click.native="preinstall('3')"  :class="{'card-item-disabled':allowFactory==0}" iconName="reset"></card-item>
                                     <card-item :title="LANG.HOME_SYNC" @click.native="preinstall('btn_sync')" iconName="sync"></card-item>
-                                    <card-item :title="LANG.HOME_ECHO_ON" :isChecked="isEcho===true" @click.native="preinstall('5')" iconName="echo_on"></card-item>
+                                    <card-item :title="LANG.HOME_ECHO_ON"  :isChecked="isEcho===true" @click.native="preinstall('5')" iconName="echo_on"></card-item>
                                     <card-item :title="LANG.HOME_ECHO_OFF" :isChecked="isEcho===false" @click.native="preinstall('6')" iconName="echo_off"></card-item>
-                                    <card-item :title="LANG.HOME_ECHO_CONFIG" @click.native="showDialog='monIp'" iconName="echo_set"></card-item>
+                                    <card-item :title="LANG.HOME_ECHO_CONFIG" :isChecked="showDialog=='monIp'" @click.native="showDialog='monIp'" iconName="echo_set"></card-item>
                                 </card>
                                 <card :title="LANG.HOME_SWITCH_WALL">
                                     <card-item :title="LANG.HOME_WALL_1" seq='0' @click.native="loadScreen(0)"  iconName="wall1"></card-item>
@@ -53,7 +53,7 @@
                                     <div class="card-item card-external">
                                         <card-child :title="LANG.HOME_OPEN_SCREEN"  @click.native="preinstall('10')" iconName="scr_on"></card-child>
                                         <card-child :title="LANG.HOME_CLOSE_SCREEN"  @click.native="preinstall('11')" iconName="scr_off"></card-child>
-                                        <card-child :title="LANG.HOME_CHANNEL_CONFIG" iconName="scr_set" @click.native="showDialog='screenCtr'"></card-child>
+                                        <card-child :title="LANG.HOME_CHANNEL_CONFIG" :isChecked="showDialog=='screenCtr'"  iconName="scr_set" @click.native="showDialog='screenCtr'"></card-child>
                                     </div>
                                 </card>
                                 <card :title="LANG.HOME_LOCK">
@@ -69,16 +69,16 @@
                         <el-tab-pane :label="LANG.HOME_TOOLS">
                             <div class="card-s">
                                 <card :title="LANG.HOME_ADVANCE_MENU">
-                                    <card-item :title="LANG.HOME_USER"  :class="{'card-item-disabled':allowUser==0}" @click.native="showDialog='user'"  iconName="user"></card-item>
-                                    <card-item @click.native="showDialog='screenBright'" :title="LANG.HOME_BRIGHT" iconName="bri"></card-item>
-                                    <card-item @click.native="showDialog='kfs'" title="KFS" iconName="kfs"></card-item>
-                                    <card-item @click.native="showDialog='multi'" :title="LANG.HOME_MULTI_SYNC" iconName="multi"></card-item>
-                                    <card-item :title="LANG.HOME_OUTPUT_SHUT"  @click.native="preinstall('8')" iconName="echo_off"></card-item>
+                                    <card-item :title="LANG.HOME_USER" :isChecked="showDialog=='user'"  :class="{'card-item-disabled':allowUser==0}" @click.native="showDialog='user'"  iconName="user"></card-item>
+                                    <card-item @click.native="showDialog='screenBright'" :isChecked="showDialog=='screenBright'"  :title="LANG.HOME_BRIGHT" iconName="bri"></card-item>
+                                    <card-item @click.native="showDialog='kfs'" title="KFS" :isChecked="showDialog=='kfs'"  iconName="kfs"></card-item>
+                                    <card-item @click.native="showDialog='multi'" :isChecked="showDialog=='multi'"  :title="LANG.HOME_MULTI_SYNC" iconName="multi"></card-item>
+                                    <card-item :title="LANG.HOME_OUTPUT_SHUT" :isChecked="showDialog=='shut'"  @click.native="preinstall('8')" iconName="echo_off"></card-item>
                                     <card-item :title="LANG.HOME_OUTPUT_ON"  @click.native="preinstall('9')" iconName="echo_on"></card-item>
-                                    <card-item :title="LANG.HOME_CONFIG_IMPORT" @click.native="opConfig('import')" iconName="import"></card-item>
-                                    <card-item :title="LANG.HOME_CONFIG_EXPORT" @click.native="opConfig('export')" iconName="export"></card-item>
+                                    <card-item :title="LANG.HOME_CONFIG_IMPORT" :isChecked="showDialog=='import'"  @click.native="opConfig('import')" iconName="import"></card-item>
+                                    <card-item :title="LANG.HOME_CONFIG_EXPORT" :isChecked="showDialog=='export'"  @click.native="opConfig('export')" iconName="export"></card-item>
                                     <!--<card-item  style="width:80px;" title="设置所有DPHDMI4K卡" @click.native="showDialog='edid'"></card-item>-->
-                                    <card-item title="EDID" @click.native="showDialog='edid'" iconName="edid"></card-item>
+                                    <card-item title="EDID" @click.native="showDialog='edid'" :isChecked="showDialog=='edid'"  iconName="edid"></card-item>
                                 </card>
                                 <card :title="LANG.HOME_LANGUAGE">
                                     <!--<card-item title="语言设置"></card-item>-->
@@ -92,15 +92,15 @@
                                     </el-select>
                                 </card>
                                 <card :title="LANG.HOME_EXPERT">
-                                    <card-item @click.native="showDialog='serial'" :title="LANG.HOME_COM_CONFIG" iconName="serial"></card-item>
-                                    <card-item :title="LANG.HOME_NET_CONFIG" @click.native="showDialog='ipConfig'" iconName="net"></card-item>
-                                    <card-item :title="LANG.HOME_COMPUTER" iconName="cal"></card-item>
-                                    <card-item :title="LANG.HOME_DEMO_MODE" @click.native="showDialog='simulate'" iconName="show"></card-item>
-                                    <card-item @click.native="showDialog='deviceStatus'" :title="LANG.HOME_TEST" iconName="test"></card-item>
-                                    <card-item @click.native="showDialog='version'" :title="LANG.HOME_VERSION" iconName="version"></card-item>
-                                    <card-item @click.native="showDialog='temp'" :title="LANG.HOME_TEMPERATURE" iconName="temp"></card-item>
-                                    <card-item :title="LANG.HOME_ARM_UPGRADE" @click.native="upgrade('arm')" iconName="arm"></card-item>
-                                    <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" @click.native="upgrade('fpga')" iconName="fpga"></card-item>
+                                    <card-item @click.native="showDialog='serial'" :isChecked="showDialog=='serial'"  :title="LANG.HOME_COM_CONFIG" iconName="serial"></card-item>
+                                    <card-item :title="LANG.HOME_NET_CONFIG" :isChecked="showDialog=='ipConfig'"  @click.native="showDialog='ipConfig'" iconName="net"></card-item>
+                                    <!--<card-item :title="LANG.HOME_COMPUTER" iconName="cal"></card-item>-->
+                                    <!--<card-item :title="LANG.HOME_DEMO_MODE" @click.native="showDialog='simulate'" iconName="show"></card-item>-->
+                                    <card-item @click.native="showDialog='deviceStatus'" :isChecked="showDialog=='deviceStatus'"  :title="LANG.HOME_TEST" iconName="test"></card-item>
+                                    <card-item @click.native="showDialog='version'" :isChecked="showDialog=='version'"  :title="LANG.HOME_VERSION" iconName="version"></card-item>
+                                    <card-item @click.native="showDialog='temp'" :isChecked="showDialog=='temp'"  :title="LANG.HOME_TEMPERATURE" iconName="temp"></card-item>
+                                    <card-item :title="LANG.HOME_ARM_UPGRADE"   @click.native="upgrade('arm')" iconName="arm"></card-item>
+                                    <card-item style="width: 56px;" :title="LANG.HOME_FPGA_UPGRADE" :isChecked="showUploadDialog=='fpga'" @click.native="upgrade('fpga')" iconName="fpga"></card-item>
                                 </card>
                             </div>
                         </el-tab-pane>
@@ -190,7 +190,7 @@
             <userDialog @sub_event="subEvent" v-if="showDialog=='user'" :showDialog="showDialog"></userDialog>
             <showEdidDialog @sub_event="subEvent" v-if="showDialog=='showEdid'" :showDialog="showDialog"></showEdidDialog>
             <uploadDialog @sub_event="subEvent" v-if="showUploadDialog!=''" :showDialog="showUploadDialog"></uploadDialog>
-            <simulateDialog @sub_event="subEvent" v-if="showDialog=='simulate'" :showDialog="showDialog"></simulateDialog>
+            <!--<simulateDialog @sub_event="subEvent" v-if="showDialog=='simulate'" :showDialog="showDialog"></simulateDialog>-->
             <importDialog @sub_event="subEvent" v-if="showDialog=='import'" :showDialog="showDialog"></importDialog>
             <exportDialog @sub_event="subEvent" v-if="showDialog=='export'" :showDialog="showDialog"></exportDialog>
             <aboutDialog @sub_event="subEvent" v-if="showDialog=='about'" :showDialog="showDialog"></aboutDialog>
@@ -251,7 +251,7 @@
     import userDialog from "@/components/panel/userDialog";
     import showEdidDialog from "@/components/panel/showEdidDialog";
     import uploadDialog from "@/components/panel/uploadDialog";
-    import simulateDialog from "@/components/panel/simulateDialog";
+    // import simulateDialog from "@/components/panel/simulateDialog";
     import loginDialog from "@/components/panel/loginDialog";
     import importDialog from "@/components/panel/importDialog";
     import exportDialog from "@/components/panel/exportDialog";
@@ -517,7 +517,8 @@
             },
             loadScreen(seq){
                 if(seq>=this.globalEvent.screenInfo.scrGroupArr.length){
-                    alert("屏幕墙不存在");
+                    //to do alert
+                    this.$message.error(this.LANG.ALERT_SCREEN_NO_EXIST);
                     return ;
                 }
                 this.globalEvent.$emit('load_screen',{seq});
@@ -549,7 +550,7 @@
                     return ;
                 }
                 if(pass!='666888' &&  pass!=this.globalEvent.userInfo.password){
-                    alert(this.LANG.TIP_WRONG_PASSWD);
+                    this.$message(this.LANG.TIP_WRONG_PASSWD);
                     return ;
                 }
 
@@ -560,7 +561,7 @@
                         opr:1
                     }
                     this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
-                        alert(this.LANG.TIP_ARM_UPGRADE)
+                        this.$message.error(this.LANG.TIP_ARM_UPGRADE);
                     });
                 }
                 else if('fpga'==act){
@@ -1064,7 +1065,7 @@
             userDialog,
             showEdidDialog,
             uploadDialog,
-            simulateDialog,
+            // simulateDialog,
             loginDialog,
             importDialog,
             exportDialog,

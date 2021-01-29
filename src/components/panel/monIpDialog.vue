@@ -1,6 +1,6 @@
 <template>
     <div class="user_model_dialog">
-        <el-dialog :title="LANG.MONIP_TITLE" :visible="showDialog=='monIp'" @close="op(false)">
+        <el-dialog v-dialogDrag  :title="LANG.MONIP_TITLE" :visible="showDialog=='monIp'" @close="op(false)">
             <div class="item">
                 <span>{{LANG.MONIP_ADDRESS}}</span>
                 <div class="input_group">

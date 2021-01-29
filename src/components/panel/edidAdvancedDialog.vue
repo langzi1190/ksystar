@@ -1,6 +1,7 @@
 <template>
     <div >
         <el-dialog
+                v-dialogDrag
                 :title="LANG.EDID_ADVANCE_TITLE"
                 :visible="showDialog=='edidAdvanced'"
                 width="700px"

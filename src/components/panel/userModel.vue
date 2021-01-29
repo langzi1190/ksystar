@@ -1,6 +1,7 @@
 <template>
     <div class="reset_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.HOME_USER_MODE"
                 :visible="showDialog"
                 width="400px"

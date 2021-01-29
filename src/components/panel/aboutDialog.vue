@@ -1,6 +1,7 @@
 <template>
     <div class="about_dialog">
         <el-dialog
+                v-dialogDrag
                 width="280px"
                 :title="LANG.ABOUT_TITLE" :visible="showDialog=='about'" @close="op(false)"
         >

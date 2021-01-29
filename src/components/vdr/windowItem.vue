@@ -378,6 +378,7 @@
                     let data={
                         scrGroupId:this.globalEvent.curScreenIndex,
                         winId:w,
+                        srcGroupId:0,
                         srcCardId:num[0]-0,
                         srcId:num[1]-0
                     };
@@ -395,6 +396,8 @@
                         if(!this.globalEvent.isValidResolution(win.resolution)){
                             win.resolution=[this.LANG.ATTR_SIGNAL_LOST]
                         }
+
+                        this.globalEvent.$emit("update_side_attr");
 
                         console.log("signal/index.vue 切换窗口源信号");
                     });

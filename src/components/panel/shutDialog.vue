@@ -1,6 +1,7 @@
 <template>
     <div class="reset_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.CLOSE_TITLE"
                 :visible="showDialog=='shut'"
                 width="400px"

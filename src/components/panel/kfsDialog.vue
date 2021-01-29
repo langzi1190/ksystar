@@ -1,6 +1,6 @@
 <template>
     <div class="kfs_dialog">
-        <el-dialog :title="LANG.KFS_TITLE" :visible="showDialog=='kfs'" @close="op(false)">
+        <el-dialog  v-dialogDrag  :title="LANG.KFS_TITLE" :visible="showDialog=='kfs'" @close="op(false)">
             <div class="top_part">
                 <div v-html="LANG.KFS_SOURCE_SYNC"></div>
                 <div class="label_group">

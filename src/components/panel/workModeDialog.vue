@@ -1,6 +1,7 @@
 <template>
     <div class="work_mode_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.WORKMODE_TITLE"
                 :visible="showDialog=='workMode'"
                 width="270px"

@@ -1,6 +1,7 @@
 <template>
     <div class="export_dialog">
         <el-dialog
+                v-dialogDrag
                 :title="LANG.EXPORT_TITLE"
                 :visible="showDialog=='export'"
                 width="400px"

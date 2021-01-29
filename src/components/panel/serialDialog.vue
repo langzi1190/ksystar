@@ -1,6 +1,6 @@
 <template>
     <div class="serial_dialog">
-        <el-dialog :title="LANG.SERIAL_TITLE" :visible="showDialog=='serial'" @close="op(false)">
+        <el-dialog v-dialogDrag  :title="LANG.SERIAL_TITLE" :visible="showDialog=='serial'" @close="op(false)">
             <div class="item">
                 <span>{{LANG.SERIAL_COM1}}</span>
                 <el-select v-model="com1" placeholder="" size="mini">

@@ -1,6 +1,6 @@
 <template>
     <div class="scene_carousel_dialog">
-        <el-dialog :title="LANG.CAROUSE_TITLE" :visible="true" @close="op(false)">
+        <el-dialog  v-dialogDrag :title="LANG.CAROUSE_TITLE" :visible="true" @close="op(false)">
             <div class="top_part">
                 <div v-html="LANG.CAROUSE_NAME"></div>
                 <div class="label_group">

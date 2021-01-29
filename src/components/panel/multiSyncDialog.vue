@@ -1,6 +1,6 @@
 <template>
     <div class="mutli_sync_dialog">
-        <el-dialog :title="LANG.MULTI_TITLE" :visible="showDialog=='multi'" @close="op(false)">
+        <el-dialog v-dialogDrag  :title="LANG.MULTI_TITLE" :visible="showDialog=='multi'" @close="op(false)">
             <div class="item sp">
                 <span v-html="LANG.MULTI_SYNC_CARD"></span>
                 <el-select v-model="controlSync" size="mini">

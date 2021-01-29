@@ -1,6 +1,6 @@
 <template>
     <div class="screen_bright_dialog">
-        <el-dialog :title="LANG.BRIGHT_TITLE" :visible="showDialog=='screenBright'" @close="op(false)">
+        <el-dialog  v-dialogDrag :title="LANG.BRIGHT_TITLE" :visible="showDialog=='screenBright'" @close="op(false)">
             <div class="screenWrapper">
                 <el-tabs type="border-card"
                          v-model="curTabName"
