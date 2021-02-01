@@ -427,7 +427,7 @@ export default {
                 return ;
             }
             else if(s==''){
-                alert("不能为空");
+                this.$message.error("不能为空");
                 return ;
             }
             this.userSceneList[this.selectedSceneIndex].label=s;

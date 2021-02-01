@@ -159,7 +159,7 @@
                 }
                 else if(this.syncType==2){
                     if(this.selectedWinIndex==-1){
-                        alert("未选中屏幕");
+                        this.$message.error("未选中屏幕");
                         return;
                     }
                     //同步自己

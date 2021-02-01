@@ -195,7 +195,7 @@
             <exportDialog @sub_event="subEvent" v-if="showDialog=='export'" :showDialog="showDialog"></exportDialog>
             <aboutDialog @sub_event="subEvent" v-if="showDialog=='about'" :showDialog="showDialog"></aboutDialog>
         </div>
-        <div v-else style="width:100%;height:100%;background-color:#131e3e;overflow:hidden;">
+        <div v-else-if="isLogin==0" style="width:100%;height:100%;background-color:#131e3e;overflow:hidden;">
             <loginDialog @sub_event="subEvent"></loginDialog>
         </div>
     </div>
@@ -527,6 +527,10 @@
                 this.$http.get("verInfoRd.cgi",{},(ret)=>{
                     this.devType=ret.data.devType;
                     this.globalEvent.versionInfo=ret.data;
+                    window.document.title=ret.data.devProp;
+                    // if(this.isLogin==-1){
+                    //     this.isLogin=0;
+                    // }
                 });
             },
             opConfig(act){

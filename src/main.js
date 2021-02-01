@@ -170,7 +170,6 @@ Vue.directive('dialogDrag',{
     }
 
 })
-
 new Vue({
   // router,
   // store,
@@ -182,5 +181,9 @@ new Vue({
     //     LANG:this.LANG
     //   };
     // },
+    meta: {
+        // 页面标题title
+        title: '标题'
+    },
   render: h => h(App)
 }).$mount('#app')

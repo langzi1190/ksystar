@@ -1,11 +1,12 @@
 import Vue from 'vue'
+import {Message} from 'element-ui';
 import Axios from '../axios';
 Vue.prototype.$http = Axios;
 Vue.prototype.LANGUAGE={
     zh:require("./zh.json"),
     en:require("./en.json"),
 };
-
+Vue.prototype.$message = Message;
 let gobalEvent =new Vue({
     data:{
         gMode:0,//0正常，1演示
@@ -530,7 +531,7 @@ let gobalEvent =new Vue({
 
                     if(ret.data.result==0){
                         //未正确接收
-                        alert(that.LANG.ALERT_API_ERROR);
+                        this.$message.error(that.LANG.ALERT_API_ERROR);
                         console.log("下发数据未正确接收:",d.packetId,d.packetNum);
                     }
                     else{

@@ -110,7 +110,7 @@
                 }
                 else{
                     if(this.cardIdList.length==0 && this.sourceIdList.length==0){
-                        alert("无数据");
+                        this.$message.error("无数据");
                         return ;
                     }
                     let param={

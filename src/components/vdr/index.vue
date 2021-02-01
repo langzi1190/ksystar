@@ -518,7 +518,7 @@
 
 
                 if(this.isOutResource(data)){
-                    alert(this.globalEvent.alert.outResource);
+                    this.$message.error(this.globalEvent.alert.outResource);
                     // this.loadScreenWindowItems();
                     return ;
                 }
@@ -889,7 +889,7 @@
                 };
 
                 if(this.isOutResource({})){
-                    alert(this.globalEvent.alert.outResource);
+                    this.$message.error(this.globalEvent.alert.outResource);
                     this.loadScreenWindowItems();
                     return ;
                 }

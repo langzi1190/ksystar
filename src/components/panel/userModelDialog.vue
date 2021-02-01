@@ -40,7 +40,7 @@
                 }
                 else{
                     if(this.globalEvent.commonInfo.presetStaArr[this.userModel-1]==0){
-                        alert("该模式没有数据");
+                        this.$message.error("该模式没有数据");
                         return ;
                     }
                     // this.$http.post("loadPreset.cgi",{presetId:this.userModel-1},(ret)=>{

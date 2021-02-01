@@ -129,7 +129,7 @@
             sendSizeEvent(){
                 // console.log("init_size",this.o_width);
                 if(this.$parent.isOutResource({})){
-                    alert(this.globalEvent.alert.outResource);
+                    this.$message.error(this.globalEvent.alert.outResource);
                     return;
                 }
 
@@ -386,7 +386,7 @@
                     if(this.$parent.isOutResource({})){
                         //检测是否超资源
                         this.loadScreenWindowItems();
-                        alert(this.globalEvent.alert.outResource);
+                        this.$message.error(this.globalEvent.alert.outResource);
                         return ;
                     }
                     this.$http.post("switchWinSrc.cgi",data,(ret)=>{

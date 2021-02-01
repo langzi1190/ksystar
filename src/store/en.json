@@ -87,6 +87,7 @@
   "ATTR_WINDOW_FULL":"Full",
   "ATTR_WINDOW_PART":"Part",
   "ATTR_WINDOW_NAME":"Window Name",
+  "ATTR_SIGNAL_NAME":"Signal Name",
   "ATTR_WINDOW_SIZE":"Size",
   "ATTR_WINDOW_POS":"Pos",
   "ATTR_SIGNAL_TYPE":"Signal",
@@ -308,6 +309,7 @@
 
   "CLOSE_TITLE":"Shut Ouput",
 
+  "ALERT_NO_FILE_CHOOSE":"No file",
   "ALERT_MAX_WINDS":"Window excess",
   "ALERT_API_ERROR":"Receive wrong",
   "ALERT_NO_INPUT_CHOOSE":"No Input Card",

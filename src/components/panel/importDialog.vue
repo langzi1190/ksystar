@@ -42,7 +42,7 @@
                 let that=this;
                 let input=this.$refs.file;
                 if(input.files.length==0){
-                    alert("尚未选择文件");
+                    this.$message.error("尚未选择文件");
                     return ;
                 }
 
@@ -94,7 +94,7 @@
 
                         if(ret.data.result==0){
                             //未正确接收
-                            alert(this.LANG.ALERT_API_ERROR);
+                            this.$message.error(this.LANG.ALERT_API_ERROR);
                             console.log("下发数据未正确接收:",d.packetId,d.packetNum);
                         }
                         else{
@@ -106,6 +106,12 @@
             },
             op(act){
                 if(act){
+                    let input=this.$refs.file;
+                    if(input.files.length==0){
+                        this.$message.error(this.LANG.ALERT_NO_FILE_CHOOSE);
+                        return ;
+                    }
+
                     this.$http.post("cfgImport.cgi",{opr:0,fileSize:this.fileSize},(ret)=>{
                         if(ret.data.result==1){
                             this.loading=this.$loading({
@@ -117,7 +123,7 @@
                             this.upload();
                         }
                         else{
-                            alert("数据擦除失败");
+                            this.$message.error("数据擦除失败");
                         }
                     });
                 }

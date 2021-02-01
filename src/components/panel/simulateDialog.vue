@@ -219,7 +219,7 @@
             op(act){
                 if(act){
                     if(this.inCount=='' || this.outCount==''){
-                        alert("输入卡或输出卡数量不能为空");
+                        this.$message.error("输入卡或输出卡数量不能为空");
                         return ;
                     }
                     //生成输入卡，输出卡

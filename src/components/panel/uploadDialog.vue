@@ -232,7 +232,7 @@
                 let that=this;
                 let input=this.$refs['file'+this.cardType];
                 if(input.files.length==0){
-                    alert("尚未选择文件");
+                    this.$message.error(this.LANG.ALERT_NO_FILE_CHOOSE);
                     return ;
                 }
 
@@ -333,7 +333,7 @@
                 this.$http.post("firmwareUpdate.cgi",param,(ret)=>{
                     if(ret.data.result==0){
                         this.loading.close();
-                        alert("擦除数据失败");
+                        this.$message.error("擦除数据失败");
                     }
                     else{
                         this.upload();
@@ -343,14 +343,20 @@
             op(act){
                 if(act){
                     if(this.cardType==-1){
-                        alert(this.LANG.ALERT_NO_CARD_CHOOSE);
+                        this.$message.error(this.LANG.ALERT_NO_CARD_CHOOSE);
                     }else if(this.cardType==1 && this.port0.length==0){
-                        alert(this.LANG.ALERT_NO_INPUT_CHOOSE);
+                        this.$message.error(this.LANG.ALERT_NO_INPUT_CHOOSE);
                     }
                     else if(this.cardType==2 && this.port1.length==0){
-                        alert(this.LANG.ALERT_NO_OUTPUT_CHOOSE);
+                        this.$message.error(this.LANG.ALERT_NO_OUTPUT_CHOOSE);
                     }
                     else{
+
+                        let input=this.$refs['file'+this.cardType];
+                        if(input.files.length==0){
+                            this.$message.error(this.LANG.ALERT_NO_FILE_CHOOSE);
+                            return ;
+                        }
 
                         this.loading=this.$loading({
                             lock: true,

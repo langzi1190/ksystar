@@ -1,6 +1,9 @@
 <template>
     <div class="edid_dialog">
-        <el-dialog v-dialogDrag  :title="LANG.EDID_TITLE" :visible="showDialog=='edid' || showDialog=='edidSingle'" @close="op('cancel')">
+        <el-dialog v-dialogDrag
+                   :title="title"
+                   :visible="showDialog=='edid' || showDialog=='edidSingle'"
+                   @close="op('cancel')">
             <div>
                 <div class="item">
                     <span v-html="LANG.EDID_DEV_NO"></span>
@@ -54,7 +57,13 @@
         data(){
 
             let isChoose=Object.keys(this.globalEvent.selectedCard).length;
+            let title=this.LANGUAGE[this.globalEvent.language].EDID_TITLE;
+            if(this.showDialog=='edidSingle'){
+                // console.log(this.globalEvent.selectedCard);
+                title+=" ("+this.globalEvent.selectedCard.label_extra+")"
+            }
             return {
+                title,
                 devNo:0,
                 width:3840,
                 height:2160,

@@ -91,7 +91,7 @@
       <!--<div class="src_card_name">{{this.globalEvent.selectedCard.label_extra}}</div>-->
       <div class="title" v-show="Object.keys(this.globalEvent.selectedCard).length>0">
         <el-input v-model="selectedCardLabel" size="mini">
-          <template slot="prepend">{{LANG.ATTR_WINDOW_NAME}}:</template>
+          <template slot="prepend">{{LANG.ATTR_SIGNAL_NAME}}:</template>
         </el-input>
       </div>
       <div class="signal_btn_group" v-show="Object.keys(this.globalEvent.selectedCard).length>0">
@@ -100,7 +100,7 @@
         <el-button @click="op('vga')" v-if="globalEvent.selectedCard.portType==3" size="mini">{{LANG.ATTR_VGA_CORRECTION}}</el-button>
         <el-button @click="op('workMode')" size="mini"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_WORK_MODE}}</el-button>
         <el-button @click="op('edidSingle')"  v-show="advanceType.includes(this.globalEvent.selectedCard.portType)" size="mini">{{LANG.ATTR_EDID_SETTING}}</el-button>
-        <el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_EQ_SETTING}}</el-button>
+        <!--<el-button @click="op('setEq')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_EQ_SETTING}}</el-button>-->
         <el-button @click="op('rdEdid')" size="mini" v-show="advanceType.includes(this.globalEvent.selectedCard.portType)">{{LANG.ATTR_EDID_READ}}</el-button>
       </div>
       <div style="text-align:center;color:#d0d0d0;" v-show="Object.keys(this.globalEvent.selectedCard).length==0">

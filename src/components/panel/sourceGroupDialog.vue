@@ -195,7 +195,7 @@
                 for(let i in this.selectedSrcCardList){
                     let dataArr=this.selectedSrcCardList[i].dataArr;
                     if(dataArr[0]==arr[0] && dataArr[1]==arr[1]){
-                        alert("已经选入");
+                        this.$message.error("已经选入");
                         return ;
                     }
                 }

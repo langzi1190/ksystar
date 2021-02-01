@@ -152,7 +152,7 @@
         watch:{
             'selectedUser.name':function (v,o) {
                 if(v.length>20){
-                    alert(this.LANG.ALERT_MAX_USERNAME_LENGTH);
+                    this.$message.error(this.LANG.ALERT_MAX_USERNAME_LENGTH);
                     this.$nextTick(()=>{
                         this.selectedUser.name=this.selectedUser.name.substring(0,20);
                     })
@@ -161,7 +161,7 @@
             },
             'selectedUser.pass':function (v,ov) {
                 if(v.length>20){
-                    alert(this.LANG.ALERT_MAX_PASSWORD_LENGTH);
+                    this.$message.error(this.LANG.ALERT_MAX_PASSWORD_LENGTH);
                     this.$nextTick(()=>{
                         this.selectedUser.pass=this.selectedUser.pass.substring(0,20);
                     })
@@ -181,16 +181,16 @@
 
                 if(act=='add'){
                     if(this.userList.length>=10){
-                        alert(this.LANG.ALERT_MAX_USERS);
+                        this.$message.error(this.LANG.ALERT_MAX_USERS);
                         return ;
                     }
                     if(this.selectedUser.pass!=this.repeatPass){
-                        alert(this.LANG.USER_PASSWD_REPEAT_WRONG);
+                        this.$message.error(this.LANG.USER_PASSWD_REPEAT_WRONG);
                         return ;
                     }
                     for(let i in this.userList){
                         if(this.userList[i].name==this.selectedUser.name){
-                            alert(this.LANG.USER_USERNAME_EXIST);
+                            this.$message.error(this.LANG.USER_USERNAME_EXIST);
                             return ;
                         }
                     }
@@ -215,14 +215,14 @@
                 }
                 else if(act=='edit'){
                     if(this.selectedUser.pass!=this.repeatPass){
-                        alert(this.LANG.USER_PASSWD_REPEAT_WRONG);
+                        this.$message.error(this.LANG.USER_PASSWD_REPEAT_WRONG);
                         return ;
                     }
                     if(this.selectedIndex>-1){
                         this.userList[this.selectedIndex].name=this.selectedUser.name;
                         this.userList[this.selectedIndex].type=this.selectedUser.type;
                         this.userList[this.selectedIndex].pass=this.selectedUser.pass;
-                        alert(this.LANG.TIP_ALREADY_SAVE);
+                        this.$message.error(this.LANG.TIP_ALREADY_SAVE);
                     }
                 }
                 else if(act=='cancel'){

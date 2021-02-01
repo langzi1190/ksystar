@@ -1,9 +1,9 @@
 <template>
     <div class="login_dialog">
         <div class="img_wrapper">
-            <img src="@/assets/images/kystarlogo.png"/>
+            <img v-if="globalEvent.versionInfo.devProp==0" src="@/assets/images/kystarlogo.png"/>
             <div style="color: #09c3fd;
-font-weight: bold;">凯视达拼接器</div>
+font-weight: bold;">{{title}}</div>
         </div>
         <div style="display: flex;justify-content: center;margin-top: 50px">
             <div style="width: 300px">
@@ -65,6 +65,7 @@ font-weight: bold;">凯视达拼接器</div>
                     username:'Administrator',
                     password:'',
                 },
+                title:"视频拼接器",
                 old_password:"xx",
                 wrong_password:false,
                 userIndex:'Administrator',
