@@ -13,7 +13,7 @@
       <div class="setting-port">
         <div style="margin-bottom:10px;margin-top:5px;">{{LANG.SCREEN_OUT_LAYOUT}}</div>
         <ul>
-          <li v-for="(val,index) in portList" :class="{port_on:portList[totalPort-index-1]==1}" :key="index" @click="portPut(index)">
+          <li v-for="(val,index) in portList" :class="{port_on:portList[totalPort-index-1]>0}" :key="index" @click="portPut(index)">
             Port {{totalPort-index}}
             <div class="spot" :class="{spot_green:usedPort.includes(totalPort-index-1)}"></div>
           </li>

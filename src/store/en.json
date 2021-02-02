@@ -64,6 +64,8 @@
   "BTN_ADD":"Add",
   "BTN_EDIT":"Edit",
   "BTN_DEL":"Delete",
+  "BTN_ALL":"Select all",
+  "BTN_INVERSE":"Select invert",
 
   "SIGNAL_SOURCE":"Signal Source",
   "SIGNAL_USER_MODE":"User Mode",

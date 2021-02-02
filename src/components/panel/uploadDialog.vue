@@ -12,6 +12,10 @@
                         <input type="file" ref="file1" :disabled="cardType!=1"/>
                     </div>
                     <div class="item_body">
+                        <div class="btn-group">
+                            <el-button @click="selectOp('all',1)" :disabled="cardType!=1"  size="mini">{{LANG.BTN_ALL}}</el-button>
+                            <el-button @click="selectOp('invert',1)" :disabled="cardType!=1"  size="mini">{{LANG.BTN_INVERSE}}</el-button>
+                        </div>
 
                         <label
                                 v-for="n in inCardCount"
@@ -26,6 +30,12 @@
                         <input type="file" ref="file2" :disabled="cardType!=2"/>
                     </div>
                     <div class="item_body">
+
+                        <div class="btn-group" style="margin-bottom:5px;">
+                            <el-button @click="selectOp('all',2)" :disabled="cardType!=2" size="mini">{{LANG.BTN_ALL}}</el-button>
+                            <el-button @click="selectOp('invert',2)" :disabled="cardType!=2" size="mini">{{LANG.BTN_INVERSE}}</el-button>
+                        </div>
+
                         <label
                                 v-for="n in outCardCount"
                         ><input :value="n" :disabled="cardType!=2" v-model="port1" type="checkbox"/>{{LANG.FPGA_CARD}}{{n}}
@@ -101,11 +111,11 @@
                 }
                 else if(v==1){
                     this.port1=[];
-                    this.port0=Array.from({length:this.inCardCount},v=>1).map((v,k)=>v+k);
+                    this.port0=[];//Array.from({length:this.inCardCount},v=>1).map((v,k)=>v+k);
                 }
                 else if(v==2){
                     this.port0=[];
-                    this.port1=Array.from({length:this.outCardCount},v=>1).map((v,k)=>v+k);
+                    this.port1=[];//Array.from({length:this.outCardCount},v=>1).map((v,k)=>v+k);
                 }
             }
         },
@@ -177,6 +187,36 @@
             //
             //     uploadFile(0);
             // },
+            selectOp(act,cardType){
+                if(act=='all'){
+                    if(cardType==1){
+                        //全选
+                        this.port0=Array.from({length:this.inCardCount},v=>1).map((v,k)=>v+k);
+                    }
+                    else if(cardType==2){
+                        this.port1=Array.from({length:this.outCardCount},v=>1).map((v,k)=>v+k);
+                    }
+                }
+                else if(act=='invert'){
+                    let arr=[];
+                    if(cardType==1){
+                        for(let k=1 ;k<=this.inCardCount;k++){
+                            if(!this.port0.includes(k)){
+                                arr.push(k);
+                            }
+                        }
+                        this.port0=arr;
+                    }
+                    else if(cardType==2){
+                        for(let k=1 ;k<=this.outCardCount;k++){
+                            if(!this.port1.includes(k)){
+                                arr.push(k);
+                            }
+                        }
+                        this.port1=arr;
+                    }
+                }
+            },
             getBoardArr(){
                 let that=this;
                 let boardStaArr=[];
@@ -382,7 +422,8 @@
     .upload_dialog .item{text-align:left;margin-bottom:20px;}
     .upload_dialog .item_tip{color:#333;font-size:16px;position:relative;}
     .upload_dialog .item_body{margin-top:20px;}
-    .upload_dialog .item_body label{margin-left:25px;}
+    .upload_dialog .item_body label{margin-left:25px;width:80px;display:inline-block;}
     .upload_dialog label input{margin-right:10px;}
     .upload_dialog input[type='file']{position:absolute;right:0;top:0;}
+    .upload_dialog .btn-group{margin-bottom:5px;margin-left:5px;}
 </style>

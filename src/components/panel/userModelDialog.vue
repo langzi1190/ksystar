@@ -11,7 +11,7 @@
             </div>
 
             <div class="item">
-                <el-button size="mini" @click="op(true)">{{LANG.BTN_SURE}}</el-button>
+                <el-button size="mini" @click="op(true)">{{this.globalEvent.language=='zh'?'确认':LANG.BTN_SURE}}</el-button>
                 <el-button size="mini" @click="op(false)">{{LANG.BTN_CANCEL}}</el-button>
             </div>
         </el-dialog>

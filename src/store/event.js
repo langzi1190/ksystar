@@ -386,9 +386,13 @@ let gobalEvent =new Vue({
             let totalNum=0;
             this.$http.post("renameCfgRd.cgi",{opr:0},(ret)=>{
                 this.userInfo=JSON.parse(sessionStorage.getItem("login_user"));
+                let lan=localStorage.getItem("language");
                 localStorage.clear();
                 sessionStorage.clear();
                 sessionStorage.setItem("login_user",JSON.stringify(this.userInfo));//恢复当前用户信息
+                if(lan!==null){
+                    localStorage.setItem("language",lan);
+                }
                 let data=ret.data;
                 totalNum=data.packetNum;
                 if(totalNum>0){

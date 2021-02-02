@@ -9,7 +9,13 @@
         </template>
 
         <div class="content-list" :style="{maxHeight:contestListHeight}">
-          <el-tree :data="inputCardList" :props="paramMap" :render-content="renderContent" @node-click="handleNodeClick"></el-tree>
+          <el-tree
+                  :data="inputCardList"
+                  :props="paramMap"
+                  :render-content="renderContent"
+                  @node-click="handleNodeClick">
+
+          </el-tree>
         </div>
 
       </el-collapse-item>
@@ -20,7 +26,10 @@
         </template>
         <div class="content-list"  :style="{maxHeight:contestListHeight}">
           <template v-for="(item,index) in userSceneList">
-            <div class="list_item" :class="{list_item_cur:item.value==1,list_item_selected:selectedSceneIndex==index}" @click="showUserModel(index)">
+            <div class="list_item"
+                 :class="{list_item_cur:item.value==1,list_item_selected:selectedSceneIndex==index}"
+                 @click.stop.prevent=""
+                 @mousedown.stop.prevent="showUserModel(index,$event)">
               {{item.label}}
             </div>
             <!--<div class="list_item" v-show="selectedSceneIndex==index">-->
@@ -455,9 +464,14 @@ export default {
 
             });
         },
-        showUserModel(index){
+        showUserModel(index,ev){
+            ev.preventDefault();
+            ev.stopPropagation();
             this.selectedSceneIndex=index;
-            this.showUserModelDialog=true;
+            if(ev.button==2){
+                this.showUserModelDialog=true;
+            }
+
         },
         subEvent(param){
             this.showUserModelDialog=false;

@@ -65,7 +65,7 @@ font-weight: bold;">{{title}}</div>
                     username:'Administrator',
                     password:'',
                 },
-                title:"视频拼接器",
+                title:this.globalEvent.versionInfo.devProp==0?"凯视达拼接器":"视频拼接器",
                 old_password:"xx",
                 wrong_password:false,
                 userIndex:'Administrator',
@@ -303,7 +303,7 @@ font-weight: bold;">{{title}}</div>
         margin: 50px auto;
     }
     table td{height:50px;}
-    .login_dialog .img_wrapper{ width: 257px;
+    .login_dialog .img_wrapper{ width: 257px;justify-content: center;
         display: flex;
         margin: 40px auto 0;
         height: 50px;

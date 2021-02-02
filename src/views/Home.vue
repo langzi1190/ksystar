@@ -3,8 +3,9 @@
         <div class="home" v-if="isLogin==1">
             <!-- 头部菜单显示 -->
             <div style="display:flex;">
-                <div class="logo" style="display:flex;justify-content: center;align-items: center;background:#1f2e54 none no-repeat center center / 100% auto;flex:0 0 210px;">
-                    <img src="@/assets/images/logo.png" width="200"/>
+                <div class="logo" style="display:flex;justify-content: center;align-items: center;background:#1f2e54 none no-repeat center center / 100% auto;flex:0 0 210px;color: #d5e0fb;font-size: 30px;">
+                    <img src="@/assets/images/logo.png" v-if="globalEvent.versionInfo.devProp==0" width="200"/>
+                    <div v-else>视频拼接器</div>
                 </div>
                 <header>
                     <el-tabs type="border-card" value="1">
@@ -16,7 +17,7 @@
                                     <!--<card-item :title="LANG.HOME_DISCONNECT_DEVICE"></card-item>-->
                                     <card-item :title="LANG.HOME_ABOUT" :isChecked="showDialog=='about'" @click.native="showDialog='about'" iconName="about"></card-item>
                                     <card-item :title="LANG.HOME_SYNC"  @click.native="preinstall('btn_sync')" iconName="sync"></card-item>
-                                    <card-item :title="LANG.HOME_EXIT" @click.native="isLogin=0" iconName="quit"></card-item>
+                                    <card-item :title="LANG.HOME_EXIT" @click.native="quit" iconName="quit"></card-item>
                                 </card>
                             </div>
                         </el-tab-pane>
@@ -345,6 +346,12 @@
                 user=JSON.parse(user);
                 this.globalEvent.userInfo=user;
                 this.isLogin=1;
+                // console.log(localStorage.getItem('language'));
+                let lan=localStorage.getItem('language');
+                if(lan!==null){
+                    this.globalEvent.language=lan;
+                }
+
             }
 
             // this.$http.get("syncOutputInfoRd.cgi",{},(ret)=>{
@@ -375,10 +382,10 @@
 
                     this.globalEvent.loadName();
                 }
-                else{
-                    sessionStorage.removeItem('login_user');
-                    window.location.reload(true);
-                }
+                // else{
+                //     sessionStorage.removeItem('login_user');
+                //     window.location.reload(true);
+                // }
             },
             curLang(v,ov){
                 this.globalEvent.language=v;
@@ -399,7 +406,7 @@
             }
 
             return {
-                isLogin:0,
+                isLogin:-1,//初始化 状态
                 curLang:lang,
                 mleft:0,
                 mtop:0,
@@ -446,6 +453,13 @@
             };
         },
         methods: {
+            quit(){
+                this.isLogin=0;
+                sessionStorage.removeItem('login_user');
+                window.location.reload();
+                // localStorage.clear();
+                // sessionStorage.removeItem('login_user');
+            },
             // 预设:1-用户模式、2-保存模式、3-出厂设置、4-同步、5-打开回显、6-关闭回显、7-回显设置 8 输出开,9输出关
             preinstall(setFn) {
 
@@ -527,10 +541,11 @@
                 this.$http.get("verInfoRd.cgi",{},(ret)=>{
                     this.devType=ret.data.devType;
                     this.globalEvent.versionInfo=ret.data;
-                    window.document.title=ret.data.devProp;
-                    // if(this.isLogin==-1){
-                    //     this.isLogin=0;
-                    // }
+                    window.document.title=ret.data.devProp==1?'视频拼接器':'凯视达拼接器';
+
+                    if(this.isLogin==-1){
+                        this.isLogin=0;
+                    }
                 });
             },
             opConfig(act){
