@@ -28,9 +28,8 @@
           <template v-for="(item,index) in userSceneList">
             <div class="list_item"
                  :class="{list_item_cur:item.value==1,list_item_selected:selectedSceneIndex==index}"
-                 @click.stop.prevent=""
-                 @mousedown.stop.prevent="showUserModel(index,$event)">
-              {{item.label}}
+                 @click.stop="showUserModel(index)">
+              {{item.label}} <i class="el-icon-edit" @click.stop="editUserModelName(index)"></i>
             </div>
             <!--<div class="list_item" v-show="selectedSceneIndex==index">-->
               <!--<el-button size="mini" @click="editScene">{{LANG.SIGNAL_CHANGE_NAME}}</el-button>-->
@@ -464,13 +463,25 @@ export default {
 
             });
         },
-        showUserModel(index,ev){
-            ev.preventDefault();
-            ev.stopPropagation();
+        showUserModel(index){
+            // ev.preventDefault();
+            // ev.stopPropagation();
             this.selectedSceneIndex=index;
-            if(ev.button==2){
-                this.showUserModelDialog=true;
-            }
+            // if(ev.button==2){
+            //     this.showUserModelDialog=true;
+            // }
+            this.showUserModelDialog=true;
+
+        },
+        editUserModelName(index){
+            this.selectedSceneIndex=index;
+            this.$nextTick(()=>{
+
+                setTimeout(()=>{
+                    this.editScene();
+                },100);
+
+            })
 
         },
         subEvent(param){
@@ -552,5 +563,12 @@ export default {
   .card_back_up::before{content:' ';width:10px;height:10px;border-radius:10px;position:absolute;top:6px;right:-10px;background-color:#f3f2f0;}
   .list_item_cur{background-color:#00cc99;color:#fff;}
   .list_item_selected{color:#00cc99;background-color:#f3f2f0;}
+
+  .el-icon-edit{    width: 30px;
+    height: 30px;
+    vertical-align: top;
+    float: right;
+    line-height: 30px;
+    font-size: 18px;}
 }
 </style>
