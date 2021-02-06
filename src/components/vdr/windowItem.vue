@@ -18,7 +18,7 @@
             <div class="draw-area__dot draw-area__dot--l" data-type="left" @mousedown.stop="handleMouseDown"></div>
             <div class="draw-area__dot draw-area__dot--tl" data-type="top_left" @mousedown.stop="handleMouseDown"></div>
 
-            <div class="title"   data-type="move" @mousedown.stop="handleMouseDown">
+            <div class="title" :class="{title_cur:seq==globalEvent.selectedWindowIndex}"   data-type="move" @mousedown.stop="handleMouseDown">
                 <div class="title-win"  data-type="move" @mousedown.stop="handleMouseDown">
                     <span>Win-{{seq+1}}:{{this.item.srcGroupId==0?item.inputCardLabel:item.groupLabel}} {{item.lock==1?'['+LANG.ATTR_LOCKED+']':''}}</span>
                 </div>
@@ -149,6 +149,9 @@
                 if(param.act=='top' || param.act=='bottom'){
                     //置顶
                     this.zIndex=this.$parent.windowItems[this.seq].layerId;
+                }
+                else if(param.act=='crop_size'){
+                    this.cropSizeArr=[param.v[0],param.v[1],param.v[0]+param.v[2],param.v[1]+param.v[3]]
                 }
             },
             setSrcGroup(group){
@@ -713,7 +716,7 @@
                 display: flex;
                 justify-content: space-between;
                 color:#fff;
-                background: #3078ff;
+                background: #a0a0a0;
             .title-win {
                 cursor:default;
                 padding: 0 6px;
@@ -741,6 +744,7 @@
                 /*}*/
             }
         }
+        .title_cur{background-color:#3078ff;}
         .content {
             flex: 1;
             background: #e6f1fa;

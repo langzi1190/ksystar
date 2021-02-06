@@ -218,7 +218,7 @@ export default {
                     this.ctop=0;
                     this.cleft=0;
                     this.cwidth=0;
-                    this.ctop=0;
+                    this.cheight=0;
                     v=[0,0,0,0];
                 }
                 else{

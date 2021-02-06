@@ -178,7 +178,9 @@
                     //     this.windowItems[k].cropSizeArr=[0,0,0,0];
                     //
                     // }
+
                     this.windowItems[k].cropSizeArr=param.v;
+                    this.$refs.windowObj[k].setProp({act:'crop_size',v:param.v});
                     this.syncWindowSize();
                 }
 
