@@ -889,7 +889,12 @@
                     winW:curWindow.winSizeArr[2]-0,
                     winH:curWindow.winSizeArr[3]-0,
                 };
-
+                if(curWindow.partOrAll==0){
+                    data.cropLeft=0;
+                    data.cropTop=0;
+                    data.cropW=0;
+                    data.cropH=0;
+                }
                 if(this.isOutResource({})){
                     this.$message.error(this.globalEvent.alert.outResource);
                     this.loadScreenWindowItems();

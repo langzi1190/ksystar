@@ -214,16 +214,18 @@ export default {
             //发送 窗体参数更新事件 update_window 接受组件 vdr/index.vue
             if(act=='partOrAll'){
                 this.isPanorama=!this.isPanorama;
-                if(this.isPanorama){
-                    this.ctop=0;
-                    this.cleft=0;
-                    this.cwidth=0;
-                    this.cheight=0;
-                    v=[0,0,0,0];
-                }
-                else{
-                    v=[this.cleft-0,this.ctop-0,this.cwidth-0,this.cheight-0];
-                }
+                // if(this.isPanorama){
+                //     this.ctop=0;
+                //     this.cleft=0;
+                //     this.cwidth=0;
+                //     this.cheight=0;
+                //     v=[0,0,0,0];
+                // }
+                // else{
+                //     v=[this.cleft-0,this.ctop-0,this.cwidth-0,this.cheight-0];
+                // }
+
+                v=[this.cleft-0,this.ctop-0,this.cwidth-0,this.cheight-0];
             }
             else if(act=='lock'){
                 this.isLock=1-this.isLock;

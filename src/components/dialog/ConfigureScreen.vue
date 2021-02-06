@@ -91,7 +91,12 @@ export default {
           //输出端口列表
           this.portList=outPortListInfo.outCardArr.flat();
           this.totalPort=this.portList.length;
-          this.globalEvent.validOutCardCount=this.portList.reduce((k,v)=>k+v);
+          this.globalEvent.validOutCardCount=0;//this.portList.reduce((k,v)=>k+v);
+          this.portList.forEach((v,k)=>{
+              if(v>0){
+                  this.globalEvent.validOutCardCount++;
+              }
+          });
       },
       updateUsedPort(){
           this.usedPort=[];
@@ -121,7 +126,7 @@ export default {
           }
           let validPos=[];//可用位置
           this.portList.forEach((v,k)=>{
-              if(v==1){
+              if(v>0){
                   validPos.push(k);
               }
           });
